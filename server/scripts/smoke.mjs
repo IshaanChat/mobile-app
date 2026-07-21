@@ -1,0 +1,293 @@
+#!/usr/bin/env node
+/**
+ * End-to-end smoke test: exercises every endpoint's happy path against a
+ * running server, then deletes everything it created.
+ *
+ *   npm run dev      # in one terminal
+ *   npm run smoke    # in another
+ *
+ * Creates a scratch business and removes it at the end (cascade takes the
+ * channels, contacts, interactions, products and payments with it), so it is
+ * safe to run against a database with real data in it.
+ */
+
+const BASE = process.env.SMOKE_BASE_URL ?? 'http://localhost:4000/api';
+
+let passed = 0;
+let failed = 0;
+const failures = [];
+
+async function api(method, path, body) {
+  const res = await fetch(`${BASE}${path}`, {
+    method,
+    headers: { 'Content-Type': 'application/json' },
+    body: body === undefined ? undefined : JSON.stringify(body),
+  });
+  const text = await res.text();
+  let json;
+  try {
+    json = text ? JSON.parse(text) : null;
+  } catch {
+    json = text;
+  }
+  return { status: res.status, body: json };
+}
+
+async function check(label, fn) {
+  try {
+    await fn();
+    passed++;
+    console.log(`  \x1b[32mPASS\x1b[0m  ${label}`);
+  } catch (err) {
+    failed++;
+    failures.push({ label, message: err.message });
+    console.log(`  \x1b[31mFAIL\x1b[0m  ${label}\n        ${err.message}`);
+  }
+}
+
+function assert(condition, message) {
+  if (!condition) throw new Error(message);
+}
+
+const run = async () => {
+  console.log(`\nSmoke test against ${BASE}\n`);
+
+  // --- health -------------------------------------------------------------
+  await check('health responds ok', async () => {
+    const { status, body } = await api('GET', '/health');
+    assert(status === 200 && body.ok === true, `got ${status} ${JSON.stringify(body)}`);
+  });
+
+  // --- profile (singleton; read-only here so we don't clobber real data) ---
+  await check('profile endpoint responds', async () => {
+    const { status } = await api('GET', '/profile');
+    assert(status === 200, `got ${status}`);
+  });
+
+  // --- business -----------------------------------------------------------
+  let businessId;
+  await check('create business', async () => {
+    const { status, body } = await api('POST', '/business', {
+      name: 'SMOKE TEST — safe to delete',
+      niche: 'smoke testing',
+      description: 'Created by npm run smoke. Deleted automatically.',
+      businessType: 'PRODUCT_SALES',
+      salesAvenues: 'ETSY',
+      pageUrl: 'example.com/smoke',
+    });
+    assert(status === 201, `got ${status} ${JSON.stringify(body)}`);
+    assert(body.pageUrl === 'https://example.com/smoke', `pageUrl not normalised: ${body.pageUrl}`);
+    businessId = body.id;
+  });
+
+  if (!businessId) {
+    console.log('\nCannot continue without a business. Aborting.\n');
+    process.exit(1);
+  }
+
+  await check('list businesses includes it', async () => {
+    const { body } = await api('GET', '/business');
+    assert(body.some((b) => b.id === businessId), 'new business missing from list');
+  });
+
+  await check('update business targeting', async () => {
+    const { status, body } = await api('PATCH', `/business/${businessId}`, {
+      idealCustomer: 'people who like smoke tests',
+      audienceKeywords: 'pottery, candles',
+    });
+    assert(status === 200 && body.idealCustomer, `got ${status}`);
+  });
+
+  // --- contacts + channel auto-detection ----------------------------------
+  let contactId;
+  await check('create contact from a pasted URL (auto-creates channel)', async () => {
+    const { status, body } = await api('POST', '/contacts', {
+      businessId,
+      name: 'Smoke Contact',
+      sourceUrl: 'etsy.com/shop/smoketest',
+      status: 'PROSPECT',
+      firstNote: 'Met during a smoke test',
+    });
+    assert(status === 201, `got ${status} ${JSON.stringify(body)}`);
+    assert(body.channel?.type === 'ETSY', `channel not detected as ETSY: ${body.channel?.type}`);
+    assert(body.interactions?.length === 1, 'firstNote did not create an interaction');
+    assert(body.relationshipStrength > 0, 'first touch did not seed a score');
+    contactId = body.id;
+  });
+
+  await check('channel now exists for the business', async () => {
+    const { body } = await api('GET', `/channels?businessId=${businessId}`);
+    assert(Array.isArray(body) && body.length >= 1, 'no channels found');
+  });
+
+  await check('fetch contact detail', async () => {
+    const { status, body } = await api('GET', `/contacts/${contactId}`);
+    assert(status === 200 && body.id === contactId, `got ${status}`);
+  });
+
+  await check('channel detection preview', async () => {
+    const { body } = await api('GET', '/contacts/detect-channel/preview?url=instagram.com/someone');
+    assert(body?.type === 'INSTAGRAM', `expected INSTAGRAM, got ${JSON.stringify(body)}`);
+  });
+
+  await check('log an interaction and raise the score', async () => {
+    const before = (await api('GET', `/contacts/${contactId}`)).body.relationshipStrength;
+    const { status, body } = await api('POST', `/contacts/${contactId}/interactions`, {
+      type: 'PURCHASE',
+      note: 'Smoke purchase',
+      weight: 4,
+    });
+    assert(status === 201, `got ${status}`);
+    assert(body.relationshipStrength > before, `score did not rise (${before} -> ${body.relationshipStrength})`);
+  });
+
+  await check('promote contact to customer', async () => {
+    const { status, body } = await api('PATCH', `/contacts/${contactId}`, { status: 'CUSTOMER' });
+    assert(status === 200 && body.status === 'CUSTOMER', `got ${status}`);
+  });
+
+  // --- products + stock ---------------------------------------------------
+  let productId;
+  await check('create product with tracked stock', async () => {
+    const { status, body } = await api('POST', '/products', {
+      businessId,
+      name: 'Smoke Mug',
+      price: 20,
+      stock: 5,
+      sku: 'SMOKE-1',
+      url: 'example.com/listing',
+    });
+    assert(status === 201 && body.stock === 5, `got ${status} ${JSON.stringify(body)}`);
+    productId = body.id;
+  });
+
+  await check('product summary reports inventory value', async () => {
+    const { body } = await api('GET', `/products?businessId=${businessId}`);
+    assert(body.summary.inventoryValue === 100, `expected 100, got ${body.summary.inventoryValue}`);
+  });
+
+  // --- payments (and the stock side effect) -------------------------------
+  await check('record a sale that decrements stock', async () => {
+    const { status } = await api('POST', '/payments', {
+      businessId,
+      amount: 40,
+      quantity: 2,
+      productId,
+      contactId,
+      note: 'Smoke sale',
+    });
+    assert(status === 201, `got ${status}`);
+    const { body } = await api('GET', `/products?businessId=${businessId}`);
+    const product = body.products.find((p) => p.id === productId);
+    assert(product.stock === 3, `stock should be 3 after selling 2, got ${product.stock}`);
+  });
+
+  await check('payment summary reflects the sale', async () => {
+    const { body } = await api('GET', `/payments?businessId=${businessId}`);
+    assert(body.summary.total === 40, `expected total 40, got ${body.summary.total}`);
+    assert(body.summary.topClient?.name === 'Smoke Contact', 'top client not attributed');
+  });
+
+  // --- socials ------------------------------------------------------------
+  await check('save social links', async () => {
+    const { status, body } = await api('PUT', '/socials', {
+      businessId,
+      links: [
+        { platform: 'INSTAGRAM', url: 'instagram.com/smoketest' },
+        { platform: 'TWITTER', url: 'x.com/smoketest' },
+      ],
+    });
+    assert(status === 200 && body.length === 2, `got ${status} ${JSON.stringify(body)}`);
+  });
+
+  // --- derived reads ------------------------------------------------------
+  await check('graph payload assembles', async () => {
+    const { status, body } = await api('GET', `/graph?businessId=${businessId}`);
+    assert(status === 200 && body.contacts.length === 1, `got ${status}`);
+    assert(body.contacts[0].lastInteractionAt, 'lastInteractionAt not derived');
+  });
+
+  await check('activity feed returns interactions', async () => {
+    const { body } = await api('GET', `/interactions?businessId=${businessId}`);
+    assert(Array.isArray(body) && body.length >= 2, `expected >=2 interactions, got ${body.length}`);
+  });
+
+  await check('missions board computes and awards Wisdom', async () => {
+    const { status, body } = await api('GET', `/missions?businessId=${businessId}`);
+    assert(status === 200, `got ${status}`);
+    assert(body.missions.length > 0, 'no missions returned');
+    assert(body.summary.xp > 0, 'no Wisdom awarded despite completed milestones');
+    assert(body.summary.level >= 1 && body.summary.level <= 100, `level out of range: ${body.summary.level}`);
+    const firstSale = body.missions.find((m) => m.id === 'first_sale');
+    assert(firstSale?.completed, 'first_sale should be complete after promoting a customer');
+  });
+
+  await check('discover returns recommendations', async () => {
+    const { status, body } = await api('GET', `/discover?businessId=${businessId}`);
+    assert(status === 200 && body.recommendations.length > 0, `got ${status}`);
+    const platforms = new Set(body.recommendations.map((r) => r.platform));
+    assert(platforms.size >= 3, `expected platform diversity, got ${[...platforms].join(', ')}`);
+  });
+
+  await check('discover status reports LLM configuration', async () => {
+    const { status, body } = await api('GET', '/discover/status');
+    assert(status === 200 && typeof body.llmConfigured === 'boolean', `got ${status}`);
+  });
+
+  await check('settings readable with API key masked', async () => {
+    const { status, body } = await api('GET', '/settings');
+    assert(status === 200, `got ${status}`);
+    assert(!('llmApiKey' in body), 'settings must never return the raw API key');
+    assert(typeof body.llmApiKeySet === 'boolean', 'llmApiKeySet missing');
+  });
+
+  await check('analytics recorded events for this business', async () => {
+    const { body } = await api('GET', `/analytics?businessId=${businessId}`);
+    assert(body.total > 0, 'no analytics events recorded');
+    assert(body.byType['payment.recorded'] >= 1, 'payment event missing');
+  });
+
+  // --- error handling -----------------------------------------------------
+  await check('unknown endpoint returns JSON 404', async () => {
+    const { status, body } = await api('GET', '/definitely-not-a-real-endpoint');
+    assert(status === 404 && body.error, `got ${status} ${JSON.stringify(body)}`);
+  });
+
+  await check('deleting a missing record returns 404, not 500', async () => {
+    const { status } = await api('DELETE', '/contacts/does-not-exist');
+    assert(status === 404, `got ${status}`);
+  });
+
+  await check('validation rejects a bad payload', async () => {
+    const { status } = await api('POST', '/contacts', { businessId, name: '' });
+    assert(status === 400, `expected 400, got ${status}`);
+  });
+
+  // --- cleanup ------------------------------------------------------------
+  await check('delete scratch business (cascades)', async () => {
+    const { status } = await api('DELETE', `/business/${businessId}`);
+    assert(status === 204, `got ${status}`);
+    const { body } = await api('GET', '/business');
+    assert(!body.some((b) => b.id === businessId), 'business still present after delete');
+  });
+
+  await check('server still healthy after the whole run', async () => {
+    const { body } = await api('GET', '/health');
+    assert(body.ok === true, 'server unhealthy');
+  });
+
+  // --- report -------------------------------------------------------------
+  console.log(`\n${passed} passed, ${failed} failed\n`);
+  if (failed > 0) {
+    console.log('Failures:');
+    for (const f of failures) console.log(`  - ${f.label}: ${f.message}`);
+    console.log('');
+    process.exit(1);
+  }
+};
+
+run().catch((err) => {
+  console.error(`\nSmoke test could not run: ${err.message}`);
+  console.error('Is the server running? Try: npm run dev\n');
+  process.exit(1);
+});
