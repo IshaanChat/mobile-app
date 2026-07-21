@@ -45,7 +45,10 @@ export default function App() {
   if (error) {
     return (
       <div style={{ padding: 40, color: 'var(--danger)' }}>
-        Failed to reach the API: {error}. Is the server running on port 4000?
+        Something went wrong loading your account: {error}
+        <div style={{ marginTop: 12 }}>
+          <button className="btn" onClick={() => window.location.reload()}>Try again</button>
+        </div>
       </div>
     );
   }

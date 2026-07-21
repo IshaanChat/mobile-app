@@ -1,4 +1,4 @@
-import { ReactNode, useEffect } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import {
   ClerkProvider,
   SignedIn,
@@ -17,15 +17,22 @@ const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as string | u
 export const CLERK_ENABLED = Boolean(PUBLISHABLE_KEY);
 
 // Feeds Clerk's session token into the API client, and clears it on sign-out.
+//
+// Children are held back until the token getter is actually installed. React
+// runs a child's effects before its parent's, so without this gate `App`
+// would fire its first API calls a beat before the token was attached — and
+// those requests would 401.
 function TokenBridge({ children }: { children: ReactNode }) {
   const { getToken, isLoaded } = useAuth();
+  const [tokenReady, setTokenReady] = useState(false);
 
   useEffect(() => {
     setAuthTokenGetter(() => getToken());
+    setTokenReady(true);
     return () => setAuthTokenGetter(null);
   }, [getToken]);
 
-  if (!isLoaded) {
+  if (!isLoaded || !tokenReady) {
     return <div style={{ padding: 40, color: 'var(--text-dim)' }}>Loading…</div>;
   }
   return <>{children}</>;
