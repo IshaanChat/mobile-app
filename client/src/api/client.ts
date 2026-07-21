@@ -17,13 +17,30 @@ export class ApiError extends Error {
   }
 }
 
+// When Clerk is active, the app installs a getter here so every request
+// carries the caller's session token. In local dev it stays null and the
+// server treats the request as the development account.
+type TokenGetter = () => Promise<string | null>;
+let authTokenGetter: TokenGetter | null = null;
+export function setAuthTokenGetter(fn: TokenGetter | null) {
+  authTokenGetter = fn;
+}
+
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+  if (authTokenGetter) {
+    try {
+      const token = await authTokenGetter();
+      if (token) headers.Authorization = `Bearer ${token}`;
+    } catch {
+      // Token fetch failed (expired/offline); let the request 401 naturally.
+    }
+  }
+
   let res: Response;
   try {
-    res = await fetch(`${BASE}${path}`, {
-      headers: { 'Content-Type': 'application/json' },
-      ...options,
-    });
+    // headers after options so ours (incl. Authorization) always win.
+    res = await fetch(`${BASE}${path}`, { ...options, headers });
   } catch {
     // Network-level failure: server down, connection refused, offline.
     throw new ApiError("Can't reach the server. Is it running?", 0, null);

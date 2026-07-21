@@ -10,6 +10,7 @@ import MissionsPage from './MissionsPage';
 import SalesTab, { SalesSubTab } from './SalesTab';
 import ClientsTab from './ClientsTab';
 import AddContactModal from './AddContactModal';
+import { AccountButton, CLERK_ENABLED } from '../auth';
 
 type Tab = 'home' | 'people' | 'sales' | 'discover' | 'business';
 
@@ -171,6 +172,11 @@ export default function Dashboard({
                 </>
               )}
             </div>
+            {CLERK_ENABLED && (
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <AccountButton />
+              </div>
+            )}
           </div>
         </div>
 
