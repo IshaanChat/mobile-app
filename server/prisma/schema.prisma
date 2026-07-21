@@ -1,18 +1,22 @@
-// Sales Mechanic — MVP data model
-// SQLite via Prisma. Kept intentionally simple: one Business per app instance
-// for the prototype (multi-tenant/auth is out of scope for the MVP).
+// Sales Mechanic — data model
+// PostgreSQL via Prisma (Neon in dev and production).
 //
-// Note: SQLite has no native enum type, so "enum-like" fields (ChannelType,
-// ContactStatus, InteractionType) are plain Strings validated in the API
-// routes. See server/src/routes/*.ts for the allowed values.
+// Note: "enum-like" fields (channel type, contact status, interaction type,
+// business type…) are plain Strings validated in the API routes rather than
+// native enums — a constraint inherited from the SQLite prototype that is
+// worth keeping, since changing an allowed value no longer needs a migration.
+// See server/src/routes/*.ts for the allowed values.
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider = "postgresql"
+  // Use Neon's DIRECT (non-pooled) connection string. Prisma keeps its own
+  // connection pool, and Prisma Migrate cannot run through Neon's pooler,
+  // so a single direct URL is both sufficient and simpler at this scale.
+  url = env("DATABASE_URL")
 }
 
 model Business {

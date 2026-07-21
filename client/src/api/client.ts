@@ -1,6 +1,11 @@
 import type { Business, Channel, Contact, ContactDetail, ContactStatus, ChannelType, GraphPayload, InteractionType, FeedInteraction, DetectedChannel, NoLinkKind, DiscoverResult, DiscoverStatus, AppSettings, LlmTestResult, UserProfile, Gender, ExperienceLevel, MissionsPayload, SocialLink, SocialPlatform, Payment, PaymentsPayload, Product, ProductsPayload } from '../types';
 
-const BASE = '/api';
+// In dev, Vite proxies /api to localhost:4000 (see vite.config.ts).
+// In production the client is on Vercel and the API on Render, so the full
+// origin is injected at build time via VITE_API_URL.
+const BASE = import.meta.env.VITE_API_URL
+  ? `${String(import.meta.env.VITE_API_URL).replace(/\/+$/, '')}/api`
+  : '/api';
 
 // Carries the HTTP status and response body so callers can recover from
 // specific failures (e.g. a 409 that already contains the existing record)

@@ -33,7 +33,11 @@ process.on('uncaughtException', (err) => {
 const app = express();
 const port = process.env.PORT ? Number(process.env.PORT) : 4000;
 
-app.use(cors());
+// In production, only the deployed client may call the API. Locally (no
+// CLIENT_ORIGIN set) allow anything, so the Vite dev server and the smoke
+// test both work without configuration.
+const clientOrigin = process.env.CLIENT_ORIGIN;
+app.use(cors(clientOrigin ? { origin: clientOrigin.split(',').map((o) => o.trim()) } : {}));
 app.use(express.json());
 
 app.use('/api/business', businessRouter);

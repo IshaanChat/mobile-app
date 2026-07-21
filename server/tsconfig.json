@@ -12,5 +12,8 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true
   },
-  "include": ["src"]
+  "include": ["src"],
+  // Tests are run by vitest directly from source; keep them out of the
+  // production build.
+  "exclude": ["src/**/*.test.ts"]
 }

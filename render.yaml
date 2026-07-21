@@ -1,0 +1,28 @@
+# Render blueprint for the Sales Mechanic API.
+#
+# The database is NOT defined here — it lives on Neon, so it survives
+# anything that happens to this service and never expires the way Render's
+# own free Postgres does.
+#
+# After connecting the repo in the Render dashboard, set these env vars
+# (marked sync:false below, so they are never stored in git):
+#   DATABASE_URL   Neon DIRECT connection string (pooling off)
+#   CLIENT_ORIGIN  the Vercel URL, for CORS
+#
+services:
+  - type: web
+    name: sales-mechanic-api
+    runtime: node
+    plan: free
+    rootDir: server
+    buildCommand: npm ci && npx prisma generate && npm run build
+    # Migrations run on boot so a deploy always matches the schema.
+    startCommand: npx prisma migrate deploy && npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: DATABASE_URL
+        sync: false
+      - key: CLIENT_ORIGIN
+        sync: false
