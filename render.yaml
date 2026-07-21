@@ -20,7 +20,10 @@ services:
     # out of startCommand means a database problem shows up as a failed
     # pre-deploy with a clear error, rather than a web service that builds
     # fine and then silently never listens.
-    preDeployCommand: npx prisma migrate deploy
+    # check-env validates DATABASE_URL first and prints a safe fingerprint,
+    # so a bad value is obvious in the log rather than surfacing later as an
+    # opaque Prisma schema error.
+    preDeployCommand: npm run check-env && npx prisma migrate deploy
     startCommand: npm start
     healthCheckPath: /api/health
     envVars:
