@@ -1,0 +1,372 @@
+/* Sales Mechanic — warm, encouraging, built for first-time founders.
+   Light theme is the default; dark is a cozy warm charcoal, not techy navy. */
+
+/* Light — "the artisan": blush cream, dusty rose, honey and sage.
+   For the store owner whose brand is beautiful, personal, handmade. */
+:root,
+:root[data-theme='light'] {
+  color-scheme: light;
+  --bg: #fbf4f0;
+  --panel: #ffffff;
+  --panel-border: #eedbd4;
+  --input-bg: #f8ede8;
+  --text: #34262b;
+  --text-dim: #98818a;
+  --accent: #c2647e;
+  --accent-soft: rgba(194, 100, 126, 0.1);
+  --prospect: #a3919a;
+  --engaged: #cf8f2e;
+  --customer: #5f9b7a;
+  --danger: #cc4f4f;
+  --shadow: 0 2px 12px rgba(90, 50, 60, 0.07);
+}
+
+/* Dark — "the grind": near-black, gold, electric blue, sharp green.
+   For the operator who treats their business like a scoreboard. */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #0b0c0f;
+  --panel: #14161b;
+  --panel-border: #262a33;
+  --input-bg: #0b0c0f;
+  --text: #edeef2;
+  --text-dim: #8b92a0;
+  --accent: #e3a82b;
+  --accent-soft: rgba(227, 168, 43, 0.12);
+  --prospect: #79808f;
+  --engaged: #5b9cf0;
+  --customer: #34c477;
+  --danger: #e5484d;
+  --shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  letter-spacing: -0.02em;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+input, textarea, select {
+  font-family: inherit;
+  font-size: 14px;
+  background: var(--input-bg);
+  color: var(--text);
+  border: 1px solid var(--panel-border);
+  border-radius: 10px;
+  padding: 9px 12px;
+  transition: border-color 0.15s;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.btn {
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 999px;
+  padding: 9px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: transform 0.1s, opacity 0.15s;
+}
+
+.btn:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  transform: none;
+  cursor: default;
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 1px solid var(--panel-border);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-size: 14px;
+  transition: border-color 0.15s;
+}
+
+.btn-secondary:hover {
+  border-color: var(--accent);
+}
+
+.btn-danger {
+  background: var(--danger);
+  color: white;
+  border: none;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 14px;
+}
+
+.field label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-dim);
+}
+
+/* Status journey cards in the add-contact flow */
+.status-card {
+  flex: 1;
+  background: var(--input-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  padding: 12px 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.15s, transform 0.1s, background 0.15s;
+}
+
+.status-card:hover {
+  transform: translateY(-1px);
+}
+
+.status-card.selected {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+/* Score delta pop after logging an interaction */
+@keyframes score-pop {
+  0% { opacity: 0; transform: translateY(6px) scale(0.8); }
+  20% { opacity: 1; transform: translateY(0) scale(1.15); }
+  40% { transform: scale(1); }
+  80% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-8px); }
+}
+
+.score-delta {
+  display: inline-block;
+  margin-left: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--customer);
+  animation: score-pop 2s ease-out forwards;
+}
+
+/* Celebration banner when someone becomes a customer */
+@keyframes celebrate-in {
+  0% { opacity: 0; transform: translateY(-10px); }
+  10% { opacity: 1; transform: translateY(0); }
+  85% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.celebrate-banner {
+  background: linear-gradient(90deg, rgba(63, 146, 104, 0.12), var(--accent-soft));
+  border: 1px solid var(--customer);
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  animation: celebrate-in 4s ease forwards;
+}
+
+/* Detected channel / status badges */
+.channel-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.chip {
+  background: var(--input-bg);
+  border: 1px solid var(--panel-border);
+  color: var(--text-dim);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+
+.chip:hover {
+  border-color: var(--accent);
+}
+
+.chip.selected {
+  border-color: var(--accent);
+  color: var(--text);
+  background: var(--accent-soft);
+  font-weight: 600;
+}
+
+/* Needs-attention rows on the Today tab */
+.attention-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 16px;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: border-color 0.15s, transform 0.1s;
+}
+
+.attention-row:hover {
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
+/* XP progress bars */
+.xp-track {
+  background: var(--input-bg);
+  border-radius: 999px;
+  height: 10px;
+  overflow: hidden;
+}
+
+.xp-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent), var(--customer));
+  transition: width 0.6s ease;
+}
+
+/* Mission-complete toast */
+@keyframes toast-in {
+  0% { opacity: 0; transform: translateY(16px); }
+  8% { opacity: 1; transform: translateY(0); }
+  90% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(8px); }
+}
+
+.mission-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 200;
+  background: var(--panel);
+  border: 1px solid var(--customer);
+  border-radius: 12px;
+  padding: 14px 18px;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: var(--shadow), 0 8px 24px rgba(0, 0, 0, 0.15);
+  animation: toast-in 5s ease forwards;
+  max-width: 320px;
+}
+
+/* Brand mark in the header */
+.brand-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  background: var(--accent);
+  font-size: 12px;
+}
+
+/* Panels/cards get a soft lift */
+section, aside {
+  box-shadow: none;
+}
+
+/* Missions sidebar */
+.missions-rail {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 46px;
+  background: var(--panel);
+  border-left: 1px solid var(--panel-border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 0;
+  cursor: pointer;
+  z-index: 40;
+}
+
+.missions-rail:hover {
+  background: var(--accent-soft);
+}
+
+.missions-rail .rail-label {
+  writing-mode: vertical-rl;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.missions-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 360px;
+  max-width: 90vw;
+  background: var(--panel);
+  border-left: 1px solid var(--panel-border);
+  box-shadow: -12px 0 32px rgba(0, 0, 0, 0.12);
+  z-index: 45;
+  overflow-y: auto;
+  transform: translateX(100%);
+  transition: transform 0.22s ease;
+}
+
+.missions-panel.open {
+  transform: translateX(0);
+}

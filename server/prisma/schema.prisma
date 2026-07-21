@@ -1,0 +1,208 @@
+// Sales Mechanic — MVP data model
+// SQLite via Prisma. Kept intentionally simple: one Business per app instance
+// for the prototype (multi-tenant/auth is out of scope for the MVP).
+//
+// Note: SQLite has no native enum type, so "enum-like" fields (ChannelType,
+// ContactStatus, InteractionType) are plain Strings validated in the API
+// routes. See server/src/routes/*.ts for the allowed values.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Business {
+  id          String   @id @default(cuid())
+  name        String
+  niche       String
+  description String
+  // Discover targeting: who they're looking for, in their own words.
+  idealCustomer String?
+  // Comma-separated interest/niche keywords used for recommendations.
+  audienceKeywords String?
+  // Comma-separated sales avenues: ETSY, SHOPIFY, DEPOP, AMAZON, EBAY,
+  // INSTAGRAM_SHOP, OWN_WEBSITE, IN_PERSON, OTHER
+  salesAvenues String?
+  // One of: PRODUCT_SALES, SERVICE, KNOWLEDGE, OTHER. Tunes scoring and
+  // Discover for how this kind of business actually sells.
+  businessType String?
+  // The business's public page — shop, website, linktree, booking page.
+  pageUrl String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  channels Channel[]
+  contacts Contact[]
+  socials  SocialLink[]
+  payments Payment[]
+  products Product[]
+}
+
+model Channel {
+  id String @id @default(cuid())
+  // One of: ETSY, INSTAGRAM, REDDIT, REFERRAL, OTHER
+  type String
+  // Display label — required for OTHER (e.g. "Craft Fair"), optional override otherwise.
+  label String?
+  // First URL this channel was detected from (e.g. the Etsy shop link).
+  url String?
+  createdAt DateTime @default(now())
+
+  businessId String
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  contacts Contact[]
+}
+
+model Contact {
+  id     String  @id @default(cuid())
+  name   String
+  notes  String?
+  // The profile/shop/post URL where this person was found, if any.
+  sourceUrl String?
+  // One of: PROSPECT, ENGAGED, CUSTOMER
+  status String @default("PROSPECT")
+
+  // Derived scores, recalculated whenever an interaction is logged.
+  // Both range 0-100.
+  relationshipStrength Float @default(0) // recency + frequency + value -> drives node size
+  engagementScore      Float @default(0) // recency + frequency only -> drives edge thickness
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  businessId String
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  channelId String
+  channel   Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+
+  interactions Interaction[]
+  payments     Payment[]
+}
+
+// App-wide key-value settings (e.g. self-hosted LLM connection).
+// Editable from the UI so users never have to touch .env.
+model AppSetting {
+  key   String @id
+  value String
+}
+
+// The person running the businesses. Single-user app: one row.
+model UserProfile {
+  id    String @id @default(cuid())
+  // Required at onboarding
+  name  String
+  email String
+  age   Int
+  // One of: WOMAN, MAN, NON_BINARY, OTHER, PREFER_NOT_TO_SAY
+  gender String
+  // Optional — addable later from My Business
+  location        String?
+  phone           String?
+  bio             String?
+  // One of: FIRST_TIME, SOME_EXPERIENCE, EXPERIENCED
+  experienceLevel String?
+  goals           String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// A business's presence on a social platform.
+// One of: TWITTER, INSTAGRAM, TIKTOK, YOUTUBE, REDDIT, FACEBOOK, PINTEREST
+model SocialLink {
+  id       String @id @default(cuid())
+  platform String
+  url      String
+
+  businessId String
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@unique([businessId, platform])
+}
+
+// One row per completed mission per period. businessId is "global" for
+// missions that aren't tied to a specific business (e.g. profile missions).
+// periodKey: "once" for one-time missions; "2026-07-20" daily; "2026-W30"
+// weekly; "2026-07" monthly — repeatable missions reappear each period.
+model MissionCompletion {
+  id          String   @id @default(cuid())
+  missionId   String
+  businessId  String
+  periodKey   String   @default("once")
+  xpAwarded   Int
+  completedAt DateTime @default(now())
+
+  @@unique([missionId, businessId, periodKey])
+}
+
+// Product analytics: one row per meaningful app action. Local-first —
+// this data never leaves the user's own database.
+model AppEvent {
+  id         String   @id @default(cuid())
+  type       String
+  businessId String?
+  // JSON string with event-specific details.
+  payload    String?
+  createdAt  DateTime @default(now())
+
+  @@index([businessId, type])
+}
+
+// A product or offering the business sells. stock = null means "not
+// tracked" (services, digital goods, made-to-order).
+model Product {
+  id          String  @id @default(cuid())
+  name        String
+  description String?
+  price       Float?
+  stock       Int?
+  sku         String?
+  // Link to the live listing (Etsy page, Shopify product, booking page…)
+  url String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  businessId String
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  payments Payment[]
+}
+
+// A payment received — the finances page is intentionally light for now.
+model Payment {
+  id         String   @id @default(cuid())
+  amount     Float
+  note       String?
+  quantity   Int      @default(1)
+  occurredAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+
+  businessId String
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  contactId String?
+  contact   Contact? @relation(fields: [contactId], references: [id], onDelete: SetNull)
+
+  productId String?
+  product   Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+}
+
+model Interaction {
+  id String @id @default(cuid())
+  // One of: MESSAGE, MEETING, PURCHASE, REVIEW, OTHER
+  type String
+  note String?
+  // Subjective impact/value of this interaction, 1 (light touch) - 5 (major, e.g. a sale).
+  weight Int @default(1)
+
+  occurredAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+
+  contactId String
+  contact   Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
+}
