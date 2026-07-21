@@ -19,6 +19,7 @@ import { paymentsRouter } from './routes/payments';
 import { analyticsRouter, registerAnalytics } from './modules/analytics';
 import { productsRouter } from './routes/products';
 import { errorHandler, notFoundHandler } from './core/http';
+import { requireAuth, clerkConfigured } from './core/auth';
 
 // Belt and braces: every async route is wrapped in ah() so rejections reach
 // the error middleware, but if one ever slips through, log instead of letting
@@ -40,6 +41,13 @@ const clientOrigin = process.env.CLIENT_ORIGIN;
 app.use(cors(clientOrigin ? { origin: clientOrigin.split(',').map((o) => o.trim()) } : {}));
 app.use(express.json());
 
+// Health is public; everything else requires an authenticated caller.
+app.get('/api/health', (_req, res) =>
+  res.json({ ok: true, auth: clerkConfigured() ? 'clerk' : 'dev' })
+);
+
+app.use('/api', requireAuth);
+
 app.use('/api/business', businessRouter);
 app.use('/api/channels', channelsRouter);
 app.use('/api/contacts', contactsRouter);
@@ -56,8 +64,6 @@ app.use('/api/products', productsRouter);
 
 // Subscribe cross-cutting modules to the event bus.
 registerAnalytics();
-
-app.get('/api/health', (_req, res) => res.json({ ok: true }));
 
 // Must come after all routes: unmatched /api paths return JSON, and any
 // error thrown or rejected in a handler becomes a clean HTTP response.

@@ -4,6 +4,7 @@ import { prisma } from '../prisma';
 import { computeScores } from '../scoring';
 import { detectChannel, normalizeUrl } from '../channelDetect';
 import { emitEvent } from '../core/events';
+import { assertOwnsBusiness } from '../core/auth';
 
 export const contactsRouter = Router();
 
@@ -17,10 +18,8 @@ const NO_LINK_KINDS: Record<string, { type: string; label: string }> = {
 };
 
 contactsRouter.get('/', ah(async (req, res) => {
-  const { businessId, channelId } = req.query;
-  if (!businessId || typeof businessId !== 'string') {
-    return res.status(400).json({ error: 'businessId query param is required' });
-  }
+  const { channelId } = req.query;
+  const businessId = await assertOwnsBusiness(req.userId, req.query.businessId);
   const contacts = await prisma.contact.findMany({
     where: {
       businessId,
@@ -32,8 +31,8 @@ contactsRouter.get('/', ah(async (req, res) => {
 }));
 
 contactsRouter.get('/:id', ah(async (req, res) => {
-  const contact = await prisma.contact.findUnique({
-    where: { id: req.params.id },
+  const contact = await prisma.contact.findFirst({
+    where: { id: req.params.id, business: { userId: req.userId } },
     include: {
       interactions: { orderBy: { occurredAt: 'desc' } },
       channel: true,
@@ -60,10 +59,9 @@ contactsRouter.get('/detect-channel/preview', ah(async (req, res) => {
 // If firstNote is provided, it is logged as the contact's first interaction
 // so the relationship starts with a heartbeat instead of a zero score.
 contactsRouter.post('/', ah(async (req, res) => {
-  const { businessId, name, status, sourceUrl, noLinkKind, channelId, firstNote } = req.body ?? {};
-  if (!businessId || !name) {
-    return res.status(400).json({ error: 'businessId and name are required' });
-  }
+  const { name, status, sourceUrl, noLinkKind, channelId, firstNote } = req.body ?? {};
+  if (!name) return res.status(400).json({ error: 'name is required' });
+  const businessId = await assertOwnsBusiness(req.userId, req.body?.businessId);
   if (status && !VALID_STATUSES.includes(status)) {
     return res.status(400).json({ error: `status must be one of ${VALID_STATUSES.join(', ')}` });
   }
@@ -144,7 +142,12 @@ contactsRouter.patch('/:id', ah(async (req, res) => {
   if (status && !VALID_STATUSES.includes(status)) {
     return res.status(400).json({ error: `status must be one of ${VALID_STATUSES.join(', ')}` });
   }
-  const before = status ? await prisma.contact.findUnique({ where: { id: req.params.id }, select: { status: true } }) : null;
+  const owned = await prisma.contact.findFirst({
+    where: { id: req.params.id, business: { userId: req.userId } },
+    select: { status: true },
+  });
+  if (!owned) return res.status(404).json({ error: 'Contact not found' });
+  const before = status ? owned : null;
   const contact = await prisma.contact.update({
     where: { id: req.params.id },
     data: { name, notes, status },
@@ -159,6 +162,11 @@ contactsRouter.patch('/:id', ah(async (req, res) => {
 }));
 
 contactsRouter.delete('/:id', ah(async (req, res) => {
+  const owned = await prisma.contact.findFirst({
+    where: { id: req.params.id, business: { userId: req.userId } },
+    select: { id: true },
+  });
+  if (!owned) return res.status(404).json({ error: 'Contact not found' });
   await prisma.contact.delete({ where: { id: req.params.id } });
   res.status(204).end();
 }));
@@ -175,8 +183,8 @@ contactsRouter.post('/:id/interactions', ah(async (req, res) => {
   }
 
   const contactId = req.params.id;
-  const contact = await prisma.contact.findUnique({
-    where: { id: contactId },
+  const contact = await prisma.contact.findFirst({
+    where: { id: contactId, business: { userId: req.userId } },
     include: { business: { select: { businessType: true } } },
   });
   if (!contact) return res.status(404).json({ error: 'Contact not found' });

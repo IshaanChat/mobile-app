@@ -17,10 +17,12 @@ let passed = 0;
 let failed = 0;
 const failures = [];
 
-async function api(method, path, body) {
+// `as` selects which dev-mode account makes the call, so isolation can be
+// tested without an auth provider. Ignored when Clerk is configured.
+async function api(method, path, body, as = 'smoke-a') {
   const res = await fetch(`${BASE}${path}`, {
     method,
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', 'x-dev-user': as },
     body: body === undefined ? undefined : JSON.stringify(body),
   });
   const text = await res.text();
@@ -261,6 +263,91 @@ const run = async () => {
   await check('validation rejects a bad payload', async () => {
     const { status } = await api('POST', '/contacts', { businessId, name: '' });
     assert(status === 400, `expected 400, got ${status}`);
+  });
+
+  // --- tenant isolation ---------------------------------------------------
+  // Everything below runs as a DIFFERENT account (smoke-b) against the data
+  // created by smoke-a. Every one must be refused.
+  const asB = (m, p, b) => api(m, p, b, 'smoke-b');
+
+  await check("another account cannot list the first account's businesses", async () => {
+    const { body } = await asB('GET', '/business');
+    assert(!body.some((b) => b.id === businessId), 'business leaked across accounts');
+  });
+
+  await check("another account cannot read the business's clients", async () => {
+    const { status } = await asB('GET', `/contacts?businessId=${businessId}`);
+    assert(status === 404, `expected 404, got ${status}`);
+  });
+
+  await check('another account cannot read a client by id', async () => {
+    const { status } = await asB('GET', `/contacts/${contactId}`);
+    assert(status === 404, `expected 404, got ${status}`);
+  });
+
+  await check('another account cannot edit a client', async () => {
+    const { status } = await asB('PATCH', `/contacts/${contactId}`, { name: 'hijacked' });
+    assert(status === 404, `expected 404, got ${status}`);
+  });
+
+  await check('another account cannot delete a client', async () => {
+    const { status } = await asB('DELETE', `/contacts/${contactId}`);
+    assert(status === 404, `expected 404, got ${status}`);
+  });
+
+  await check('another account cannot log an interaction on a client', async () => {
+    const { status } = await asB('POST', `/contacts/${contactId}/interactions`, { type: 'MESSAGE' });
+    assert(status === 404, `expected 404, got ${status}`);
+  });
+
+  await check('another account cannot read products or payments', async () => {
+    const products = await asB('GET', `/products?businessId=${businessId}`);
+    const payments = await asB('GET', `/payments?businessId=${businessId}`);
+    assert(products.status === 404, `products: expected 404, got ${products.status}`);
+    assert(payments.status === 404, `payments: expected 404, got ${payments.status}`);
+  });
+
+  await check('another account cannot delete a product', async () => {
+    const { status } = await asB('DELETE', `/products/${productId}`);
+    assert(status === 404, `expected 404, got ${status}`);
+  });
+
+  await check('another account cannot write a payment against the business', async () => {
+    const { status } = await asB('POST', '/payments', { businessId, amount: 1 });
+    assert(status === 404, `expected 404, got ${status}`);
+  });
+
+  await check('another account cannot edit the business', async () => {
+    const { status } = await asB('PATCH', `/business/${businessId}`, { name: 'hijacked' });
+    assert(status === 404, `expected 404, got ${status}`);
+  });
+
+  await check('another account cannot delete the business', async () => {
+    const { status } = await asB('DELETE', `/business/${businessId}`);
+    assert(status === 404, `expected 404, got ${status}`);
+  });
+
+  await check("another account cannot read the business's missions or discover", async () => {
+    const missions = await asB('GET', `/missions?businessId=${businessId}`);
+    const discover = await asB('GET', `/discover?businessId=${businessId}`);
+    assert(missions.status === 404, `missions: expected 404, got ${missions.status}`);
+    assert(discover.status === 404, `discover: expected 404, got ${discover.status}`);
+  });
+
+  await check("another account cannot see the first account's analytics", async () => {
+    const { body } = await asB('GET', '/analytics');
+    assert(body.total === 0 || !body.byType['payment.recorded'], 'analytics leaked across accounts');
+  });
+
+  await check('each account sees its own profile, not the other one', async () => {
+    const a = await api('GET', '/profile');
+    const b = await asB('GET', '/profile');
+    if (a.body && b.body) assert(a.body.id !== b.body.id, 'profile shared across accounts');
+  });
+
+  await check('the owner can still do everything', async () => {
+    const { status, body } = await api('GET', `/contacts/${contactId}`);
+    assert(status === 200 && body.id === contactId, `owner locked out: ${status}`);
   });
 
   // --- cleanup ------------------------------------------------------------

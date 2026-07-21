@@ -29,8 +29,17 @@ export const analyticsRouter = Router();
 
 // Event counts by type + recent stream, for future insight surfaces.
 analyticsRouter.get('/', ah(async (req, res) => {
+  // Only events for businesses this account owns.
+  const owned = await prisma.business.findMany({
+    where: { userId: req.userId },
+    select: { id: true },
+  });
+  const ownedIds = owned.map((b) => b.id);
   const { businessId } = req.query;
-  const where = typeof businessId === 'string' && businessId ? { businessId } : {};
+  const where =
+    typeof businessId === 'string' && businessId
+      ? { businessId: ownedIds.includes(businessId) ? businessId : '__none__' }
+      : { businessId: { in: ownedIds } };
 
   const [total, recent, all] = await Promise.all([
     prisma.appEvent.count({ where }),

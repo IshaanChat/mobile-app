@@ -1,16 +1,14 @@
 import { Router } from 'express';
 import { ah } from '../core/http';
 import { prisma } from '../prisma';
+import { assertOwnsBusiness } from '../core/auth';
 
 export const channelsRouter = Router();
 
 const VALID_TYPES = ['ETSY', 'INSTAGRAM', 'REDDIT', 'REFERRAL', 'OTHER'];
 
 channelsRouter.get('/', ah(async (req, res) => {
-  const { businessId } = req.query;
-  if (!businessId || typeof businessId !== 'string') {
-    return res.status(400).json({ error: 'businessId query param is required' });
-  }
+  const businessId = await assertOwnsBusiness(req.userId, req.query.businessId);
   const channels = await prisma.channel.findMany({
     where: { businessId },
     include: { _count: { select: { contacts: true } } },
@@ -20,10 +18,11 @@ channelsRouter.get('/', ah(async (req, res) => {
 }));
 
 channelsRouter.post('/', ah(async (req, res) => {
-  const { businessId, type, label } = req.body ?? {};
-  if (!businessId || !type || !VALID_TYPES.includes(type)) {
-    return res.status(400).json({ error: `businessId and a valid type (${VALID_TYPES.join(', ')}) are required` });
+  const { businessId: rawId, type, label } = req.body ?? {};
+  if (!type || !VALID_TYPES.includes(type)) {
+    return res.status(400).json({ error: `a valid type (${VALID_TYPES.join(', ')}) is required` });
   }
+  const businessId = await assertOwnsBusiness(req.userId, rawId);
   if (type === 'OTHER' && !label) {
     return res.status(400).json({ error: 'label is required for OTHER channels' });
   }
@@ -35,6 +34,11 @@ channelsRouter.post('/', ah(async (req, res) => {
 }));
 
 channelsRouter.delete('/:id', ah(async (req, res) => {
+  const channel = await prisma.channel.findFirst({
+    where: { id: req.params.id, business: { userId: req.userId } },
+    select: { id: true },
+  });
+  if (!channel) return res.status(404).json({ error: 'Channel not found' });
   await prisma.channel.delete({ where: { id: req.params.id } });
   res.status(204).end();
 }));

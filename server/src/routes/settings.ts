@@ -8,8 +8,10 @@ export const settingsRouter = Router();
 const LLM_KEYS = ['llmBaseUrl', 'llmModel', 'llmApiKey'] as const;
 
 // The API key is write-only: the client only learns whether one is set.
-settingsRouter.get('/', ah(async (_req, res) => {
-  const rows = await prisma.appSetting.findMany({ where: { key: { in: [...LLM_KEYS] } } });
+settingsRouter.get('/', ah(async (req, res) => {
+  const rows = await prisma.appSetting.findMany({
+    where: { userId: req.userId, key: { in: [...LLM_KEYS] } },
+  });
   const stored = Object.fromEntries(rows.map((r) => [r.key, r.value]));
   res.json({
     llmBaseUrl: stored.llmBaseUrl || process.env.LLM_BASE_URL || null,
@@ -26,21 +28,21 @@ settingsRouter.put('/', ah(async (req, res) => {
     if (value === undefined) continue;
     if (typeof value !== 'string') return res.status(400).json({ error: `${key} must be a string` });
     if (value.trim() === '') {
-      await prisma.appSetting.deleteMany({ where: { key } });
+      await prisma.appSetting.deleteMany({ where: { userId: req.userId, key } });
     } else {
       await prisma.appSetting.upsert({
-        where: { key },
+        where: { userId_key: { userId: req.userId, key } },
         update: { value: value.trim() },
-        create: { key, value: value.trim() },
+        create: { userId: req.userId, key, value: value.trim() },
       });
     }
   }
   res.json({ ok: true });
 }));
 
-// Try a tiny completion against the currently saved config.
-settingsRouter.post('/test-llm', ah(async (_req, res) => {
-  const config = await getLlmConfig();
+// Try a tiny completion against the caller's saved config.
+settingsRouter.post('/test-llm', ah(async (req, res) => {
+  const config = await getLlmConfig(req.userId);
   if (!config) {
     return res.json({ ok: false, error: 'No model configured — set a base URL and model name first.' });
   }

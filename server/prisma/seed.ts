@@ -22,6 +22,8 @@ const daysAgo = (n: number, hour = 12) => {
   return d;
 };
 
+const DEMO_EXTERNAL_ID = 'dev:dev';
+
 async function reset() {
   // Order matters only where onDelete isn't cascading.
   await prisma.appEvent.deleteMany();
@@ -34,6 +36,8 @@ async function reset() {
   await prisma.socialLink.deleteMany();
   await prisma.business.deleteMany();
   await prisma.userProfile.deleteMany();
+  await prisma.appSetting.deleteMany();
+  await prisma.user.deleteMany();
   console.log('  wiped existing data');
 }
 
@@ -42,11 +46,21 @@ async function main() {
   console.log('\nSeeding demo data…');
   if (shouldReset) await reset();
 
+  // --- the account --------------------------------------------------------
+  // Matches the default identity used by dev-mode auth, so the seeded data
+  // belongs to whoever opens the app locally.
+  const user = await prisma.user.upsert({
+    where: { externalId: DEMO_EXTERNAL_ID },
+    update: {},
+    create: { externalId: DEMO_EXTERNAL_ID, email: 'maya@wildflowerceramics.example' },
+  });
+
   // --- the person ---------------------------------------------------------
-  const existingProfile = await prisma.userProfile.findFirst();
+  const existingProfile = await prisma.userProfile.findUnique({ where: { userId: user.id } });
   if (!existingProfile) {
     await prisma.userProfile.create({
       data: {
+        userId: user.id,
         name: 'Maya Okonkwo',
         email: 'maya@wildflowerceramics.example',
         age: 31,
@@ -65,6 +79,7 @@ async function main() {
   // --- the business -------------------------------------------------------
   const business = await prisma.business.create({
     data: {
+      userId: user.id,
       name: 'Wildflower Ceramics',
       niche: 'Handmade stoneware mugs & bowls',
       description:

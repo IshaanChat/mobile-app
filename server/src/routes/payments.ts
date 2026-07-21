@@ -1,16 +1,14 @@
 import { Router } from 'express';
 import { ah } from '../core/http';
 import { prisma } from '../prisma';
+import { assertOwnsBusiness } from '../core/auth';
 import { emitEvent } from '../core/events';
 
 export const paymentsRouter = Router();
 
 // Payments list + light insights. Intentionally simple for now.
 paymentsRouter.get('/', ah(async (req, res) => {
-  const { businessId } = req.query;
-  if (!businessId || typeof businessId !== 'string') {
-    return res.status(400).json({ error: 'businessId query param is required' });
-  }
+  const businessId = await assertOwnsBusiness(req.userId, req.query.businessId);
 
   const payments = await prisma.payment.findMany({
     where: { businessId },
@@ -50,8 +48,8 @@ paymentsRouter.get('/', ah(async (req, res) => {
 }));
 
 paymentsRouter.post('/', ah(async (req, res) => {
-  const { businessId, amount, note, contactId, occurredAt, productId, quantity } = req.body ?? {};
-  if (!businessId) return res.status(400).json({ error: 'businessId is required' });
+  const { amount, note, contactId, occurredAt, productId, quantity } = req.body ?? {};
+  const businessId = await assertOwnsBusiness(req.userId, req.body?.businessId);
   const parsed = Number(amount);
   if (!Number.isFinite(parsed) || parsed <= 0) {
     return res.status(400).json({ error: 'amount must be a positive number' });
@@ -98,6 +96,11 @@ paymentsRouter.post('/', ah(async (req, res) => {
 }));
 
 paymentsRouter.delete('/:id', ah(async (req, res) => {
+  const owned = await prisma.payment.findFirst({
+    where: { id: req.params.id, business: { userId: req.userId } },
+    select: { id: true },
+  });
+  if (!owned) return res.status(404).json({ error: 'Payment not found' });
   await prisma.payment.delete({ where: { id: req.params.id } });
   res.status(204).end();
 }));

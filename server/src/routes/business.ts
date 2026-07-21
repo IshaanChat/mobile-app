@@ -4,6 +4,9 @@ import { prisma } from '../prisma';
 import { invalidateDiscoverCache } from './discover';
 import { emitEvent } from '../core/events';
 import { normalizeUrl } from '../channelDetect';
+import { assertOwnsBusiness } from '../core/auth';
+
+export const businessRouter = Router();
 
 // pageUrl: empty string clears; anything else must normalize to a valid URL.
 function parsePageUrl(raw: unknown): { value?: string | null; error?: string } {
@@ -14,11 +17,12 @@ function parsePageUrl(raw: unknown): { value?: string | null; error?: string } {
   return { value: normalized };
 }
 
-export const businessRouter = Router();
-
-// All businesses, oldest first (the client picks its active one).
-businessRouter.get('/', ah(async (_req, res) => {
-  const businesses = await prisma.business.findMany({ orderBy: { createdAt: 'asc' } });
+// Only the caller's own businesses, oldest first.
+businessRouter.get('/', ah(async (req, res) => {
+  const businesses = await prisma.business.findMany({
+    where: { userId: req.userId },
+    orderBy: { createdAt: 'asc' },
+  });
   res.json(businesses);
 }));
 
@@ -31,6 +35,7 @@ businessRouter.post('/', ah(async (req, res) => {
   if (page.error) return res.status(400).json({ error: page.error });
   const business = await prisma.business.create({
     data: {
+      userId: req.userId,
       name, niche, description,
       salesAvenues: salesAvenues || null,
       businessType: businessType || null,
@@ -42,33 +47,29 @@ businessRouter.post('/', ah(async (req, res) => {
 }));
 
 businessRouter.patch('/:id', ah(async (req, res) => {
+  await assertOwnsBusiness(req.userId, req.params.id);
+
   const { name, niche, description, idealCustomer, audienceKeywords, salesAvenues, businessType, pageUrl } = req.body ?? {};
   const page = parsePageUrl(pageUrl);
   if (page.error) return res.status(400).json({ error: page.error });
-  try {
-    const business = await prisma.business.update({
-      where: { id: req.params.id },
-      data: {
-        name, niche, description, idealCustomer, audienceKeywords, salesAvenues, businessType,
-        ...(page.value !== undefined ? { pageUrl: page.value } : {}),
-      },
-    });
-    // Targeting changes should immediately produce fresh recommendations.
-    invalidateDiscoverCache(business.id);
-    emitEvent('business.updated', { businessId: business.id });
-    res.json(business);
-  } catch {
-    res.status(404).json({ error: 'Business not found' });
-  }
+
+  const business = await prisma.business.update({
+    where: { id: req.params.id },
+    data: {
+      name, niche, description, idealCustomer, audienceKeywords, salesAvenues, businessType,
+      ...(page.value !== undefined ? { pageUrl: page.value } : {}),
+    },
+  });
+  // Targeting changes should immediately produce fresh recommendations.
+  invalidateDiscoverCache(business.id);
+  emitEvent('business.updated', { businessId: business.id });
+  res.json(business);
 }));
 
 // Deletes the business and everything under it (channels/contacts/interactions cascade).
 businessRouter.delete('/:id', ah(async (req, res) => {
-  try {
-    await prisma.business.delete({ where: { id: req.params.id } });
-  } catch {
-    return res.status(404).json({ error: 'Business not found' });
-  }
+  await assertOwnsBusiness(req.userId, req.params.id);
+  await prisma.business.delete({ where: { id: req.params.id } });
   invalidateDiscoverCache(req.params.id);
   emitEvent('business.deleted', { businessId: req.params.id });
   res.status(204).end();

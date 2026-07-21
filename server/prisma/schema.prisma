@@ -19,6 +19,19 @@ datasource db {
   url = env("DATABASE_URL")
 }
 
+// An account. `externalId` is the id from the auth provider (Clerk); in
+// local dev it is a stable stand-in so the app works without Clerk keys.
+model User {
+  id         String   @id @default(cuid())
+  externalId String   @unique
+  email      String?
+  createdAt  DateTime @default(now())
+
+  businesses Business[]
+  profile    UserProfile?
+  settings   AppSetting[]
+}
+
 model Business {
   id          String   @id @default(cuid())
   name        String
@@ -39,11 +52,16 @@ model Business {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   channels Channel[]
   contacts Contact[]
   socials  SocialLink[]
   payments Payment[]
   products Product[]
+
+  @@index([userId])
 }
 
 model Channel {
@@ -89,14 +107,20 @@ model Contact {
   payments     Payment[]
 }
 
-// App-wide key-value settings (e.g. self-hosted LLM connection).
+// Per-user key-value settings (e.g. self-hosted LLM connection).
 // Editable from the UI so users never have to touch .env.
 model AppSetting {
-  key   String @id
+  id    String @id @default(cuid())
+  key   String
   value String
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, key])
 }
 
-// The person running the businesses. Single-user app: one row.
+// The person running the businesses — one profile per account.
 model UserProfile {
   id    String @id @default(cuid())
   // Required at onboarding
@@ -114,6 +138,9 @@ model UserProfile {
   goals           String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 // A business's presence on a social platform.

@@ -18,8 +18,8 @@ function validateRequired(body: any): string | null {
   return null;
 }
 
-profileRouter.get('/', ah(async (_req, res) => {
-  const profile = await prisma.userProfile.findFirst();
+profileRouter.get('/', ah(async (req, res) => {
+  const profile = await prisma.userProfile.findUnique({ where: { userId: req.userId } });
   res.json(profile);
 }));
 
@@ -28,11 +28,12 @@ profileRouter.post('/', ah(async (req, res) => {
   const invalid = validateRequired(body);
   if (invalid) return res.status(400).json({ error: invalid });
 
-  const existing = await prisma.userProfile.findFirst();
+  const existing = await prisma.userProfile.findUnique({ where: { userId: req.userId } });
   if (existing) return res.status(409).json({ error: 'A profile already exists', profile: existing });
 
   const profile = await prisma.userProfile.create({
     data: {
+      userId: req.userId,
       name: body.name.trim(),
       email: body.email.trim(),
       age: Number(body.age),
@@ -65,6 +66,14 @@ profileRouter.patch('/:id', ah(async (req, res) => {
   if (body.email !== undefined && !/^\S+@\S+\.\S+$/.test(body.email)) {
     return res.status(400).json({ error: 'email must be valid' });
   }
+
+  // Scope by userId as well as id, so one account cannot edit another's
+  // profile by guessing an id.
+  const owned = await prisma.userProfile.findFirst({
+    where: { id: req.params.id, userId: req.userId },
+    select: { id: true },
+  });
+  if (!owned) return res.status(404).json({ error: 'Profile not found' });
 
   const profile = await prisma.userProfile.update({
     where: { id: req.params.id },

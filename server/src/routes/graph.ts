@@ -1,16 +1,14 @@
 import { Router } from 'express';
 import { ah } from '../core/http';
 import { prisma } from '../prisma';
+import { assertOwnsBusiness } from '../core/auth';
 
 export const graphRouter = Router();
 
 // Single payload the frontend needs to render the force graph:
 // business (center) -> channels (middle ring) -> contacts (outer nodes).
 graphRouter.get('/', ah(async (req, res) => {
-  const { businessId } = req.query;
-  if (!businessId || typeof businessId !== 'string') {
-    return res.status(400).json({ error: 'businessId query param is required' });
-  }
+  const businessId = await assertOwnsBusiness(req.userId, req.query.businessId);
 
   const business = await prisma.business.findUnique({ where: { id: businessId } });
   if (!business) return res.status(404).json({ error: 'Business not found' });

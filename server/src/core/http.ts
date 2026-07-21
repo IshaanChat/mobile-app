@@ -30,6 +30,11 @@ export function errorHandler(err: any, _req: Request, res: Response, _next: Next
     return res.status(400).json({ error: 'Request body is not valid JSON' });
   }
 
+  // Errors that already know their HTTP status (ownership checks etc).
+  if (err?.name === 'HttpError' && typeof err.status === 'number') {
+    return res.status(err.status).json({ error: err.message });
+  }
+
   const known = err?.code ? PRISMA_STATUS[err.code] : undefined;
   const status = known?.status ?? 500;
 

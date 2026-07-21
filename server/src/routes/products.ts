@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { ah } from '../core/http';
 import { prisma } from '../prisma';
+import { assertOwnsBusiness } from '../core/auth';
 import { normalizeUrl } from '../channelDetect';
 import { emitEvent } from '../core/events';
 
@@ -9,10 +10,7 @@ export const productsRouter = Router();
 const LOW_STOCK_THRESHOLD = 3;
 
 productsRouter.get('/', ah(async (req, res) => {
-  const { businessId } = req.query;
-  if (!businessId || typeof businessId !== 'string') {
-    return res.status(400).json({ error: 'businessId query param is required' });
-  }
+  const businessId = await assertOwnsBusiness(req.userId, req.query.businessId);
 
   const products = await prisma.product.findMany({
     where: { businessId },
@@ -80,8 +78,9 @@ function parseProductBody(body: any): { data?: any; error?: string } {
 }
 
 productsRouter.post('/', ah(async (req, res) => {
-  const { businessId, name } = req.body ?? {};
-  if (!businessId || !name) return res.status(400).json({ error: 'businessId and name are required' });
+  const { name } = req.body ?? {};
+  if (!name) return res.status(400).json({ error: 'name is required' });
+  const businessId = await assertOwnsBusiness(req.userId, req.body?.businessId);
 
   const parsed = parseProductBody(req.body);
   if (parsed.error) return res.status(400).json({ error: parsed.error });
@@ -96,7 +95,11 @@ productsRouter.patch('/:id', ah(async (req, res) => {
   if (parsed.error) return res.status(400).json({ error: parsed.error });
 
   try {
-    const before = await prisma.product.findUnique({ where: { id: req.params.id }, select: { stock: true, businessId: true } });
+    const before = await prisma.product.findFirst({
+      where: { id: req.params.id, business: { userId: req.userId } },
+      select: { stock: true, businessId: true },
+    });
+    if (!before) return res.status(404).json({ error: 'Product not found' });
     const product = await prisma.product.update({ where: { id: req.params.id }, data: parsed.data });
     emitEvent('product.updated', { businessId: product.businessId, payload: { productId: product.id } });
     if (before && before.stock !== product.stock) {
@@ -113,6 +116,11 @@ productsRouter.patch('/:id', ah(async (req, res) => {
 
 productsRouter.delete('/:id', ah(async (req, res) => {
   try {
+    const owned = await prisma.product.findFirst({
+      where: { id: req.params.id, business: { userId: req.userId } },
+      select: { id: true },
+    });
+    if (!owned) return res.status(404).json({ error: 'Product not found' });
     const product = await prisma.product.delete({ where: { id: req.params.id } });
     emitEvent('product.deleted', { businessId: product.businessId, payload: { productId: product.id } });
   } catch {

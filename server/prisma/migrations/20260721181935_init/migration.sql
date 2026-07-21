@@ -1,4 +1,14 @@
 -- CreateTable
+CREATE TABLE "User" (
+    "id" TEXT NOT NULL,
+    "externalId" TEXT NOT NULL,
+    "email" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Business" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
@@ -11,6 +21,7 @@ CREATE TABLE "Business" (
     "pageUrl" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "userId" TEXT NOT NULL,
 
     CONSTRAINT "Business_pkey" PRIMARY KEY ("id")
 );
@@ -46,10 +57,12 @@ CREATE TABLE "Contact" (
 
 -- CreateTable
 CREATE TABLE "AppSetting" (
+    "id" TEXT NOT NULL,
     "key" TEXT NOT NULL,
     "value" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
 
-    CONSTRAINT "AppSetting_pkey" PRIMARY KEY ("key")
+    CONSTRAINT "AppSetting_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -66,6 +79,7 @@ CREATE TABLE "UserProfile" (
     "goals" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "userId" TEXT NOT NULL,
 
     CONSTRAINT "UserProfile_pkey" PRIMARY KEY ("id")
 );
@@ -148,6 +162,18 @@ CREATE TABLE "Interaction" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "User_externalId_key" ON "User"("externalId");
+
+-- CreateIndex
+CREATE INDEX "Business_userId_idx" ON "Business"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "AppSetting_userId_key_key" ON "AppSetting"("userId", "key");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "UserProfile_userId_key" ON "UserProfile"("userId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "SocialLink_businessId_platform_key" ON "SocialLink"("businessId", "platform");
 
 -- CreateIndex
@@ -157,6 +183,9 @@ CREATE UNIQUE INDEX "MissionCompletion_missionId_businessId_periodKey_key" ON "M
 CREATE INDEX "AppEvent_businessId_type_idx" ON "AppEvent"("businessId", "type");
 
 -- AddForeignKey
+ALTER TABLE "Business" ADD CONSTRAINT "Business_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "Channel" ADD CONSTRAINT "Channel_businessId_fkey" FOREIGN KEY ("businessId") REFERENCES "Business"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -164,6 +193,12 @@ ALTER TABLE "Contact" ADD CONSTRAINT "Contact_businessId_fkey" FOREIGN KEY ("bus
 
 -- AddForeignKey
 ALTER TABLE "Contact" ADD CONSTRAINT "Contact_channelId_fkey" FOREIGN KEY ("channelId") REFERENCES "Channel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "AppSetting" ADD CONSTRAINT "AppSetting_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "UserProfile" ADD CONSTRAINT "UserProfile_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "SocialLink" ADD CONSTRAINT "SocialLink_businessId_fkey" FOREIGN KEY ("businessId") REFERENCES "Business"("id") ON DELETE CASCADE ON UPDATE CASCADE;

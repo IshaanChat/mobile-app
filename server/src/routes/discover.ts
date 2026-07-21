@@ -5,6 +5,7 @@ import { llmRecommendations, getLlmConfig } from '../discover/llm';
 import { builtinRecommendations } from '../discover/builtin';
 import type { DiscoverResult } from '../discover/types';
 import { emitEvent } from '../core/events';
+import { assertOwnsBusiness } from '../core/auth';
 
 export const discoverRouter = Router();
 
@@ -17,10 +18,8 @@ export function invalidateDiscoverCache(businessId: string) {
 }
 
 discoverRouter.get('/', ah(async (req, res) => {
-  const { businessId, refresh } = req.query;
-  if (!businessId || typeof businessId !== 'string') {
-    return res.status(400).json({ error: 'businessId query param is required' });
-  }
+  const { businessId: rawId, refresh } = req.query;
+  const businessId = await assertOwnsBusiness(req.userId, rawId);
 
   if (refresh !== '1') {
     const hit = cache.get(businessId);
@@ -41,7 +40,7 @@ discoverRouter.get('/', ah(async (req, res) => {
     socials: socials.map((s) => ({ platform: s.platform, url: s.url })),
   };
 
-  const fromLlm = await llmRecommendations(context);
+  const fromLlm = await llmRecommendations(req.userId, context);
   const result: DiscoverResult = fromLlm
     ? { source: 'llm', generatedAt: new Date().toISOString(), recommendations: fromLlm }
     : { source: 'builtin', generatedAt: new Date().toISOString(), recommendations: builtinRecommendations(context) };
@@ -55,7 +54,7 @@ discoverRouter.get('/', ah(async (req, res) => {
 }));
 
 // Lets the client show whether the user's own model is wired up.
-discoverRouter.get('/status', ah(async (_req, res) => {
-  const config = await getLlmConfig();
+discoverRouter.get('/status', ah(async (req, res) => {
+  const config = await getLlmConfig(req.userId);
   res.json({ llmConfigured: Boolean(config), model: config?.model ?? null });
 }));

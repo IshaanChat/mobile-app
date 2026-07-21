@@ -20,9 +20,9 @@ export interface LlmConfig {
   apiKey?: string;
 }
 
-export async function getLlmConfig(): Promise<LlmConfig | null> {
+export async function getLlmConfig(userId: string): Promise<LlmConfig | null> {
   const rows = await prisma.appSetting.findMany({
-    where: { key: { in: ['llmBaseUrl', 'llmModel', 'llmApiKey'] } },
+    where: { userId, key: { in: ['llmBaseUrl', 'llmModel', 'llmApiKey'] } },
   });
   const stored = Object.fromEntries(rows.map((r) => [r.key, r.value]));
 
@@ -115,8 +115,8 @@ Rules:
 - No scraping tools, no purchased lead lists, no cold-email vendors.`;
 }
 
-export async function llmRecommendations(biz: BusinessContext): Promise<Recommendation[] | null> {
-  const config = await getLlmConfig();
+export async function llmRecommendations(userId: string, biz: BusinessContext): Promise<Recommendation[] | null> {
+  const config = await getLlmConfig(userId);
   if (!config) return null;
 
   try {

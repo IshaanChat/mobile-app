@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { ah } from '../core/http';
 import { prisma } from '../prisma';
+import { assertOwnsBusiness } from '../core/auth';
 import { normalizeUrl } from '../channelDetect';
 import { emitEvent } from '../core/events';
 
@@ -9,10 +10,7 @@ export const socialsRouter = Router();
 export const SOCIAL_PLATFORMS = ['TWITTER', 'INSTAGRAM', 'TIKTOK', 'YOUTUBE', 'REDDIT', 'FACEBOOK', 'PINTEREST'] as const;
 
 socialsRouter.get('/', ah(async (req, res) => {
-  const { businessId } = req.query;
-  if (!businessId || typeof businessId !== 'string') {
-    return res.status(400).json({ error: 'businessId query param is required' });
-  }
+  const businessId = await assertOwnsBusiness(req.userId, req.query.businessId);
   const socials = await prisma.socialLink.findMany({ where: { businessId } });
   res.json(socials);
 }));
@@ -20,10 +18,9 @@ socialsRouter.get('/', ah(async (req, res) => {
 // (socials.saved event emitted at the end of PUT below)
 // Bulk save: an entry with a url upserts; an entry with empty url removes.
 socialsRouter.put('/', ah(async (req, res) => {
-  const { businessId, links } = req.body ?? {};
-  if (!businessId || !Array.isArray(links)) {
-    return res.status(400).json({ error: 'businessId and links[] are required' });
-  }
+  const { businessId: rawId, links } = req.body ?? {};
+  if (!Array.isArray(links)) return res.status(400).json({ error: 'links[] is required' });
+  const businessId = await assertOwnsBusiness(req.userId, rawId);
 
   for (const link of links) {
     const platform = link?.platform;
