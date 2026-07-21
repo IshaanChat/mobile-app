@@ -24,6 +24,7 @@ client/src/components/<Feature>*.tsx      UI per aspect
 client/src/api/client.ts                  single typed API surface
 client/src/types/index.ts                 shared client types
 
+server/src/core/auth.ts                   identity + ownership checks
 server/src/core/events.ts                 typed pub/sub bus (the seam)
 server/src/modules/analytics/             subscriber: persists AppEvents
 server/src/routes/<feature>.ts            HTTP surface per aspect
@@ -61,6 +62,33 @@ payment.recorded, mission.completed, discover.generated, socials.saved.
 
 All events are persisted locally to the `AppEvent` table by the analytics
 module — inspect via `GET /api/analytics?businessId=`.
+
+## Accounts and data isolation
+
+Every row that matters hangs off a `User`. `Business.userId` is the root of
+ownership; contacts, channels, products, payments and interactions are
+reached through their business.
+
+`core/auth.ts` has two modes, chosen by whether `CLERK_SECRET_KEY` is set:
+
+- **dev** — no auth provider required. The caller is identified by an
+  `x-dev-user` header (default `dev`), and the `User` row is created on
+  demand. Local development needs no keys, and the smoke test uses this to
+  simulate two accounts.
+- **prod** — verifies a Clerk session token from `Authorization: Bearer`.
+
+Routes never branch on the mode; they read `req.userId`. Swapping auth
+providers is a one-file change.
+
+**Rules for any new route:**
+
+1. Call `assertOwnsBusiness(req.userId, businessId)` before touching
+   anything scoped to a business. It throws a 404 — deliberately, so the
+   API never confirms an id exists to someone who guessed it.
+2. For child resources, scope through the parent rather than trusting an
+   id: `where: { id, business: { userId: req.userId } }`.
+3. Add an isolation case to `scripts/smoke.mjs`. The suite already proves a
+   second account is refused on every existing path.
 
 ## Personalization by business type
 

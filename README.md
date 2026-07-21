@@ -33,7 +33,8 @@ spreadsheet you maintain.
 |---|---|
 | Client | React 18, TypeScript, Vite |
 | Server | Express 4, TypeScript, run with tsx |
-| Database | SQLite via Prisma |
+| Database | PostgreSQL via Prisma (Neon) |
+| Auth | Clerk in production; header-based stub in dev |
 | Tests | vitest (unit), a Node script (smoke) |
 
 No UI framework or component library — styling is plain CSS with custom
@@ -47,8 +48,9 @@ Requires Node 20+ (developed on 24).
 # 1. Server
 cd server
 npm install
-cp .env.example .env          # then edit if you like
-npx prisma migrate deploy     # creates prisma/dev.db
+cp .env.example .env          # then paste your Neon connection string
+npx prisma migrate deploy     # applies the schema
+npm run seed                  # optional: realistic demo data
 npm run dev                   # http://localhost:4000
 
 # 2. Client, in a second terminal
@@ -62,6 +64,16 @@ profile and a business.
 
 The Vite dev server proxies `/api` to port 4000, so the client is always
 talking to the local server.
+
+You need a Postgres database. [Neon](https://neon.tech)'s free tier is what
+this is developed against — create a project, copy the **direct** connection
+string (turn *Connection pooling* off), and put it in `server/.env`.
+
+### Signing in
+
+Locally you are signed in automatically: with no `CLERK_SECRET_KEY` set, the
+API treats every request as the same development account. Nothing to
+configure. In production, Clerk session tokens are verified instead.
 
 ### Windows gotcha
 
@@ -126,13 +138,15 @@ internals. See [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ## Data and privacy
 
-Everything lives in `server/prisma/dev.db` on your own machine. Nothing is
-sent anywhere — including the analytics, which are recorded locally so the app
-can show you your own history. If you configure an LLM, business context is
-sent to whichever server you point at, which is why self-hosting is the
-default assumption.
+Data lives in your own Postgres database. Analytics are recorded there too —
+they exist so the app can show you your own history, not to report anywhere.
+If you configure an LLM, business context is sent to whichever server you
+point at, which is why self-hosting is the default assumption.
 
-`dev.db` and `.env` are git-ignored. Do not commit them.
+Every account only ever sees its own data; see the isolation rules in
+[ARCHITECTURE.md](ARCHITECTURE.md).
+
+`.env` and any local database files are git-ignored. Do not commit them.
 
 ## Docs
 
