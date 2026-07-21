@@ -70,6 +70,12 @@ registerAnalytics();
 app.use('/api', notFoundHandler);
 app.use(errorHandler);
 
-app.listen(port, () => {
-  console.log(`Sales Mechanic API listening on http://localhost:${port}`);
+// Bind on all interfaces, not just loopback: hosting platforms route
+// external traffic to the container's public interface, and a server
+// listening only on localhost is unreachable (requests hang rather than
+// being refused, which makes it look like a slow start).
+app.listen(port, '0.0.0.0', () => {
+  console.log(`Sales Mechanic API listening on 0.0.0.0:${port}`);
+  console.log(`  auth: ${clerkConfigured() ? 'clerk' : 'dev (no CLERK_SECRET_KEY set)'}`);
+  console.log(`  database: ${process.env.DATABASE_URL ? 'configured' : 'MISSING — set DATABASE_URL'}`);
 });

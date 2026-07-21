@@ -16,8 +16,12 @@ services:
     plan: free
     rootDir: server
     buildCommand: npm ci && npx prisma generate && npm run build
-    # Migrations run on boot so a deploy always matches the schema.
-    startCommand: npx prisma migrate deploy && npm start
+    # Migrations run before the app starts, as their own step. Keeping them
+    # out of startCommand means a database problem shows up as a failed
+    # pre-deploy with a clear error, rather than a web service that builds
+    # fine and then silently never listens.
+    preDeployCommand: npx prisma migrate deploy
+    startCommand: npm start
     healthCheckPath: /api/health
     envVars:
       - key: NODE_VERSION
