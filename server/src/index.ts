@@ -18,12 +18,16 @@ import { socialsRouter } from './routes/socials';
 import { paymentsRouter } from './routes/payments';
 import { analyticsRouter, registerAnalytics } from './modules/analytics';
 import { productsRouter } from './routes/products';
+import { errorHandler, notFoundHandler } from './core/http';
 
-// Async route errors in Express 4 become unhandled rejections, and Node 20+
-// kills the process on those. Log instead of dying — a bad request should
-// never take the whole app down.
+// Belt and braces: every async route is wrapped in ah() so rejections reach
+// the error middleware, but if one ever slips through, log instead of letting
+// Node 20+ terminate the process.
 process.on('unhandledRejection', (err) => {
   console.error('[unhandled rejection]', err instanceof Error ? err.message : err);
+});
+process.on('uncaughtException', (err) => {
+  console.error('[uncaught exception]', err instanceof Error ? err.message : err);
 });
 
 const app = express();
@@ -50,6 +54,11 @@ app.use('/api/products', productsRouter);
 registerAnalytics();
 
 app.get('/api/health', (_req, res) => res.json({ ok: true }));
+
+// Must come after all routes: unmatched /api paths return JSON, and any
+// error thrown or rejected in a handler becomes a clean HTTP response.
+app.use('/api', notFoundHandler);
+app.use(errorHandler);
 
 app.listen(port, () => {
   console.log(`Sales Mechanic API listening on http://localhost:${port}`);

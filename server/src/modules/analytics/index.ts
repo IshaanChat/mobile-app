@@ -3,6 +3,7 @@
 // product can learn what's used and the user can see their own history.
 
 import { Router } from 'express';
+import { ah } from '../../core/http';
 import { prisma } from '../../prisma';
 import { onEvent } from '../../core/events';
 
@@ -27,7 +28,7 @@ export function registerAnalytics() {
 export const analyticsRouter = Router();
 
 // Event counts by type + recent stream, for future insight surfaces.
-analyticsRouter.get('/', async (req, res) => {
+analyticsRouter.get('/', ah(async (req, res) => {
   const { businessId } = req.query;
   const where = typeof businessId === 'string' && businessId ? { businessId } : {};
 
@@ -41,4 +42,4 @@ analyticsRouter.get('/', async (req, res) => {
   for (const e of all) byType[e.type] = (byType[e.type] ?? 0) + 1;
 
   res.json({ total, byType, recent });
-});
+}));

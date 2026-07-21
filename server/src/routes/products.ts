@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { ah } from '../core/http';
 import { prisma } from '../prisma';
 import { normalizeUrl } from '../channelDetect';
 import { emitEvent } from '../core/events';
@@ -7,7 +8,7 @@ export const productsRouter = Router();
 
 const LOW_STOCK_THRESHOLD = 3;
 
-productsRouter.get('/', async (req, res) => {
+productsRouter.get('/', ah(async (req, res) => {
   const { businessId } = req.query;
   if (!businessId || typeof businessId !== 'string') {
     return res.status(400).json({ error: 'businessId query param is required' });
@@ -31,7 +32,7 @@ productsRouter.get('/', async (req, res) => {
       lowStockThreshold: LOW_STOCK_THRESHOLD,
     },
   });
-});
+}));
 
 function parseProductBody(body: any): { data?: any; error?: string } {
   const { name, description, price, stock, sku, url } = body ?? {};
@@ -78,7 +79,7 @@ function parseProductBody(body: any): { data?: any; error?: string } {
   };
 }
 
-productsRouter.post('/', async (req, res) => {
+productsRouter.post('/', ah(async (req, res) => {
   const { businessId, name } = req.body ?? {};
   if (!businessId || !name) return res.status(400).json({ error: 'businessId and name are required' });
 
@@ -88,9 +89,9 @@ productsRouter.post('/', async (req, res) => {
   const product = await prisma.product.create({ data: { businessId, ...parsed.data } });
   emitEvent('product.created', { businessId, payload: { productId: product.id, tracked: product.stock !== null } });
   res.status(201).json(product);
-});
+}));
 
-productsRouter.patch('/:id', async (req, res) => {
+productsRouter.patch('/:id', ah(async (req, res) => {
   const parsed = parseProductBody(req.body);
   if (parsed.error) return res.status(400).json({ error: parsed.error });
 
@@ -108,9 +109,9 @@ productsRouter.patch('/:id', async (req, res) => {
   } catch {
     res.status(404).json({ error: 'Product not found' });
   }
-});
+}));
 
-productsRouter.delete('/:id', async (req, res) => {
+productsRouter.delete('/:id', ah(async (req, res) => {
   try {
     const product = await prisma.product.delete({ where: { id: req.params.id } });
     emitEvent('product.deleted', { businessId: product.businessId, payload: { productId: product.id } });
@@ -118,4 +119,4 @@ productsRouter.delete('/:id', async (req, res) => {
     return res.status(404).json({ error: 'Product not found' });
   }
   res.status(204).end();
-});
+}));

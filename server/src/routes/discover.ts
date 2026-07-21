@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { ah } from '../core/http';
 import { prisma } from '../prisma';
 import { llmRecommendations, getLlmConfig } from '../discover/llm';
 import { builtinRecommendations } from '../discover/builtin';
@@ -15,7 +16,7 @@ export function invalidateDiscoverCache(businessId: string) {
   cache.delete(businessId);
 }
 
-discoverRouter.get('/', async (req, res) => {
+discoverRouter.get('/', ah(async (req, res) => {
   const { businessId, refresh } = req.query;
   if (!businessId || typeof businessId !== 'string') {
     return res.status(400).json({ error: 'businessId query param is required' });
@@ -51,10 +52,10 @@ discoverRouter.get('/', async (req, res) => {
     payload: { source: result.source, count: result.recommendations.length },
   });
   res.json(result);
-});
+}));
 
 // Lets the client show whether the user's own model is wired up.
-discoverRouter.get('/status', async (_req, res) => {
+discoverRouter.get('/status', ah(async (_req, res) => {
   const config = await getLlmConfig();
   res.json({ llmConfigured: Boolean(config), model: config?.model ?? null });
-});
+}));

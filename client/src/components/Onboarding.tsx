@@ -1,5 +1,5 @@
 import { useState, FormEvent } from 'react';
-import { api } from '../api/client';
+import { api, ApiError } from '../api/client';
 import type { Business, BusinessType, Gender, SalesAvenue, UserProfile } from '../types';
 import StarterToolkit from './StarterToolkit';
 
@@ -82,7 +82,14 @@ export default function Onboarding({
       onProfileCreated(profile);
       if (needsBusiness) setStep('business');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Something went wrong');
+      // A profile already exists (double-submit, second tab, another device):
+      // adopt it and carry on rather than stranding the user on step 1.
+      if (err instanceof ApiError && err.status === 409 && err.body?.profile) {
+        onProfileCreated(err.body.profile);
+        if (needsBusiness) setStep('business');
+      } else {
+        setError(err instanceof Error ? err.message : 'Something went wrong');
+      }
     } finally {
       setSubmitting(false);
     }

@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { ah } from '../core/http';
 import { prisma } from '../prisma';
 import { emitEvent } from '../core/events';
 
@@ -17,12 +18,12 @@ function validateRequired(body: any): string | null {
   return null;
 }
 
-profileRouter.get('/', async (_req, res) => {
+profileRouter.get('/', ah(async (_req, res) => {
   const profile = await prisma.userProfile.findFirst();
   res.json(profile);
-});
+}));
 
-profileRouter.post('/', async (req, res) => {
+profileRouter.post('/', ah(async (req, res) => {
   const body = req.body ?? {};
   const invalid = validateRequired(body);
   if (invalid) return res.status(400).json({ error: invalid });
@@ -45,9 +46,9 @@ profileRouter.post('/', async (req, res) => {
   });
   emitEvent('profile.created', {});
   res.status(201).json(profile);
-});
+}));
 
-profileRouter.patch('/:id', async (req, res) => {
+profileRouter.patch('/:id', ah(async (req, res) => {
   const body = req.body ?? {};
   if (body.gender && !VALID_GENDERS.includes(body.gender)) {
     return res.status(400).json({ error: `gender must be one of ${VALID_GENDERS.join(', ')}` });
@@ -81,4 +82,4 @@ profileRouter.patch('/:id', async (req, res) => {
   });
   emitEvent('profile.updated', {});
   res.json(profile);
-});
+}));

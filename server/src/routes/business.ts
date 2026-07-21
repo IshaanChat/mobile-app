@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { ah } from '../core/http';
 import { prisma } from '../prisma';
 import { invalidateDiscoverCache } from './discover';
 import { emitEvent } from '../core/events';
@@ -16,12 +17,12 @@ function parsePageUrl(raw: unknown): { value?: string | null; error?: string } {
 export const businessRouter = Router();
 
 // All businesses, oldest first (the client picks its active one).
-businessRouter.get('/', async (_req, res) => {
+businessRouter.get('/', ah(async (_req, res) => {
   const businesses = await prisma.business.findMany({ orderBy: { createdAt: 'asc' } });
   res.json(businesses);
-});
+}));
 
-businessRouter.post('/', async (req, res) => {
+businessRouter.post('/', ah(async (req, res) => {
   const { name, niche, description, salesAvenues, businessType, pageUrl } = req.body ?? {};
   if (!name || !niche || !description) {
     return res.status(400).json({ error: 'name, niche, and description are required' });
@@ -38,9 +39,9 @@ businessRouter.post('/', async (req, res) => {
   });
   emitEvent('business.created', { businessId: business.id, payload: { businessType: business.businessType } });
   res.status(201).json(business);
-});
+}));
 
-businessRouter.patch('/:id', async (req, res) => {
+businessRouter.patch('/:id', ah(async (req, res) => {
   const { name, niche, description, idealCustomer, audienceKeywords, salesAvenues, businessType, pageUrl } = req.body ?? {};
   const page = parsePageUrl(pageUrl);
   if (page.error) return res.status(400).json({ error: page.error });
@@ -59,10 +60,10 @@ businessRouter.patch('/:id', async (req, res) => {
   } catch {
     res.status(404).json({ error: 'Business not found' });
   }
-});
+}));
 
 // Deletes the business and everything under it (channels/contacts/interactions cascade).
-businessRouter.delete('/:id', async (req, res) => {
+businessRouter.delete('/:id', ah(async (req, res) => {
   try {
     await prisma.business.delete({ where: { id: req.params.id } });
   } catch {
@@ -71,4 +72,4 @@ businessRouter.delete('/:id', async (req, res) => {
   invalidateDiscoverCache(req.params.id);
   emitEvent('business.deleted', { businessId: req.params.id });
   res.status(204).end();
-});
+}));

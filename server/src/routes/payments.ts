@@ -1,11 +1,12 @@
 import { Router } from 'express';
+import { ah } from '../core/http';
 import { prisma } from '../prisma';
 import { emitEvent } from '../core/events';
 
 export const paymentsRouter = Router();
 
 // Payments list + light insights. Intentionally simple for now.
-paymentsRouter.get('/', async (req, res) => {
+paymentsRouter.get('/', ah(async (req, res) => {
   const { businessId } = req.query;
   if (!businessId || typeof businessId !== 'string') {
     return res.status(400).json({ error: 'businessId query param is required' });
@@ -46,9 +47,9 @@ paymentsRouter.get('/', async (req, res) => {
       topClient,
     },
   });
-});
+}));
 
-paymentsRouter.post('/', async (req, res) => {
+paymentsRouter.post('/', ah(async (req, res) => {
   const { businessId, amount, note, contactId, occurredAt, productId, quantity } = req.body ?? {};
   if (!businessId) return res.status(400).json({ error: 'businessId is required' });
   const parsed = Number(amount);
@@ -94,9 +95,9 @@ paymentsRouter.post('/', async (req, res) => {
     payload: { amount: payment.amount, hasClient: Boolean(payment.contactId), hasProduct: Boolean(productId), quantity: qty },
   });
   res.status(201).json(payment);
-});
+}));
 
-paymentsRouter.delete('/:id', async (req, res) => {
+paymentsRouter.delete('/:id', ah(async (req, res) => {
   await prisma.payment.delete({ where: { id: req.params.id } });
   res.status(204).end();
-});
+}));

@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { ah } from '../core/http';
 import { prisma } from '../prisma';
 import { computeScores } from '../scoring';
 import { detectChannel, normalizeUrl } from '../channelDetect';
@@ -15,7 +16,7 @@ const NO_LINK_KINDS: Record<string, { type: string; label: string }> = {
   OTHER: { type: 'OTHER', label: 'Other' },
 };
 
-contactsRouter.get('/', async (req, res) => {
+contactsRouter.get('/', ah(async (req, res) => {
   const { businessId, channelId } = req.query;
   if (!businessId || typeof businessId !== 'string') {
     return res.status(400).json({ error: 'businessId query param is required' });
@@ -28,9 +29,9 @@ contactsRouter.get('/', async (req, res) => {
     orderBy: { createdAt: 'desc' },
   });
   res.json(contacts);
-});
+}));
 
-contactsRouter.get('/:id', async (req, res) => {
+contactsRouter.get('/:id', ah(async (req, res) => {
   const contact = await prisma.contact.findUnique({
     where: { id: req.params.id },
     include: {
@@ -40,17 +41,17 @@ contactsRouter.get('/:id', async (req, res) => {
   });
   if (!contact) return res.status(404).json({ error: 'Contact not found' });
   res.json(contact);
-});
+}));
 
 // Preview endpoint so the client can show a live "detected channel" badge
 // while the user types/pastes a URL.
-contactsRouter.get('/detect-channel/preview', async (req, res) => {
+contactsRouter.get('/detect-channel/preview', ah(async (req, res) => {
   const { url } = req.query;
   if (!url || typeof url !== 'string') return res.status(400).json({ error: 'url query param required' });
   const detected = detectChannel(url);
   if (!detected) return res.json(null);
   res.json(detected);
-});
+}));
 
 // Create a contact. Channel resolution, in priority order:
 //   1. sourceUrl  -> detect platform from domain, find-or-create that channel
@@ -58,7 +59,7 @@ contactsRouter.get('/detect-channel/preview', async (req, res) => {
 //   3. channelId  -> explicit existing channel (legacy path)
 // If firstNote is provided, it is logged as the contact's first interaction
 // so the relationship starts with a heartbeat instead of a zero score.
-contactsRouter.post('/', async (req, res) => {
+contactsRouter.post('/', ah(async (req, res) => {
   const { businessId, name, status, sourceUrl, noLinkKind, channelId, firstNote } = req.body ?? {};
   if (!businessId || !name) {
     return res.status(400).json({ error: 'businessId and name are required' });
@@ -136,9 +137,9 @@ contactsRouter.post('/', async (req, res) => {
     include: { interactions: true, channel: true },
   });
   res.status(201).json(full);
-});
+}));
 
-contactsRouter.patch('/:id', async (req, res) => {
+contactsRouter.patch('/:id', ah(async (req, res) => {
   const { name, notes, status } = req.body ?? {};
   if (status && !VALID_STATUSES.includes(status)) {
     return res.status(400).json({ error: `status must be one of ${VALID_STATUSES.join(', ')}` });
@@ -155,15 +156,15 @@ contactsRouter.patch('/:id', async (req, res) => {
     });
   }
   res.json(contact);
-});
+}));
 
-contactsRouter.delete('/:id', async (req, res) => {
+contactsRouter.delete('/:id', ah(async (req, res) => {
   await prisma.contact.delete({ where: { id: req.params.id } });
   res.status(204).end();
-});
+}));
 
 // Log a new interaction and recompute the contact's relationship/engagement scores.
-contactsRouter.post('/:id/interactions', async (req, res) => {
+contactsRouter.post('/:id/interactions', ah(async (req, res) => {
   const { type, note, weight, occurredAt } = req.body ?? {};
   if (!type || !VALID_INTERACTION_TYPES.includes(type)) {
     return res.status(400).json({ error: `type must be one of ${VALID_INTERACTION_TYPES.join(', ')}` });
@@ -208,4 +209,4 @@ contactsRouter.post('/:id/interactions', async (req, res) => {
   });
 
   res.status(201).json(updatedContact);
-});
+}));

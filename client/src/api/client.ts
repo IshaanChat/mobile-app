@@ -2,14 +2,30 @@ import type { Business, Channel, Contact, ContactDetail, ContactStatus, ChannelT
 
 const BASE = '/api';
 
+// Carries the HTTP status and response body so callers can recover from
+// specific failures (e.g. a 409 that already contains the existing record)
+// instead of only being able to show a message.
+export class ApiError extends Error {
+  constructor(message: string, readonly status: number, readonly body: any) {
+    super(message);
+    this.name = 'ApiError';
+  }
+}
+
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
-  const res = await fetch(`${BASE}${path}`, {
-    headers: { 'Content-Type': 'application/json' },
-    ...options,
-  });
+  let res: Response;
+  try {
+    res = await fetch(`${BASE}${path}`, {
+      headers: { 'Content-Type': 'application/json' },
+      ...options,
+    });
+  } catch {
+    // Network-level failure: server down, connection refused, offline.
+    throw new ApiError("Can't reach the server. Is it running?", 0, null);
+  }
   if (!res.ok) {
     const body = await res.json().catch(() => ({}));
-    throw new Error(body.error || `Request failed: ${res.status}`);
+    throw new ApiError(body.error || `Request failed: ${res.status}`, res.status, body);
   }
   if (res.status === 204) return undefined as T;
   return res.json();

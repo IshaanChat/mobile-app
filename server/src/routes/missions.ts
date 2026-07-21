@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { ah } from '../core/http';
 import { prisma } from '../prisma';
 import { MISSIONS, levelForXp, periodKeyFor, periodStartFor, CADENCE_INFO } from '../missions/definitions';
 import { emitEvent } from '../core/events';
@@ -9,7 +10,7 @@ const GLOBAL_SCOPE = 'global';
 
 // Compute progress for every mission (per current period for repeatables),
 // auto-award newly completed ones, and return the board + Wisdom summary.
-missionsRouter.get('/', async (req, res) => {
+missionsRouter.get('/', ah(async (req, res) => {
   const { businessId } = req.query;
   if (!businessId || typeof businessId !== 'string') {
     return res.status(400).json({ error: 'businessId query param is required' });
@@ -82,4 +83,4 @@ missionsRouter.get('/', async (req, res) => {
     cadenceInfo: CADENCE_INFO,
     justCompleted,
   });
-});
+}));

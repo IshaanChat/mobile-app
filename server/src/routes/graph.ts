@@ -1,11 +1,12 @@
 import { Router } from 'express';
+import { ah } from '../core/http';
 import { prisma } from '../prisma';
 
 export const graphRouter = Router();
 
 // Single payload the frontend needs to render the force graph:
 // business (center) -> channels (middle ring) -> contacts (outer nodes).
-graphRouter.get('/', async (req, res) => {
+graphRouter.get('/', ah(async (req, res) => {
   const { businessId } = req.query;
   if (!businessId || typeof businessId !== 'string') {
     return res.status(400).json({ error: 'businessId query param is required' });
@@ -29,4 +30,4 @@ graphRouter.get('/', async (req, res) => {
   }));
 
   res.json({ business, channels, contacts });
-});
+}));

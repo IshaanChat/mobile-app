@@ -1,10 +1,11 @@
 import { Router } from 'express';
+import { ah } from '../core/http';
 import { prisma } from '../prisma';
 
 export const interactionsRouter = Router();
 
 // Cross-contact activity feed for a business, most recent first.
-interactionsRouter.get('/', async (req, res) => {
+interactionsRouter.get('/', ah(async (req, res) => {
   const { businessId, limit } = req.query;
   if (!businessId || typeof businessId !== 'string') {
     return res.status(400).json({ error: 'businessId query param is required' });
@@ -23,4 +24,4 @@ interactionsRouter.get('/', async (req, res) => {
   });
 
   res.json(interactions);
-});
+}));

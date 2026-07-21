@@ -1,11 +1,12 @@
 import { Router } from 'express';
+import { ah } from '../core/http';
 import { prisma } from '../prisma';
 
 export const channelsRouter = Router();
 
 const VALID_TYPES = ['ETSY', 'INSTAGRAM', 'REDDIT', 'REFERRAL', 'OTHER'];
 
-channelsRouter.get('/', async (req, res) => {
+channelsRouter.get('/', ah(async (req, res) => {
   const { businessId } = req.query;
   if (!businessId || typeof businessId !== 'string') {
     return res.status(400).json({ error: 'businessId query param is required' });
@@ -16,9 +17,9 @@ channelsRouter.get('/', async (req, res) => {
     orderBy: { createdAt: 'asc' },
   });
   res.json(channels);
-});
+}));
 
-channelsRouter.post('/', async (req, res) => {
+channelsRouter.post('/', ah(async (req, res) => {
   const { businessId, type, label } = req.body ?? {};
   if (!businessId || !type || !VALID_TYPES.includes(type)) {
     return res.status(400).json({ error: `businessId and a valid type (${VALID_TYPES.join(', ')}) are required` });
@@ -31,9 +32,9 @@ channelsRouter.post('/', async (req, res) => {
     data: { businessId, type, label: label || null },
   });
   res.status(201).json(channel);
-});
+}));
 
-channelsRouter.delete('/:id', async (req, res) => {
+channelsRouter.delete('/:id', ah(async (req, res) => {
   await prisma.channel.delete({ where: { id: req.params.id } });
   res.status(204).end();
-});
+}));
