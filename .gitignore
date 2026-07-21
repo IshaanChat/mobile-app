@@ -11,11 +11,12 @@ build/
 .env.*
 !.env.example
 
-# Local database (contains real business data — never commit)
-*.db
-*.db-journal
-*.sqlite
-*.sqlite3
+# Local database (contains real business data — never commit).
+# Broad on purpose: *.db* also catches dev.db-journal, dev.db.backup,
+# dev.db.demo-aside and anything else derived from a database file.
+*.db*
+*.sqlite*
+prisma/*.db*
 
 # Logs
 *.log
