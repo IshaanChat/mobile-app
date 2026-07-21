@@ -16,15 +16,14 @@ services:
     plan: free
     rootDir: server
     buildCommand: npm ci && npx prisma generate && npm run build
-    # Migrations run before the app starts, as their own step. Keeping them
-    # out of startCommand means a database problem shows up as a failed
-    # pre-deploy with a clear error, rather than a web service that builds
-    # fine and then silently never listens.
-    # check-env validates DATABASE_URL first and prints a safe fingerprint,
-    # so a bad value is obvious in the log rather than surfacing later as an
-    # opaque Prisma schema error.
-    preDeployCommand: npm run check-env && npx prisma migrate deploy
-    startCommand: npm start
+    # Everything in the start command rather than preDeployCommand, which is
+    # not confirmed available on the free plan — a blueprint the platform
+    # rejects is worse than a slightly longer start line.
+    #
+    # check-env runs FIRST so a malformed DATABASE_URL reports what is
+    # actually wrong, instead of Prisma failing with an opaque schema error
+    # that names the wrong problem.
+    startCommand: npm run check-env && npx prisma migrate deploy && npm start
     healthCheckPath: /api/health
     envVars:
       - key: NODE_VERSION
