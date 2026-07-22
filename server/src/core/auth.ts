@@ -12,6 +12,7 @@
 // Routes never care which mode is active: they only read `req.userId`.
 
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
+import { Prisma } from '@prisma/client';
 import { prisma } from '../prisma';
 
 declare global {
@@ -28,15 +29,33 @@ export function clerkConfigured(): boolean {
   return Boolean(process.env.CLERK_SECRET_KEY);
 }
 
-/** Find or create the local User row for an auth-provider identity. */
+/**
+ * Find or create the local User row for an auth-provider identity.
+ *
+ * Race-safe: a brand-new account fires several requests at once (the app
+ * loads the profile and businesses in parallel), and without care each
+ * would see "no user" and try to INSERT, so all but one hit the unique
+ * constraint on externalId and 409. Here the loser of that race simply
+ * re-reads the row the winner created.
+ */
 async function resolveUser(externalId: string, email?: string): Promise<string> {
   const existing = await prisma.user.findUnique({ where: { externalId }, select: { id: true } });
   if (existing) return existing.id;
-  const created = await prisma.user.create({
-    data: { externalId, email: email ?? null },
-    select: { id: true },
-  });
-  return created.id;
+
+  try {
+    const created = await prisma.user.create({
+      data: { externalId, email: email ?? null },
+      select: { id: true },
+    });
+    return created.id;
+  } catch (err) {
+    // P2002 = another concurrent request created this same user first.
+    if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
+      const winner = await prisma.user.findUnique({ where: { externalId }, select: { id: true } });
+      if (winner) return winner.id;
+    }
+    throw err;
+  }
 }
 
 /**
