@@ -1,4 +1,4 @@
-import type { Business, Channel, Contact, ContactDetail, ContactStatus, ChannelType, GraphPayload, InteractionType, FeedInteraction, DetectedChannel, NoLinkKind, DiscoverResult, DiscoverStatus, AppSettings, LlmTestResult, UserProfile, Gender, ExperienceLevel, MissionsPayload, SocialLink, SocialPlatform, Payment, PaymentsPayload, Product, ProductsPayload } from '../types';
+import type { Business, Channel, Contact, ContactDetail, ContactStatus, ChannelType, GraphPayload, InteractionType, FeedInteraction, DetectedChannel, NoLinkKind, DiscoverResult, DiscoverStatus, AppSettings, LlmTestResult, UserProfile, Gender, ExperienceLevel, MissionsPayload, SocialLink, SocialPlatform, Payment, PaymentsPayload, Product, ProductsPayload, TrendCard, TrendsPayload } from '../types';
 
 // The native app always talks to a full API origin (there is no dev proxy like
 // the web client's Vite server). Set EXPO_PUBLIC_API_URL in .env — no trailing
@@ -128,6 +128,21 @@ export const api = {
   updateProduct: (id: string, data: Partial<{ name: string; description: string | null; price: number | null; stock: number | null; sku: string | null; url: string | null }>) =>
     request<Product>(`/products/${id}`, { method: 'PATCH', body: JSON.stringify(data) }),
   deleteProduct: (id: string) => request<void>(`/products/${id}`, { method: 'DELETE' }),
+
+  // Personalize by businessId (owners) or interests (explorers, no business
+  // yet). Neither = hotness-ranked feed for a brand-new account.
+  getTrends: (params: { businessId?: string; interests?: string[] }) => {
+    const q = params.businessId
+      ? `businessId=${params.businessId}`
+      : params.interests?.length
+        ? `interests=${encodeURIComponent(params.interests.join(','))}`
+        : '';
+    return request<TrendsPayload>(`/trends${q ? `?${q}` : ''}`);
+  },
+  getSavedTrends: () => request<TrendCard[]>('/trends/saved'),
+  saveTrend: (id: string) => request<{ saved: boolean }>(`/trends/${id}/save`, { method: 'POST' }),
+  unsaveTrend: (id: string) => request<void>(`/trends/${id}/save`, { method: 'DELETE' }),
+  dismissTrend: (id: string) => request<{ dismissed: boolean }>(`/trends/${id}/dismiss`, { method: 'POST' }),
 
   getSocials: (businessId: string) => request<SocialLink[]>(`/socials?businessId=${businessId}`),
   saveSocials: (businessId: string, links: { platform: SocialPlatform; url: string }[]) =>

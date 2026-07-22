@@ -212,6 +212,27 @@ export interface GraphPayload {
   contacts: Contact[];
 }
 
+// A curated Discover-feed card: a product source / trend worth a look.
+export interface TrendCard {
+  id: string;
+  title: string;
+  blurb: string;
+  category: string;
+  imageUrl: string | null;
+  sourceName: string | null;
+  sourceUrl: string | null;
+  priceRange: string | null;
+  hotness: number;
+  saved: boolean;
+  // Present on the saved shelf only.
+  savedAt?: string;
+}
+
+export interface TrendsPayload {
+  generatedAt: string;
+  cards: TrendCard[];
+}
+
 export interface FeedInteraction extends Interaction {
   contact: {
     id: string;
