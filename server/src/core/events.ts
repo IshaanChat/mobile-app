@@ -22,7 +22,10 @@ export type AppEventType =
   | 'product.created'
   | 'product.updated'
   | 'product.deleted'
-  | 'product.stock_changed';
+  | 'product.stock_changed'
+  | 'trend.saved'
+  | 'trend.unsaved'
+  | 'trend.dismissed';
 
 export interface AppEventPayload {
   type: AppEventType;

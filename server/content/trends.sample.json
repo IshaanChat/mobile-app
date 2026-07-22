@@ -1,0 +1,90 @@
+[
+  {
+    "slug": "sample-mushroom-lamps",
+    "title": "Mushroom lamps",
+    "blurb": "Cottagecore lighting keeps pulling millions of views — small makers with resin or ceramic versions sell out drops. Placeholder card: replace with your own curation.",
+    "category": "Home & decor",
+    "tags": "lamp, mushroom, cottagecore, decor, lighting, resin, ceramic",
+    "sourceName": "TikTok",
+    "sourceUrl": "https://www.tiktok.com/tag/mushroomlamp",
+    "priceRange": "$25–60",
+    "hotness": 80
+  },
+  {
+    "slug": "sample-claw-clips",
+    "title": "Decorative claw clips",
+    "blurb": "Hair accessories with personality — florals, food shapes, custom colorways. Cheap to make, easy to ship, endlessly giftable. Placeholder card.",
+    "category": "Fashion",
+    "tags": "hair, claw clip, accessories, fashion, resin, gift",
+    "sourceName": "Etsy",
+    "sourceUrl": "https://www.etsy.com/search?q=claw+clip",
+    "priceRange": "$8–25",
+    "hotness": 72
+  },
+  {
+    "slug": "sample-pet-portraits",
+    "title": "Custom pet portraits",
+    "blurb": "Evergreen with viral spikes around holidays. Owners pay happily for their animal's face on anything. Placeholder card.",
+    "category": "Pets",
+    "tags": "pet, dog, cat, portrait, custom, gift, art",
+    "sourceName": "Instagram",
+    "sourceUrl": "https://www.instagram.com/explore/tags/petportrait/",
+    "priceRange": "$30–150",
+    "hotness": 65
+  },
+  {
+    "slug": "sample-digital-planners",
+    "title": "Digital planners & templates",
+    "blurb": "Zero inventory, infinite stock. Niche planners (ADHD, wedding, small-biz finance) outsell generic ones. Placeholder card.",
+    "category": "Digital products",
+    "tags": "digital, planner, template, notion, printable, download",
+    "sourceName": "Etsy",
+    "sourceUrl": "https://www.etsy.com/search?q=digital+planner",
+    "priceRange": "$5–30",
+    "hotness": 70
+  },
+  {
+    "slug": "sample-dessert-candles",
+    "title": "Dessert-shaped candles",
+    "blurb": "Candles that look like food do numbers on every platform — the more unreasonably realistic, the more shares. Placeholder card.",
+    "category": "Candles & scent",
+    "tags": "candle, dessert, food, wax, scent, gift, cute",
+    "sourceName": "TikTok",
+    "sourceUrl": "https://www.tiktok.com/tag/foodcandle",
+    "priceRange": "$12–35",
+    "hotness": 77
+  },
+  {
+    "slug": "sample-crochet-plushies",
+    "title": "Crochet plushies (amigurumi)",
+    "blurb": "Handmade plushies of animals and characters sell on cuteness alone; commissions often book out weeks ahead. Placeholder card.",
+    "category": "Handmade & crafts",
+    "tags": "crochet, plush, amigurumi, yarn, cute, gift, handmade",
+    "sourceName": "Instagram",
+    "sourceUrl": "https://www.instagram.com/explore/tags/amigurumi/",
+    "priceRange": "$20–80",
+    "hotness": 68
+  },
+  {
+    "slug": "sample-vintage-glassware",
+    "title": "Curated vintage glassware",
+    "blurb": "Thrift-flip candy: colored coupes and depression glass styled into sets. Sourcing skill is the moat. Placeholder card.",
+    "category": "Vintage",
+    "tags": "vintage, glassware, thrift, barware, retro, home",
+    "sourceName": "Instagram",
+    "sourceUrl": "https://www.instagram.com/explore/tags/vintageglassware/",
+    "priceRange": "$15–90",
+    "hotness": 60
+  },
+  {
+    "slug": "sample-jewelry-permanent",
+    "title": "Permanent jewelry pop-ups",
+    "blurb": "Welded-on bracelets are an experience, not just a product — pop-ups at markets and salons churn out bookings. Placeholder card.",
+    "category": "Jewelry",
+    "tags": "jewelry, bracelet, permanent, popup, market, experience",
+    "sourceName": "TikTok",
+    "sourceUrl": "https://www.tiktok.com/tag/permanentjewelry",
+    "priceRange": "$45–120",
+    "hotness": 74
+  }
+]

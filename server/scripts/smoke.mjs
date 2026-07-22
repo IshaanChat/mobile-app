@@ -265,6 +265,49 @@ const run = async () => {
     assert(status === 400, `expected 400, got ${status}`);
   });
 
+  // --- trends (Discover feed) ----------------------------------------------
+  // Cards are global curated content; only the caller's reactions are
+  // per-user. If no content has been imported the reaction checks skip.
+  let trendCardId = null;
+  await check('trends feed responds for a business owner', async () => {
+    const { status, body } = await api('GET', `/trends?businessId=${businessId}`);
+    assert(status === 200 && Array.isArray(body.cards), `got ${status} ${JSON.stringify(body)}`);
+    trendCardId = body.cards[0]?.id ?? null;
+  });
+
+  await check('trends feed responds for an explorer (interests only)', async () => {
+    const { status, body } = await api('GET', '/trends?interests=jewelry,handmade');
+    assert(status === 200 && Array.isArray(body.cards), `got ${status}`);
+  });
+
+  if (trendCardId) {
+    await check('save a trend, then it shows on the saved shelf', async () => {
+      const save = await api('POST', `/trends/${trendCardId}/save`);
+      assert(save.status === 200 && save.body.saved === true, `save: got ${save.status}`);
+      const { body } = await api('GET', '/trends/saved');
+      assert(body.some((c) => c.id === trendCardId), 'saved card missing from shelf');
+    });
+
+    await check("another account's saved shelf does not contain it", async () => {
+      const { body } = await api('GET', '/trends/saved', undefined, 'smoke-b');
+      assert(!body.some((c) => c.id === trendCardId), 'saved trend leaked across accounts');
+    });
+
+    await check('unsave removes it from the shelf', async () => {
+      const del = await api('DELETE', `/trends/${trendCardId}/save`);
+      assert(del.status === 204, `got ${del.status}`);
+      const { body } = await api('GET', '/trends/saved');
+      assert(!body.some((c) => c.id === trendCardId), 'card still on shelf after unsave');
+    });
+
+    await check('dismissing an unknown card returns 404, not 500', async () => {
+      const { status } = await api('POST', '/trends/does-not-exist/dismiss');
+      assert(status === 404, `got ${status}`);
+    });
+  } else {
+    console.log('  \x1b[33mSKIP\x1b[0m  trend reactions (no cards imported — run npm run trends:import)');
+  }
+
   // --- tenant isolation ---------------------------------------------------
   // Everything below runs as a DIFFERENT account (smoke-b) against the data
   // created by smoke-a. Every one must be refused.
@@ -332,6 +375,11 @@ const run = async () => {
     const discover = await asB('GET', `/discover?businessId=${businessId}`);
     assert(missions.status === 404, `missions: expected 404, got ${missions.status}`);
     assert(discover.status === 404, `discover: expected 404, got ${discover.status}`);
+  });
+
+  await check("another account cannot personalize trends with the business's id", async () => {
+    const { status } = await asB('GET', `/trends?businessId=${businessId}`);
+    assert(status === 404, `expected 404, got ${status}`);
   });
 
   await check("another account cannot see the first account's analytics", async () => {

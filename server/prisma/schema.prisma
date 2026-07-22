@@ -30,6 +30,7 @@ model User {
   businesses Business[]
   profile    UserProfile?
   settings   AppSetting[]
+  trendReactions SavedTrend[]
 }
 
 model Business {
@@ -221,6 +222,62 @@ model Payment {
 
   productId String?
   product   Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+}
+
+// Curated content for the Discover feed: a product source / trend worth a
+// look. GLOBAL content, not user-owned — the only such table. Rows are
+// loaded by the curator via `npm run trends:import` (see content/README.md);
+// users can only read and react. Never accept card writes from the API.
+model TrendCard {
+  id   String @id @default(cuid())
+  // Curator-chosen stable identity so re-importing updates in place.
+  slug String @unique
+
+  title String
+  // Why this could take off, in the curator's words — the card's body text.
+  blurb String
+  // Shelf label ("Jewelry", "Home & decor"…). Drives feed diversity.
+  category String
+  // Comma-separated match keywords (same convention as Business fields).
+  tags String
+
+  imageUrl   String?
+  // Where the trend was spotted, e.g. "TikTok" + a link worth opening.
+  sourceName String?
+  sourceUrl  String?
+  // Free text, e.g. "$15–40"
+  priceRange String?
+  // Curator-set 0–100: how hot this is right now.
+  hotness Int @default(50)
+  // One of: ACTIVE, ARCHIVED. Archived cards leave the feed but existing
+  // saves keep working, so nobody's idea shelf silently loses entries.
+  status String @default("ACTIVE")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  reactions SavedTrend[]
+
+  @@index([status])
+}
+
+// A user's reaction to a trend card. state: SAVED (their idea shelf) or
+// DISMISSED (never show again). Doubles as the engagement log the ranking
+// algorithm will learn from later.
+model SavedTrend {
+  id String @id @default(cuid())
+  // One of: SAVED, DISMISSED
+  state     String
+  createdAt DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  trendCardId String
+  trendCard   TrendCard @relation(fields: [trendCardId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, trendCardId])
+  @@index([userId, state])
 }
 
 model Interaction {

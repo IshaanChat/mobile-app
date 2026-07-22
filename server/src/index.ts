@@ -18,6 +18,7 @@ import { socialsRouter } from './routes/socials';
 import { paymentsRouter } from './routes/payments';
 import { analyticsRouter, registerAnalytics } from './modules/analytics';
 import { productsRouter } from './routes/products';
+import { trendsRouter } from './routes/trends';
 import { errorHandler, notFoundHandler } from './core/http';
 import { requireAuth, clerkConfigured } from './core/auth';
 
@@ -61,6 +62,7 @@ app.use('/api/socials', socialsRouter);
 app.use('/api/payments', paymentsRouter);
 app.use('/api/analytics', analyticsRouter);
 app.use('/api/products', productsRouter);
+app.use('/api/trends', trendsRouter);
 
 // Subscribe cross-cutting modules to the event bus.
 registerAnalytics();
