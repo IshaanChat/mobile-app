@@ -80,5 +80,13 @@ growthRouter.get('/:id', ah(async (req, res) => {
   if (!post) throw new HttpError(404, 'Post not found');
 
   emitEvent('growth.post_viewed', { payload: { postId: post.id, slug: post.slug } });
-  res.json({ ...toCard(post), body: post.body });
+  res.json({
+    ...toCard(post),
+    overview: post.overview,
+    discussions: post.discussions,
+    loves: post.loves,
+    dislikes: post.dislikes,
+    rules: post.rules,
+    approach: post.approach,
+  });
 }));

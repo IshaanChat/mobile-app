@@ -23,7 +23,12 @@ interface PostInput {
   url: string;
   tagline: string;
   audience: string;
-  body: string;
+  overview: string;
+  discussions: string;
+  loves: string;
+  dislikes: string;
+  rules: string;
+  approach: string;
   tags: string;
   imageUrl?: string;
   memberCount?: number;
@@ -48,7 +53,7 @@ try {
 }
 if (!Array.isArray(parsed)) fail('The file must contain a JSON array of posts.');
 
-const REQUIRED: (keyof PostInput)[] = ['slug', 'title', 'platform', 'kind', 'url', 'tagline', 'audience', 'body', 'tags'];
+const REQUIRED: (keyof PostInput)[] = ['slug', 'title', 'platform', 'kind', 'url', 'tagline', 'audience', 'overview', 'discussions', 'loves', 'dislikes', 'rules', 'approach', 'tags'];
 const KINDS = new Set(['community', 'hashtag', 'marketplace', 'search', 'event']);
 const problems: string[] = [];
 const seenSlugs = new Set<string>();
@@ -86,7 +91,12 @@ async function run() {
       url: post.url.trim(),
       tagline: post.tagline.trim(),
       audience: post.audience.trim(),
-      body: post.body.trim(),
+      overview: post.overview.trim(),
+      discussions: post.discussions.trim(),
+      loves: post.loves.trim(),
+      dislikes: post.dislikes.trim(),
+      rules: post.rules.trim(),
+      approach: post.approach.trim(),
       tags: post.tags.trim(),
       imageUrl: post.imageUrl?.trim() || null,
       memberCount: post.memberCount ?? null,

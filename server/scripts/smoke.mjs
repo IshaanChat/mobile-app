@@ -322,10 +322,12 @@ const run = async () => {
   });
 
   if (growthPostId) {
-    await check('growth post detail includes the body', async () => {
+    await check('growth post detail includes all sections', async () => {
       const { status, body } = await api('GET', `/growth/${growthPostId}`);
-      assert(status === 200 && typeof body.body === 'string' && body.body.length > 0,
-        `got ${status}`);
+      assert(status === 200, `got ${status}`);
+      for (const field of ['overview', 'discussions', 'loves', 'dislikes', 'rules', 'approach']) {
+        assert(typeof body[field] === 'string' && body[field].length > 0, `missing section: ${field}`);
+      }
     });
   } else {
     console.log('  \x1b[33mSKIP\x1b[0m  growth detail (no posts imported — run npm run growth:import)');

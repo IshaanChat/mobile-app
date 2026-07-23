@@ -281,12 +281,22 @@ model CommunityPost {
   url  String
 
   // Card text (one line) and the blog-post depth behind the tap.
+  // The post reads as a PROFILE of the community — descriptive, editorial —
+  // with the how-to-approach guidance as a side element at the end.
   tagline  String
   // Who a business will actually find there — buyers, peers, lurkers.
   audience String
-  // The coached write-up: what it is, how to show up, what converts.
-  // Plain text with blank-line paragraph breaks.
-  body String
+  // What this place is. Paragraphs separated by blank lines.
+  overview String
+  // What people talk about and discuss. One item per line.
+  discussions String
+  // Buyer behavior: what wins them over / what turns them off. One per line.
+  loves    String
+  dislikes String
+  // Community rules and platform norms that limit how you can show up.
+  rules String
+  // The side element at the end: how to actually approach this place.
+  approach String
 
   // Comma-separated match keywords (same convention as Business fields).
   tags String

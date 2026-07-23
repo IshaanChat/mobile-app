@@ -1,8 +1,9 @@
-// The blog-post view behind a Growth card: hero, who-you'll-find-here,
-// the coached write-up, and the Explore button out to the community.
+// The blog-post view behind a Growth card. Reads as a PROFILE of the
+// community — overview, what they talk about, buyer likes/dislikes, house
+// rules — with the how-to-approach guidance as a side element at the end.
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
-import { useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -13,6 +14,9 @@ import { MaxContentWidth, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { formatMembers, KIND_LABELS, platformStyle } from '@/lib/platforms';
 import type { GrowthPostDetail } from '@/types';
+
+const splitLines = (text: string) =>
+  text.split('\n').map((l) => l.trim()).filter(Boolean);
 
 export default function GrowthPostScreen() {
   const theme = useTheme();
@@ -31,6 +35,28 @@ export default function GrowthPostScreen() {
 
   const style = post ? platformStyle(post.platform) : null;
   const members = post ? formatMembers(post.memberCount) : null;
+
+  const section = (title: string, children: ReactNode) => (
+    <View style={styles.section}>
+      <ThemedText type="smallBold" style={styles.sectionTitle}>{title}</ThemedText>
+      {children}
+    </View>
+  );
+
+  const bulletList = (text: string, mark: string, markColor?: string) => (
+    <View style={styles.list}>
+      {splitLines(text).map((item, i) => (
+        <View key={i} style={styles.listRow}>
+          <ThemedText type="small" style={[styles.listMark, markColor ? { color: markColor } : null]}>
+            {mark}
+          </ThemedText>
+          <ThemedText type="small" themeColor="textSecondary" style={styles.listText}>
+            {item}
+          </ThemedText>
+        </View>
+      ))}
+    </View>
+  );
 
   return (
     <ThemedView style={styles.root}>
@@ -74,14 +100,24 @@ export default function GrowthPostScreen() {
                 <ThemedText type="small" themeColor="textSecondary">{members}</ThemedText>
               ) : null}
 
+              {post.overview.split(/\n\s*\n/).map((para, i) => (
+                <ThemedText key={i} style={styles.para}>{para.trim()}</ThemedText>
+              ))}
+
               <View style={[styles.audienceCard, { backgroundColor: theme.backgroundElement }]}>
                 <ThemedText type="smallBold">Who you’ll find here</ThemedText>
                 <ThemedText type="small" themeColor="textSecondary">{post.audience}</ThemedText>
               </View>
 
-              {post.body.split(/\n\s*\n/).map((para, i) => (
-                <ThemedText key={i} style={styles.para}>{para.trim()}</ThemedText>
-              ))}
+              {section('What they talk about', bulletList(post.discussions, '•'))}
+              {section('What wins them over', bulletList(post.loves, '✓', theme.success))}
+              {section('What turns them off', bulletList(post.dislikes, '✕', theme.danger))}
+              {section('House rules', bulletList(post.rules, '§'))}
+
+              <View style={[styles.approachCard, { backgroundColor: theme.backgroundElement, borderColor: theme.accent }]}>
+                <ThemedText type="smallBold" style={{ color: theme.accent }}>The play</ThemedText>
+                <ThemedText type="small">{post.approach}</ThemedText>
+              </View>
 
               <Pressable
                 accessibilityRole="button"
@@ -121,15 +157,28 @@ const styles = StyleSheet.create({
   },
   chipText: { color: '#ffffff', fontSize: 12, lineHeight: 16 },
   title: { marginTop: Spacing.two },
+  para: { marginTop: Spacing.two },
   audienceCard: {
     borderRadius: Spacing.three,
     padding: Spacing.three,
     gap: Spacing.one,
     marginVertical: Spacing.two,
   },
-  para: { marginTop: Spacing.two },
-  explore: {
+  section: { marginTop: Spacing.three, gap: Spacing.two },
+  sectionTitle: { fontSize: 16 },
+  list: { gap: Spacing.two },
+  listRow: { flexDirection: 'row', gap: Spacing.two, alignItems: 'flex-start' },
+  listMark: { width: 16, textAlign: 'center' },
+  listText: { flex: 1 },
+  approachCard: {
     marginTop: Spacing.four,
+    borderRadius: Spacing.three,
+    borderWidth: 1.5,
+    padding: Spacing.three,
+    gap: Spacing.one,
+  },
+  explore: {
+    marginTop: Spacing.three,
     borderRadius: Spacing.three,
     paddingVertical: 16,
     alignItems: 'center',

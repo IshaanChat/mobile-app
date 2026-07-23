@@ -55,7 +55,8 @@ development. Replace it with your own curation and import with
 ## Growth posts (`communities.json`)
 
 The Growth feed uses the same workflow with `npm run growth:import`. Each
-post is a community written up blog-post deep:
+post reads as a PROFILE of the community — descriptive sections that fill
+the post, with the how-to-approach guidance as a side element at the end:
 
 ```jsonc
 {
@@ -65,8 +66,13 @@ post is a community written up blog-post deep:
   "kind": "community",              // required — community | hashtag | marketplace | search | event
   "url": "https://…",               // required — the Explore link
   "tagline": "One line for the card.",              // required
-  "audience": "Who a business finds there.",        // required — shown as its own section
-  "body": "The coached write-up.\n\nBlank lines separate paragraphs.", // required
+  "audience": "Who a business finds there.",        // required — its own section
+  "overview": "What this place is.\n\nBlank lines separate paragraphs.",  // required
+  "discussions": "One topic per line\nWhat people talk about",            // required
+  "loves": "What wins buyers over\nOne per line",                         // required
+  "dislikes": "What turns them off\nOne per line",                        // required
+  "rules": "Community rules / platform norms that limit you\nOne per line", // required
+  "approach": "The end-of-post side element: how to actually show up.",   // required
   "tags": "pottery, ceramics, clay",// required — matched against business niche/keywords
   "imageUrl": "https://…",          // optional — hero image
   "memberCount": 250000,            // optional — real numbers only; enricher fills later

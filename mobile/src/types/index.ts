@@ -248,8 +248,16 @@ export interface GrowthPost {
   hotness: number;
 }
 
+// Detail sections: the post reads as a profile of the community, with the
+// how-to-approach guidance as a side element at the end. List-like fields
+// (discussions/loves/dislikes/rules) are newline-separated items.
 export interface GrowthPostDetail extends GrowthPost {
-  body: string;
+  overview: string;
+  discussions: string;
+  loves: string;
+  dislikes: string;
+  rules: string;
+  approach: string;
 }
 
 export interface GrowthPayload {
