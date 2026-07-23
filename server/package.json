@@ -14,6 +14,7 @@
     "trends:import": "tsx scripts/import-trends.ts",
     "growth:import": "tsx scripts/import-communities.ts",
     "growth:images": "tsx scripts/enrich-images.ts",
+    "growth:preview": "tsx scripts/preview-communities.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "smoke": "node scripts/smoke.mjs"
