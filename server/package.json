@@ -13,6 +13,7 @@
     "seed": "tsx prisma/seed.ts",
     "trends:import": "tsx scripts/import-trends.ts",
     "growth:import": "tsx scripts/import-communities.ts",
+    "growth:images": "tsx scripts/enrich-images.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "smoke": "node scripts/smoke.mjs"

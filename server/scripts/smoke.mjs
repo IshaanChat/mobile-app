@@ -314,6 +314,7 @@ const run = async () => {
     const { status, body } = await api('GET', `/growth?businessId=${businessId}`);
     assert(status === 200 && Array.isArray(body.posts), `got ${status} ${JSON.stringify(body)}`);
     growthPostId = body.posts[0]?.id ?? null;
+    assert(!growthPostId || typeof body.posts[0].overview === 'string', 'feed post missing overview section');
   });
 
   await check('growth without a businessId is a 400, not a 500', async () => {

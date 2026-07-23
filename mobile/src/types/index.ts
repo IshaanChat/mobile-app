@@ -262,7 +262,8 @@ export interface GrowthPostDetail extends GrowthPost {
 
 export interface GrowthPayload {
   generatedAt: string;
-  posts: GrowthPost[];
+  // The feed carries full sections so cards expand in place (accordion).
+  posts: GrowthPostDetail[];
 }
 
 export interface FeedInteraction extends Interaction {

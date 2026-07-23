@@ -84,3 +84,23 @@ the post, with the how-to-approach guidance as a side element at the end:
 curated community set — **review and edit them; they carry the product's
 voice.** Only put real numbers in `memberCount` (leave it out rather than
 guess); a later enricher job fills stats from sanctioned APIs.
+
+### Community images (Pexels)
+
+Cards show a photo. Rather than hand-pick 24 of them, let the enricher pull
+free, commercial-use images from Pexels:
+
+```bash
+PEXELS_API_KEY=your_key npm run growth:images -- content/communities.json
+```
+
+Get a free key at <https://www.pexels.com/api/>. For each post *without* an
+`imageUrl`, it searches Pexels and writes the URL back into the JSON (plus
+`imageCredit`). The search term is the post's `imageQuery` if you set one,
+otherwise its first tag — so if the auto-pick is weak (business niches
+photograph cheesy), add `"imageQuery": "cozy pottery studio"` to steer it.
+Your own `imageUrl` is never overwritten unless you pass `--force`.
+
+Flow: `growth:images` (fill photos) → eyeball the picks → `growth:import`
+(load to the feed). The image is decorative mood, not a photo of the actual
+community.
