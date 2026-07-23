@@ -14,7 +14,10 @@
     "rules": "Self-promotion in posts is heavily restricted; shop links belong in your profile, not your captions\nDirect selling or price listings in threads are typically removed by moderators\nReddiquette applies: participation history matters, and accounts that only promote get flagged",
     "approach": "Show up as a maker, not a seller. Post work with its story, answer glaze and technique questions generously, and let your profile hold the shop link. When someone asks where to buy — and on good work, someone asks weekly — that's your opening.",
     "tags": "pottery, ceramics, ceramic, stoneware, mug, mugs, clay, handmade",
-    "hotness": 70
+    "hotness": 70,
+    "imageUrl": "https://images.pexels.com/photos/6611306/pexels-photo-6611306.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Yan Krukau / Pexels",
+    "imageQuery": "potter throwing clay wheel"
   },
   {
     "slug": "reddit-mugs",
@@ -31,7 +34,10 @@
     "rules": "Moderation is lighter than big craft subs, but Reddit-wide self-promotion norms still apply\nAccounts that only post their own products tend to get called out by regulars\nGift-season threads have informal etiquette: recommendations are welcome, spam is not",
     "approach": "Post your best work in natural light with capacity noted, engage as a fellow collector, and keep the cadence low — one strong post beats weekly promotion. November gift threads are the highest-intent moment of the year here.",
     "tags": "mug, mugs, ceramics, pottery, coffee, drinkware",
-    "hotness": 62
+    "hotness": 62,
+    "imageUrl": "https://images.pexels.com/photos/14918462/pexels-photo-14918462.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Ayşenur / Pexels",
+    "imageQuery": "handmade ceramic mug coffee"
   },
   {
     "slug": "ig-ceramics",
@@ -48,7 +54,10 @@
     "rules": "Hashtag reach is algorithmic: spammy tag-stuffing can quietly suppress visibility\nInstagram norms apply — buying followers or repost-farming damages account standing\nSales mechanics live in bio links and stories; captions that read as pure ads underperform",
     "approach": "Spend fifteen minutes a day leaving real observations on other makers' work — their audiences see your name and click through. Post process video consistently, keep availability in stories rather than captions, and let the grid be your gallery.",
     "tags": "ceramics, pottery, clay, stoneware, handmade",
-    "hotness": 66
+    "hotness": 66,
+    "imageUrl": "https://images.pexels.com/photos/3094036/pexels-photo-3094036.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "cottonbro studio / Pexels",
+    "imageQuery": "ceramic bowls studio shelf"
   },
   {
     "slug": "reddit-jewelrymaking",
@@ -65,7 +74,10 @@
     "rules": "Self-promotion is restricted; showcase posts are fine, sales pitches are not\nAI-generated designs and resale items are typically unwelcome or removed\nModerators expect participation beyond posting your own work",
     "approach": "Share process, answer beginner questions with patience, and let your name become known for expertise. The referrals and collaboration offers arrive by DM — when your work is good and your presence is generous, people ask, and the ask is the sale.",
     "tags": "jewelry, jewellery, earrings, necklace, rings, beads, silver",
-    "hotness": 60
+    "hotness": 60,
+    "imageUrl": "https://images.pexels.com/photos/33873067/pexels-photo-33873067.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Tahir Xəlfəquliyev / Pexels",
+    "imageQuery": "jewelry making workbench tools"
   },
   {
     "slug": "ig-handmadejewelry",
@@ -82,7 +94,10 @@
     "rules": "Algorithmic reach punishes spammy hashtag stuffing — relevance beats volume\nCounterfeit or trademarked designs face takedowns\nShopping features require Instagram's commerce approval; without them, the bio link carries everything",
     "approach": "Answer three questions in one glance — what is it, how big is it, how does it look worn. Post three times a week rather than in bursts, keep story highlights as your catalogue, and make buying one tap from every post.",
     "tags": "jewelry, jewellery, earrings, necklace, handmade",
-    "hotness": 68
+    "hotness": 68,
+    "imageUrl": "https://images.pexels.com/photos/5494378/pexels-photo-5494378.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Boris Pavlikovsky / Pexels",
+    "imageQuery": "handmade earrings flatlay"
   },
   {
     "slug": "reddit-candlemaking",
@@ -99,7 +114,10 @@
     "rules": "Direct self-promotion is against subreddit rules and gets removed quickly\nSafety standards are enforced culturally — dangerous advice gets corrected loudly\nYour post history is public: an account that only promotes reads as a spammer",
     "approach": "Help people fix sinkholes. Share your burn tests and honest failures. Your username's history becomes your storefront here — make it the history of someone who clearly knows wax, and let recommendations happen to you.",
     "tags": "candle, candles, wax, scent, fragrance",
-    "hotness": 58
+    "hotness": 58,
+    "imageUrl": "https://images.pexels.com/photos/8272376/pexels-photo-8272376.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Ron Lach / Pexels",
+    "imageQuery": "pouring candle wax"
   },
   {
     "slug": "reddit-soapmaking",
@@ -116,7 +134,10 @@
     "rules": "Self-promotion is restricted to what subreddit rules allow — check before posting anything shop-adjacent\nMedical or therapeutic claims about products are both against the rules and legally risky\nSafety-first culture: skipping lye safety in tutorials gets posts removed",
     "approach": "Show your cuts and cure racks, answer scent and sensitivity questions with real knowledge, and be generous with base recipes. The trust that builds is what gets your name dropped when the buying threads appear.",
     "tags": "soap, skincare, bath, handmade, natural",
-    "hotness": 55
+    "hotness": 55,
+    "imageUrl": "https://images.pexels.com/photos/7814808/pexels-photo-7814808.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Mikhail Nilov / Pexels",
+    "imageQuery": "handmade soap bars stacked"
   },
   {
     "slug": "reddit-knitting",
@@ -133,7 +154,10 @@
     "rules": "Strict self-promotion limits — promotional posts outside designated threads are removed\nPattern-credit etiquette is enforced socially and taken seriously\nCommission requests and sales talk have designated places; the main feed is not one",
     "approach": "Post your work in progress with pattern and yarn named, help beginners debug, and be the generous expert whose products happen to exist. The community converts through recognition, not promotion — your name spreading in comments is the marketing.",
     "tags": "knitting, yarn, wool, fiber, knit",
-    "hotness": 64
+    "hotness": 64,
+    "imageUrl": "https://images.pexels.com/photos/5903547/pexels-photo-5903547.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "ROMAN ODINTSOV / Pexels",
+    "imageQuery": "knitting needles sweater"
   },
   {
     "slug": "reddit-crochet",
@@ -150,7 +174,10 @@
     "rules": "Pattern-credit rules are enforced — always name the designer\nSelf-promotion is limited to designated threads and formats; check the sidebar\nBe-kind moderation: criticism culture is gentle, and harshness gets removed",
     "approach": "Post finished work with proper pattern credit, and answer pricing threads with honest math — that positions you as the professional in a room full of people deciding what handmade is worth. Use the designated promo spaces when you promote.",
     "tags": "crochet, yarn, amigurumi, fiber",
-    "hotness": 63
+    "hotness": 63,
+    "imageUrl": "https://images.pexels.com/photos/16178789/pexels-photo-16178789.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Татьяна Контеева / Pexels",
+    "imageQuery": "crochet amigurumi yarn"
   },
   {
     "slug": "ravelry",
@@ -167,7 +194,10 @@
     "rules": "Each group sets its own promotion rules — many restrict it to specific threads\nMarketplace standards apply to pattern sales: accurate listings, functioning downloads\nCommunity norms are strong and long-memoried; reputation compounds both directions",
     "approach": "Get your patterns and yarns into the database properly, join groups in your niche as a participant first, and treat every member-made project photo as marketing you didn't have to pay for. A pattern with twenty beautiful member projects sells itself.",
     "tags": "knitting, crochet, yarn, pattern, fiber, wool",
-    "hotness": 61
+    "hotness": 61,
+    "imageUrl": "https://images.pexels.com/photos/8931794/pexels-photo-8931794.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Sami  Aksu / Pexels",
+    "imageQuery": "colorful yarn balls basket"
   },
   {
     "slug": "reddit-artbusiness",
@@ -184,7 +214,10 @@
     "rules": "Self-promotion is restricted — this is a discussion space, not a gallery\nPortfolio critiques and shop reviews happen in designated formats\nSpam and referral-link dropping are removed",
     "approach": "Share your own numbers and lessons candidly — the community reciprocates in kind. Don't expect end buyers here; expect the intelligence and peer network that make every other channel work better, plus the occasional overflow commission from an artist who trusts you.",
     "tags": "art, artist, prints, painting, illustration, drawing",
-    "hotness": 56
+    "hotness": 56,
+    "imageUrl": "https://images.pexels.com/photos/4362304/pexels-photo-4362304.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Yaroslav Shuraev / Pexels",
+    "imageQuery": "artist painting studio"
   },
   {
     "slug": "ig-artprints",
@@ -201,7 +234,10 @@
     "rules": "Algorithmic visibility punishes tag-stuffing; relevant niche tags outperform volume\nCopyright enforcement is real — fan art and derivative work face takedowns\nWithout Instagram Shopping approval, the bio link carries the entire purchase path",
     "approach": "Photograph every print in a styled room, state sizes and prices in the caption, and pair this tag with taste tags for your subject matter. Re-shoot your catalogue in new rooms seasonally — the tag rewards fresh photos, not just fresh art.",
     "tags": "art, prints, painting, illustration",
-    "hotness": 59
+    "hotness": 59,
+    "imageUrl": "https://images.pexels.com/photos/383568/pexels-photo-383568.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Medhat Ayad / Pexels",
+    "imageQuery": "framed art prints gallery wall"
   },
   {
     "slug": "reddit-stickers",
@@ -218,7 +254,10 @@
     "rules": "Promotion norms lean permissive but reward participation — pure ad accounts stagnate\nArt theft is policed aggressively by the community itself\nTrade etiquette is real: honor trades, ship what you promised",
     "approach": "Soft-launch new designs here and let the comments pick your print run. Run small giveaways and trades early — seeding beats selling at the start, and say \"waterproof vinyl\" out loud, because they'll ask.",
     "tags": "sticker, stickers, stationery, vinyl",
-    "hotness": 54
+    "hotness": 54,
+    "imageUrl": "https://images.pexels.com/photos/17567386/pexels-photo-17567386.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Arindam Raha / Pexels",
+    "imageQuery": "vinyl stickers laptop"
   },
   {
     "slug": "reddit-woodworking",
@@ -235,7 +274,10 @@
     "rules": "Self-promotion and direct selling are restricted; the work can speak but the pitch cannot\nCommission conversations happen in DMs, not threads\nSafety culture is enforced socially and by moderators",
     "approach": "Post finished pieces with full process shots, and detail your materials and finishes in comments — visible expertise is what separates you. The commissions come to your inbox; your job in the thread is to be the woodworker worth asking.",
     "tags": "wood, woodworking, furniture, carving, cutting board",
-    "hotness": 62
+    "hotness": 62,
+    "imageUrl": "https://images.pexels.com/photos/5974407/pexels-photo-5974407.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Ono  Kosuki / Pexels",
+    "imageQuery": "woodworking hand tools workshop"
   },
   {
     "slug": "reddit-baking",
@@ -252,7 +294,10 @@
     "rules": "Self-promotion is limited; business posts belong in designated spaces\nCottage food laws vary by region — legal advice threads are informational, not authoritative\nRecipe-sharing culture is expected; posts that gate everything behind a link get removed",
     "approach": "Use it as your public portfolio and technique reputation, mention your city naturally in comments, and crosspost your best work to your city's subreddit — that's where the actual customers live. Know your cottage food laws and state plainly what you offer.",
     "tags": "baking, cake, cookies, dessert, bakery, food",
-    "hotness": 57
+    "hotness": 57,
+    "imageUrl": "https://images.pexels.com/photos/16140003/pexels-photo-16140003.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Doğu Tuncer / Pexels",
+    "imageQuery": "baker decorating pastry"
   },
   {
     "slug": "ig-customcakes",
@@ -269,7 +314,10 @@
     "rules": "Local discoverability depends on city tags and location tagging — the generic tag alone won't be found\nFood business regulations (licensing, labeling) vary by region and apply to what you claim\nDM-based ordering means response time is part of the product",
     "approach": "Always tag your city and use local tag variants — an out-of-town like is worthless, a local follow is a future order. Organize story highlights by occasion, anchor your pricing publicly, and treat DM response speed as part of your reputation.",
     "tags": "cake, baking, bakery, dessert, wedding",
-    "hotness": 60
+    "hotness": 60,
+    "imageUrl": "https://images.pexels.com/photos/12616001/pexels-photo-12616001.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Atlantic Ambience / Pexels",
+    "imageQuery": "decorated birthday cake"
   },
   {
     "slug": "reddit-entrepreneur",
@@ -286,7 +334,10 @@
     "rules": "Self-promotion and link-dropping are aggressively removed\nAMAs and promotional formats require moderator arrangement\nAccounts that pitch in DMs after commenting get reported and banned",
     "approach": "Pick the three question types you're genuinely best at and answer them thoroughly for weeks, without linking anything. Your profile becomes the funnel — people who trust the answers check the bio, and the DMs that follow are warm.",
     "tags": "coach, coaching, business, consulting, entrepreneur, startup",
-    "hotness": 58
+    "hotness": 58,
+    "imageUrl": "https://images.pexels.com/photos/5356215/pexels-photo-5356215.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Roberto Hund / Pexels",
+    "imageQuery": "entrepreneur working laptop cafe"
   },
   {
     "slug": "reddit-smallbusiness",
@@ -303,7 +354,10 @@
     "rules": "Self-promotion in comments and posts is against the rules and removed\nDMing question-askers uninvited violates community norms and gets reported\nFlair and formats exist for the few permitted promotional moments",
     "approach": "Give away real answers — specific enough to screenshot — in your professional lane, consistently. The conversion is slow but high-value: by the time an owner DMs you, they already trust you, and trust is the product.",
     "tags": "coach, coaching, business, consulting, services, marketing",
-    "hotness": 57
+    "hotness": 57,
+    "imageUrl": "https://images.pexels.com/photos/3735172/pexels-photo-3735172.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Polina Tankilevitch / Pexels",
+    "imageQuery": "small business owner shop counter"
   },
   {
     "slug": "x-shopsmall",
@@ -320,7 +374,10 @@
     "rules": "Platform spam detection throttles repetitive link posting\nThread etiquette is informal but real: match the thread's format and tone\nReach is reply-driven — the algorithm rewards engagement over broadcast",
     "approach": "Keep a ready-to-paste intro — one line, one image, one link — and show up early when the big threads run. Follow the accounts that host them regularly; on X, the reply beats the broadcast every time.",
     "tags": "handmade, craft, shop, etsy, vintage, maker",
-    "hotness": 55
+    "hotness": 55,
+    "imageUrl": "https://images.pexels.com/photos/31763620/pexels-photo-31763620.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Omar Ramadan / Pexels",
+    "imageQuery": "boutique storefront shopping"
   },
   {
     "slug": "tiktok-smallbusinesscheck",
@@ -337,7 +394,10 @@
     "rules": "Shop features and link capabilities are gated by TikTok's commerce requirements\nMusic licensing matters for business accounts — commercial sound libraries apply\nAlgorithmic distribution is volatile: reach is earned per-video, never owned",
     "approach": "Start with packing videos — low effort, proven format — and post consistently rather than perfectly. Reply to comments with more video, keep your back catalogue up, and treat every video as a lottery ticket the algorithm might resurrect months later.",
     "tags": "handmade, craft, shop, etsy, seller, business",
-    "hotness": 74
+    "hotness": 74,
+    "imageUrl": "https://images.pexels.com/photos/7857532/pexels-photo-7857532.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Kampus Production / Pexels",
+    "imageQuery": "packing online order box"
   },
   {
     "slug": "tiktok-crafttok",
@@ -354,7 +414,10 @@
     "rules": "Commercial music licensing applies to business accounts\nTikTok's volatile distribution means consistency matters more than any single hit\nShopping links require meeting TikTok's commerce eligibility bars",
     "approach": "Find the stage of your craft that's most satisfying to watch and film it relentlessly — batch ten videos on making days. Pin the video that shows product plus where to get it, and let raw-and-real beat produced every time.",
     "tags": "craft, handmade, pottery, ceramics, knitting, crochet, candle, soap, art",
-    "hotness": 72
+    "hotness": 72,
+    "imageUrl": "https://images.pexels.com/photos/10474291/pexels-photo-10474291.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "RDNE Stock project / Pexels",
+    "imageQuery": "crafting hands making"
   },
   {
     "slug": "etsy-forums",
@@ -371,7 +434,10 @@
     "rules": "Etsy's community guidelines govern the forums; promotion belongs in designated threads\nCritique threads have formats — follow them or get skipped\nFee and policy complaints are tolerated; ToS-violating advice is removed",
     "approach": "Search before you change your shop — someone has already tested it. Give critiques as well as ask; reciprocity gets noticed. Treat the daily complaints thread as weather, not strategy — the sellers doing well are mostly busy selling.",
     "tags": "handmade, etsy, craft, shop, seller",
-    "hotness": 52
+    "hotness": 52,
+    "imageUrl": "https://images.pexels.com/photos/7857589/pexels-photo-7857589.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Kampus Production / Pexels",
+    "imageQuery": "online seller laptop workspace"
   },
   {
     "slug": "reddit-somethingimade",
@@ -388,7 +454,10 @@
     "rules": "You must have made the thing — resale and manufactured goods are removed\nDirect selling and pricing in posts is against the rules; interested buyers go to DMs\nWatermarks and promotional framing draw moderator and community pushback",
     "approach": "Save this for your greatest hits — your single most striking piece, one hero photo, story in the comments. It's not a channel, it's a stage; use it occasionally and let the DMs come to you.",
     "tags": "handmade, craft, maker, diy",
-    "hotness": 61
+    "hotness": 61,
+    "imageUrl": "https://images.pexels.com/photos/4452611/pexels-photo-4452611.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Vlada Karpovich / Pexels",
+    "imageQuery": "handmade craft workshop table"
   },
   {
     "slug": "pinterest-handmade",
@@ -405,6 +474,9 @@
     "rules": "It's a search engine: keywords in pin titles and descriptions decide discoverability\nSeasonal indexing runs early — Christmas pinning starts in September, weddings in January\nClaimed accounts and functioning product links are required for shopping features",
     "approach": "Make several vertical pins per product, each targeting a different search a planner would run, and pin seasonally early. Treat it as gardening, not broadcasting — what you plant this month sells next year.",
     "tags": "handmade, craft, gift, wedding, decor, jewelry, art",
-    "hotness": 63
+    "hotness": 63,
+    "imageUrl": "https://images.pexels.com/photos/10224944/pexels-photo-10224944.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Djordje Vezilic / Pexels",
+    "imageQuery": "handmade gift wrapping flatlay"
   }
 ]
