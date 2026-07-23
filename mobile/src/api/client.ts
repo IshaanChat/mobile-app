@@ -1,4 +1,4 @@
-import type { Business, Channel, Contact, ContactDetail, ContactStatus, ChannelType, GraphPayload, InteractionType, FeedInteraction, DetectedChannel, NoLinkKind, DiscoverResult, DiscoverStatus, AppSettings, LlmTestResult, UserProfile, Gender, ExperienceLevel, MissionsPayload, SocialLink, SocialPlatform, Payment, PaymentsPayload, Product, ProductsPayload, TrendCard, TrendsPayload } from '../types';
+import type { Business, Channel, Contact, ContactDetail, ContactStatus, ChannelType, GraphPayload, InteractionType, FeedInteraction, DetectedChannel, NoLinkKind, DiscoverResult, DiscoverStatus, AppSettings, LlmTestResult, UserProfile, Gender, ExperienceLevel, MissionsPayload, SocialLink, SocialPlatform, Payment, PaymentsPayload, Product, ProductsPayload, TrendCard, TrendsPayload, GrowthPayload, GrowthPostDetail } from '../types';
 
 // The native app always talks to a full API origin (there is no dev proxy like
 // the web client's Vite server). Set EXPO_PUBLIC_API_URL in .env — no trailing
@@ -140,6 +140,9 @@ export const api = {
     return request<TrendsPayload>(`/trends${q ? `?${q}` : ''}`);
   },
   getSavedTrends: () => request<TrendCard[]>('/trends/saved'),
+
+  getGrowth: (businessId: string) => request<GrowthPayload>(`/growth?businessId=${businessId}`),
+  getGrowthPost: (id: string) => request<GrowthPostDetail>(`/growth/${id}`),
   saveTrend: (id: string) => request<{ saved: boolean }>(`/trends/${id}/save`, { method: 'POST' }),
   unsaveTrend: (id: string) => request<void>(`/trends/${id}/save`, { method: 'DELETE' }),
   dismissTrend: (id: string) => request<{ dismissed: boolean }>(`/trends/${id}/dismiss`, { method: 'POST' }),

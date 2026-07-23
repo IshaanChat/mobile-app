@@ -233,6 +233,30 @@ export interface TrendsPayload {
   cards: TrendCard[];
 }
 
+// A Growth-feed post: a community where this business finds customers,
+// written up blog-post deep.
+export interface GrowthPost {
+  id: string;
+  title: string;
+  platform: string;
+  kind: 'community' | 'hashtag' | 'marketplace' | 'search' | 'event';
+  url: string;
+  tagline: string;
+  audience: string;
+  imageUrl: string | null;
+  memberCount: number | null;
+  hotness: number;
+}
+
+export interface GrowthPostDetail extends GrowthPost {
+  body: string;
+}
+
+export interface GrowthPayload {
+  generatedAt: string;
+  posts: GrowthPost[];
+}
+
 export interface FeedInteraction extends Interaction {
   contact: {
     id: string;
