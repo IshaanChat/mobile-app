@@ -308,6 +308,34 @@ const run = async () => {
     console.log('  \x1b[33mSKIP\x1b[0m  trend reactions (no cards imported — run npm run trends:import)');
   }
 
+  // --- growth (community posts) --------------------------------------------
+  let growthPostId = null;
+  await check('growth feed responds for a business owner', async () => {
+    const { status, body } = await api('GET', `/growth?businessId=${businessId}`);
+    assert(status === 200 && Array.isArray(body.posts), `got ${status} ${JSON.stringify(body)}`);
+    growthPostId = body.posts[0]?.id ?? null;
+  });
+
+  await check('growth without a businessId is a 400, not a 500', async () => {
+    const { status } = await api('GET', '/growth');
+    assert(status === 400, `got ${status}`);
+  });
+
+  if (growthPostId) {
+    await check('growth post detail includes the body', async () => {
+      const { status, body } = await api('GET', `/growth/${growthPostId}`);
+      assert(status === 200 && typeof body.body === 'string' && body.body.length > 0,
+        `got ${status}`);
+    });
+  } else {
+    console.log('  \x1b[33mSKIP\x1b[0m  growth detail (no posts imported — run npm run growth:import)');
+  }
+
+  await check('unknown growth post returns 404, not 500', async () => {
+    const { status } = await api('GET', '/growth/does-not-exist');
+    assert(status === 404, `got ${status}`);
+  });
+
   // --- tenant isolation ---------------------------------------------------
   // Everything below runs as a DIFFERENT account (smoke-b) against the data
   // created by smoke-a. Every one must be refused.
@@ -379,6 +407,11 @@ const run = async () => {
 
   await check("another account cannot personalize trends with the business's id", async () => {
     const { status } = await asB('GET', `/trends?businessId=${businessId}`);
+    assert(status === 404, `expected 404, got ${status}`);
+  });
+
+  await check("another account cannot read the business's growth feed", async () => {
+    const { status } = await asB('GET', `/growth?businessId=${businessId}`);
     assert(status === 404, `expected 404, got ${status}`);
   });
 

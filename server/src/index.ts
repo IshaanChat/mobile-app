@@ -19,6 +19,7 @@ import { paymentsRouter } from './routes/payments';
 import { analyticsRouter, registerAnalytics } from './modules/analytics';
 import { productsRouter } from './routes/products';
 import { trendsRouter } from './routes/trends';
+import { growthRouter } from './routes/growth';
 import { errorHandler, notFoundHandler } from './core/http';
 import { requireAuth, clerkConfigured } from './core/auth';
 
@@ -63,6 +64,7 @@ app.use('/api/payments', paymentsRouter);
 app.use('/api/analytics', analyticsRouter);
 app.use('/api/products', productsRouter);
 app.use('/api/trends', trendsRouter);
+app.use('/api/growth', growthRouter);
 
 // Subscribe cross-cutting modules to the event bus.
 registerAnalytics();

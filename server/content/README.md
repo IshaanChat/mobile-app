@@ -51,3 +51,30 @@ ordering the file.
 The sample file is placeholder content so the feed renders during
 development. Replace it with your own curation and import with
 `--archive-missing` to retire the samples.
+
+## Growth posts (`communities.json`)
+
+The Growth feed uses the same workflow with `npm run growth:import`. Each
+post is a community written up blog-post deep:
+
+```jsonc
+{
+  "slug": "reddit-pottery",         // required, stable id
+  "title": "r/Pottery",             // required
+  "platform": "Reddit",             // required — drives feed diversity + card styling
+  "kind": "community",              // required — community | hashtag | marketplace | search | event
+  "url": "https://…",               // required — the Explore link
+  "tagline": "One line for the card.",              // required
+  "audience": "Who a business finds there.",        // required — shown as its own section
+  "body": "The coached write-up.\n\nBlank lines separate paragraphs.", // required
+  "tags": "pottery, ceramics, clay",// required — matched against business niche/keywords
+  "imageUrl": "https://…",          // optional — hero image
+  "memberCount": 250000,            // optional — real numbers only; enricher fills later
+  "hotness": 70                     // optional 0–100 editorial priority (default 50)
+}
+```
+
+`communities.json` currently holds AI-drafted write-ups of the proven
+curated community set — **review and edit them; they carry the product's
+voice.** Only put real numbers in `memberCount` (leave it out rather than
+guess); a later enricher job fills stats from sanctioned APIs.

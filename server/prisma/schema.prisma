@@ -261,6 +261,50 @@ model TrendCard {
   @@index([status])
 }
 
+// Curated content for the Growth feed: a community/place where a business
+// finds customers, written up as a coached blog-style post. Same global,
+// curator-owned model as TrendCard: loaded via `npm run growth:import`,
+// read-only through the API. Live stats (memberCount, icon images) are
+// nullable — a later enricher job fills them from sanctioned APIs (Reddit
+// public JSON, YouTube API); nothing is ever scraped against ToS.
+model CommunityPost {
+  id   String @id @default(cuid())
+  // Curator-chosen stable identity so re-importing updates in place.
+  slug String @unique
+
+  title String
+  // Where it lives: Reddit, Instagram, TikTok, X, YouTube, Etsy, Pinterest,
+  // Facebook, Forum… Drives feed diversity and card styling.
+  platform String
+  // One of: community, hashtag, marketplace, search, event
+  kind String
+  url  String
+
+  // Card text (one line) and the blog-post depth behind the tap.
+  tagline  String
+  // Who a business will actually find there — buyers, peers, lurkers.
+  audience String
+  // The coached write-up: what it is, how to show up, what converts.
+  // Plain text with blank-line paragraph breaks.
+  body String
+
+  // Comma-separated match keywords (same convention as Business fields).
+  tags String
+
+  imageUrl    String?
+  // Filled by the enricher where an official API provides it.
+  memberCount Int?
+  // Curator-set 0–100 editorial priority.
+  hotness Int @default(50)
+  // One of: ACTIVE, ARCHIVED
+  status String @default("ACTIVE")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+}
+
 // A user's reaction to a trend card. state: SAVED (their idea shelf) or
 // DISMISSED (never show again). Doubles as the engagement log the ranking
 // algorithm will learn from later.

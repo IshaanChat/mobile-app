@@ -25,7 +25,9 @@ export type AppEventType =
   | 'product.stock_changed'
   | 'trend.saved'
   | 'trend.unsaved'
-  | 'trend.dismissed';
+  | 'trend.dismissed'
+  | 'growth.generated'
+  | 'growth.post_viewed';
 
 export interface AppEventPayload {
   type: AppEventType;
