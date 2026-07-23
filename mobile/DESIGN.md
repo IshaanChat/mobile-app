@@ -60,7 +60,11 @@ without app-store releases.
 
 ## Stack decisions
 
-- **Expo SDK 57** (React 19, RN 0.86), TypeScript, expo-router.
+- **Expo SDK 56** (React 19, RN 0.85), TypeScript, expo-router. Started on
+  SDK 57, but the App Store build of Expo Go for 57 was still in Apple's
+  review queue, so a physical iPhone with the latest Expo Go couldn't run it.
+  Downgraded to 56 for on-device testing. Revisit 57 once its Expo Go ships
+  (or when we move to a dev/EAS build, which doesn't depend on Expo Go).
 - **Auth: `@clerk/expo` v4** (peer `expo >=54 <58` — verified). Same Clerk
   instance as web; token cache via `expo-secure-store`. Like the web client,
   auth is opt-in: no `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` = dev mode against a
