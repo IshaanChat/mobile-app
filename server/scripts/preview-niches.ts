@@ -1,14 +1,14 @@
 /**
- * Niche & product explorer — the curator/base version of Discover.
+ * Niche & product explorer — the base version of Discover, rendered as the
+ * app's mobile accordion cards (same pattern as growth:preview).
  *
  *   npm run niches:preview                      (serves content/niches.json)
  *   npm run niches:preview -- content/other.json
  *
- * A local page for browsing every niche: image, audience, and one starter
- * product with cost → resale and a real sourcing link. Filter by audience
- * (maker / reseller / both) or search. Re-reads the JSON on every request —
- * edit the file, refresh the browser. Preview only; nothing touches the
- * database or the app.
+ * Collapsed: image hero + niche + product teaser. Tap a card to expand the
+ * full write-up (blurb, economics, sourcing link) in place. Filter by
+ * audience or search. Re-reads the JSON on every request — edit the file,
+ * refresh the browser. Preview only; nothing touches the database or app.
  */
 
 import { readFileSync } from 'fs';
@@ -34,29 +34,43 @@ const AUDIENCE_COLORS: Record<string, string> = {
 const esc = (s: string) =>
   String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
-function card(n: any) {
+function card(n: any, i: number) {
   const p = n.product ?? {};
   const aud = AUDIENCE_COLORS[n.audience] ?? '#60646c';
-  return `<div class="card" data-aud="${esc(n.audience)}" data-text="${esc((n.name + ' ' + n.domain + ' ' + (p.title ?? '') + ' ' + n.tags).toLowerCase())}">
-    <div class="hero" style="background-image:url('${esc(n.imageUrl ?? '')}')">
-      <span class="aud" style="background:${aud}">${esc(AUDIENCE_LABELS[n.audience] ?? n.audience)}</span>
-    </div>
-    <div class="body">
-      <div class="domain">${esc(n.domain)}</div>
-      <div class="name">${esc(n.name)}</div>
-      <div class="product">
-        <div class="p-head">
-          <span class="p-kind">${esc(SOURCING_LABELS[p.sourcingType] ?? p.sourcingType ?? '')}</span>
+  return `<div class="card" data-i="${i}" data-aud="${esc(n.audience)}" data-text="${esc((n.name + ' ' + n.domain + ' ' + (p.title ?? '') + ' ' + n.tags).toLowerCase())}">
+    <div class="head" onclick="toggle(${i})">
+      <div class="hero" style="background-image:url('${esc(n.imageUrl ?? '')}')">
+        <div class="chips">
+          <span class="chip" style="background:${aud}">${esc(AUDIENCE_LABELS[n.audience] ?? n.audience)}</span>
+          <span class="chip chip-dark">${esc(SOURCING_LABELS[p.sourcingType] ?? p.sourcingType ?? '')}</span>
         </div>
-        <div class="p-title">${esc(p.title ?? '')}</div>
-        <div class="p-blurb">${esc(p.blurb ?? '')}</div>
-        <div class="p-econ">
+      </div>
+      <div class="body">
+        <div class="titlerow">
+          <div>
+            <div class="domain">${esc(n.domain)}</div>
+            <div class="title">${esc(n.name)}</div>
+            <div class="tagline">${esc(p.title ?? '')}</div>
+          </div>
+          <div class="chev">&#9660;</div>
+        </div>
+      </div>
+    </div>
+    <div class="expand">
+      <p class="blurb">${esc(p.blurb ?? '')}</p>
+      <div class="econ">
+        <div class="econ-t">The math</div>
+        <div class="econ-row">
           <span class="cost">${esc(p.sourceCost ?? '')}</span>
           <span class="arrow">&rarr;</span>
           <span class="resale">${esc(p.typicalResale ?? '')}</span>
         </div>
-        <a class="source" href="${esc(p.sourcingUrl ?? '#')}" target="_blank" rel="noreferrer">Source it on ${esc(p.sourceName ?? 'the web')} &#8599;</a>
       </div>
+      <div class="srcbox">
+        <div class="src-t">Where to source</div>
+        <div class="src-b">${esc(p.sourceName ?? '')} &middot; ${esc(SOURCING_LABELS[p.sourcingType] ?? '')}</div>
+      </div>
+      <a class="source" href="${esc(p.sourcingUrl ?? '#')}" target="_blank" rel="noreferrer">Source it &#8599;</a>
       ${n.imageCredit ? `<div class="credit">Photo: ${esc(n.imageCredit)}</div>` : ''}
     </div>
   </div>`;
@@ -70,52 +84,66 @@ function page(niches: any[]) {
 <style>
   * { box-sizing:border-box; }
   body { margin:0; background:#f4f4f6; color:#111; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
-  .wrap { max-width:960px; margin:0 auto; padding:16px; }
-  h1 { font-size:24px; margin:8px 0 2px; }
-  .sub { color:#60646c; font-size:13px; margin-bottom:14px; }
-  .controls { position:sticky; top:0; background:#f4f4f6; padding:10px 0; z-index:5; display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
-  .controls input { flex:1; min-width:180px; border:1px solid #d0d2d8; border-radius:10px; padding:9px 12px; font-size:14px; }
-  .chipbtn { border:1px solid #d0d2d8; background:#fff; border-radius:999px; padding:7px 14px; font-size:13px; cursor:pointer; }
+  .wrap { max-width:440px; margin:0 auto; padding:16px; }
+  .bar { position:sticky; top:0; background:#f4f4f6; padding:12px 0 10px; z-index:5; }
+  .bar h1 { font-size:22px; margin:0; }
+  .bar .sub { color:#60646c; font-size:13px; margin:2px 0 10px; }
+  .bar input { width:100%; border:1px solid #d0d2d8; border-radius:12px; padding:10px 14px; font-size:14px; margin-bottom:8px; }
+  .filters { display:flex; gap:8px; overflow-x:auto; }
+  .chipbtn { border:1px solid #d0d2d8; background:#fff; border-radius:999px; padding:7px 14px; font-size:13px; cursor:pointer; white-space:nowrap; }
   .chipbtn.on { background:#111; color:#fff; border-color:#111; }
-  h2.domain-h { font-size:17px; margin:22px 0 10px; }
-  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; }
-  .card { background:#fff; border-radius:16px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.06); display:flex; flex-direction:column; }
-  .hero { height:140px; background-size:cover; background-position:center; position:relative; }
-  .aud { position:absolute; left:12px; bottom:12px; color:#fff; font-size:11px; font-weight:600; padding:4px 10px; border-radius:999px; }
-  .body { padding:12px 14px 14px; display:flex; flex-direction:column; flex:1; }
+  .domain-h { font-size:16px; font-weight:600; margin:20px 0 10px; }
+  .card { background:#fff; border-radius:16px; overflow:hidden; margin-bottom:16px; box-shadow:0 1px 3px rgba(0,0,0,0.06); }
+  .head { cursor:pointer; }
+  .hero { height:180px; background-size:cover; background-position:center; position:relative; }
+  .chips { position:absolute; left:14px; bottom:14px; display:flex; gap:8px; }
+  .chip { color:#fff; font-size:12px; font-weight:600; padding:4px 10px; border-radius:999px; }
+  .chip-dark { background:rgba(0,0,0,0.55); font-weight:500; }
+  .body { padding:14px 16px; }
+  .titlerow { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; }
   .domain { color:#9095a0; font-size:11px; text-transform:uppercase; letter-spacing:0.4px; }
-  .name { font-size:17px; font-weight:600; margin:2px 0 10px; }
-  .product { background:#f7f7f9; border-radius:12px; padding:12px; flex:1; display:flex; flex-direction:column; }
-  .p-kind { color:#60646c; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.4px; }
-  .p-title { font-size:14px; font-weight:600; margin:5px 0 4px; }
-  .p-blurb { font-size:13px; color:#60646c; line-height:1.5; flex:1; }
-  .p-econ { margin:10px 0 8px; font-size:13px; font-variant:tabular-nums; }
+  .title { font-size:18px; font-weight:600; margin-top:2px; }
+  .tagline { color:#60646c; font-size:14px; margin-top:3px; line-height:1.4; }
+  .chev { color:#9095a0; font-size:12px; padding-top:4px; transition:transform 0.15s; }
+  .card.open .chev { transform:rotate(180deg); }
+  .expand { display:none; padding:0 16px 18px; }
+  .card.open .expand { display:block; }
+  .blurb { font-size:14px; line-height:1.6; margin:4px 0 0; }
+  .econ { background:#f4f4f6; border-radius:12px; padding:12px 14px; margin-top:14px; }
+  .econ-t { font-size:13px; font-weight:600; margin-bottom:4px; }
+  .econ-row { font-size:15px; font-variant:tabular-nums; }
   .cost { color:#60646c; }
-  .arrow { color:#9095a0; margin:0 6px; }
-  .resale { color:#188038; font-weight:600; }
-  .source { display:block; text-align:center; background:#208aef; color:#fff; font-weight:600; font-size:13px; padding:10px; border-radius:10px; text-decoration:none; }
-  .credit { color:#b0b3ba; font-size:10px; margin-top:8px; text-align:right; }
+  .arrow { color:#9095a0; margin:0 8px; }
+  .resale { color:#188038; font-weight:700; }
+  .srcbox { border:1.5px solid #208aef; border-radius:12px; padding:12px 14px; margin-top:12px; }
+  .src-t { color:#208aef; font-size:13px; font-weight:600; }
+  .src-b { font-size:14px; margin-top:3px; }
+  .source { display:block; text-align:center; background:#208aef; color:#fff; font-weight:600; font-size:14px; padding:14px; border-radius:12px; margin-top:12px; text-decoration:none; }
+  .credit { color:#b0b3ba; font-size:10px; margin-top:10px; text-align:center; }
   .empty { color:#60646c; font-size:14px; padding:40px 0; text-align:center; display:none; }
 </style></head><body>
 <div class="wrap">
-  <h1>Niche &amp; product explorer</h1>
-  <div class="sub">${niches.length} niches &middot; ${domains.length} categories &middot; from ${esc(file)} &middot; base version, not the live app</div>
-  <div class="controls">
+  <div class="bar">
+    <h1>Discover &mdash; base</h1>
+    <div class="sub">${niches.length} niches &middot; tap a card for the full picture</div>
     <input id="q" placeholder="Search niches, products, tags…" oninput="apply()">
-    <button class="chipbtn on" data-f="all" onclick="setF(this)">All</button>
-    <button class="chipbtn" data-f="maker" onclick="setF(this)">Maker</button>
-    <button class="chipbtn" data-f="reseller" onclick="setF(this)">Reseller</button>
-    <button class="chipbtn" data-f="both" onclick="setF(this)">Both</button>
+    <div class="filters">
+      <button class="chipbtn on" data-f="all" onclick="setF(this)">All</button>
+      <button class="chipbtn" data-f="maker" onclick="setF(this)">Maker</button>
+      <button class="chipbtn" data-f="reseller" onclick="setF(this)">Reseller</button>
+      <button class="chipbtn" data-f="both" onclick="setF(this)">Both</button>
+    </div>
   </div>
   ${domains.map((d) => `
     <section class="domain-sec">
-      <h2 class="domain-h">${esc(d)}</h2>
-      <div class="grid">${niches.filter((n) => n.domain === d).map(card).join('')}</div>
+      <div class="domain-h">${esc(d)}</div>
+      ${niches.map((n, i) => ({ n, i })).filter(({ n }) => n.domain === d).map(({ n, i }) => card(n, i)).join('')}
     </section>`).join('')}
   <div class="empty" id="empty">Nothing matches — clear the search or filter.</div>
 </div>
 <script>
   var f = 'all';
+  function toggle(i){ document.querySelector('.card[data-i="'+i+'"]').classList.toggle('open'); }
   function setF(btn){
     f = btn.dataset.f;
     document.querySelectorAll('.chipbtn').forEach(function(b){ b.classList.toggle('on', b===btn); });
