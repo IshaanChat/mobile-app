@@ -1,0 +1,895 @@
+[
+  {
+    "slug": "ceramics-pottery",
+    "name": "Ceramics & pottery",
+    "domain": "Home & Living",
+    "audience": "maker",
+    "tags": "pottery, ceramics, clay, stoneware, mug",
+    "imageQuery": "potter glazing ceramic bowl",
+    "product": {
+      "title": "Chunky hand-thrown latte mugs",
+      "blurb": "Oversized rustic mugs keep selling out for indie potters — cafe culture at home. Supplies-wise, mid-fire stoneware clay and a couple of reliable glazes are all a starter batch needs.",
+      "sourcingType": "MATERIALS",
+      "sourceName": "AliExpress (glazes & tools)",
+      "sourcingUrl": "https://www.aliexpress.com/w/wholesale-pottery-glaze.html",
+      "sourceCost": "$2–8/mug in materials",
+      "typicalResale": "$28–45"
+    },
+    "imageUrl": "https://images.pexels.com/photos/9304555/pexels-photo-9304555.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Mikhail Nilov / Pexels"
+  },
+  {
+    "slug": "candles-fragrance",
+    "name": "Candles & home fragrance",
+    "domain": "Home & Living",
+    "audience": "maker",
+    "tags": "candle, wax, scent, fragrance, soy",
+    "imageQuery": "aesthetic candle jars flatlay",
+    "product": {
+      "title": "Dessert candles (whipped-cream jars)",
+      "blurb": "Candles styled like desserts — whipped wax, cherry toppers — are a TikTok staple that photographs itself. Soy wax, fragrance oil, and jars come cheap in bulk.",
+      "sourcingType": "MATERIALS",
+      "sourceName": "AliExpress (jars, wicks, wax tools)",
+      "sourcingUrl": "https://www.aliexpress.com/w/wholesale-candle-making-kit.html",
+      "sourceCost": "$3–6/candle in materials",
+      "typicalResale": "$22–38"
+    },
+    "imageUrl": "https://images.pexels.com/photos/5782660/pexels-photo-5782660.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Leeloo The First / Pexels"
+  },
+  {
+    "slug": "wall-art-prints",
+    "name": "Wall art & prints",
+    "domain": "Home & Living",
+    "audience": "both",
+    "tags": "wall art, prints, poster, decor",
+    "imageQuery": "gallery wall framed posters room",
+    "product": {
+      "title": "Vintage-botanical print sets (3-pack)",
+      "blurb": "Matching print sets outsell singles — buyers want a finished gallery wall, not homework. Print-on-demand means zero inventory: upload once, ship worldwide.",
+      "sourcingType": "PRINT_ON_DEMAND",
+      "sourceName": "Printify (posters)",
+      "sourcingUrl": "https://printify.com/app/products?search=poster",
+      "sourceCost": "$4–9/print fulfilled",
+      "typicalResale": "$18–35 each, $45+ per set"
+    },
+    "imageUrl": "https://images.pexels.com/photos/19019600/pexels-photo-19019600.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Harun / Pexels"
+  },
+  {
+    "slug": "plants-planters",
+    "name": "Plants, planters & terrariums",
+    "domain": "Home & Living",
+    "audience": "both",
+    "tags": "plants, planter, pot, terrarium, succulent",
+    "imageQuery": "succulents ceramic planters shelf",
+    "product": {
+      "title": "Self-watering globe planters",
+      "blurb": "Plant parents kill plants — self-watering planters sell as guilt insurance. Cheap to source in bulk, light to ship, and they demo brilliantly on video.",
+      "sourcingType": "DROPSHIP",
+      "sourceName": "AliExpress",
+      "sourcingUrl": "https://www.aliexpress.com/w/wholesale-self-watering-planter.html",
+      "sourceCost": "$3–7",
+      "typicalResale": "$18–30"
+    },
+    "imageUrl": "https://images.pexels.com/photos/35979376/pexels-photo-35979376.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Minh Fan / Pexels"
+  },
+  {
+    "slug": "kitchen-tableware",
+    "name": "Kitchen & tableware",
+    "domain": "Home & Living",
+    "audience": "both",
+    "tags": "kitchen, tableware, utensils, serving, coasters",
+    "imageQuery": "wooden serving board table setting",
+    "product": {
+      "title": "Irregular-edge acacia serving boards",
+      "blurb": "Charcuterie culture made serving boards a gift default. Organic-edge boards look handmade even when sourced — or woodworkers can make and charge double.",
+      "sourcingType": "WHOLESALE",
+      "sourceName": "Alibaba",
+      "sourcingUrl": "https://www.alibaba.com/trade/search?SearchText=acacia+serving+board",
+      "sourceCost": "$4–10 (bulk)",
+      "typicalResale": "$25–55"
+    },
+    "imageUrl": "https://images.pexels.com/photos/5638471/pexels-photo-5638471.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Askar Abayev / Pexels"
+  },
+  {
+    "slug": "furniture-woodworking",
+    "name": "Furniture & woodworking",
+    "domain": "Home & Living",
+    "audience": "maker",
+    "tags": "wood, woodworking, furniture, shelf, carving",
+    "imageQuery": "carpenter sanding wooden furniture",
+    "product": {
+      "title": "Floating nightstands (small-space furniture)",
+      "blurb": "Small-space furniture is the woodworking niche that ships — wall-mounted nightstands flat-pack into a box. One sheet of hardwood ply yields several units.",
+      "sourcingType": "MAKE_YOUR_OWN",
+      "sourceName": "AliExpress (hardware & fixings)",
+      "sourcingUrl": "https://www.aliexpress.com/w/wholesale-floating-shelf-bracket.html",
+      "sourceCost": "$12–25/unit in materials",
+      "typicalResale": "$80–160"
+    },
+    "imageUrl": "https://images.pexels.com/photos/5466146/pexels-photo-5466146.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "AI25.Studio  Studio / Pexels"
+  },
+  {
+    "slug": "handmade-jewelry",
+    "name": "Handmade jewelry",
+    "domain": "Fashion & Wearables",
+    "audience": "both",
+    "tags": "jewelry, earrings, necklace, rings, beads",
+    "imageQuery": "gold earrings jewelry making close",
+    "product": {
+      "title": "Waterproof gold-filled huggie hoops",
+      "blurb": "\"Waterproof jewelry\" is one of the most-searched jewelry phrases — buyers are tired of tarnish. Gold-filled findings cost little and the everyday-wear story sells itself.",
+      "sourcingType": "MATERIALS",
+      "sourceName": "AliExpress (gold-filled findings)",
+      "sourcingUrl": "https://www.aliexpress.com/w/wholesale-gold-filled-earring-hoops.html",
+      "sourceCost": "$1–4/pair in parts",
+      "typicalResale": "$18–35"
+    },
+    "imageUrl": "https://images.pexels.com/photos/14033026/pexels-photo-14033026.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Yassir Abbas / Pexels"
+  },
+  {
+    "slug": "knitwear-crochet",
+    "name": "Knitwear & crochet wearables",
+    "domain": "Fashion & Wearables",
+    "audience": "maker",
+    "tags": "knitting, crochet, yarn, beanie, cardigan",
+    "imageQuery": "chunky knit sweater neutral tones",
+    "product": {
+      "title": "Chunky ribbed beanies (fisherman style)",
+      "blurb": "The one crochet/knit item with year-round demand spikes every autumn. Two hours of work, one skein of yarn, and beginner-friendly patterns everywhere.",
+      "sourcingType": "MATERIALS",
+      "sourceName": "AliExpress (chunky yarn bulk)",
+      "sourcingUrl": "https://www.aliexpress.com/w/wholesale-chunky-yarn.html",
+      "sourceCost": "$3–5/beanie in yarn",
+      "typicalResale": "$25–40"
+    },
+    "imageUrl": "https://images.pexels.com/photos/6630834/pexels-photo-6630834.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Polina Tankilevitch / Pexels"
+  },
+  {
+    "slug": "bags-totes",
+    "name": "Bags, purses & totes",
+    "domain": "Fashion & Wearables",
+    "audience": "both",
+    "tags": "bag, tote, purse, canvas, crossbody",
+    "imageQuery": "canvas tote bag street style",
+    "product": {
+      "title": "Quilted puffer totes",
+      "blurb": "The puffer bag wave keeps rolling — light, cheap to ship, and they look far more expensive than they cost. Blanks also take embroidery beautifully for a handmade upsell.",
+      "sourcingType": "DROPSHIP",
+      "sourceName": "AliExpress",
+      "sourcingUrl": "https://www.aliexpress.com/w/wholesale-quilted-puffer-tote-bag.html",
+      "sourceCost": "$5–12",
+      "typicalResale": "$28–55"
+    },
+    "imageUrl": "https://images.pexels.com/photos/11673914/pexels-photo-11673914.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Mathias Reding / Pexels"
+  },
+  {
+    "slug": "hair-accessories",
+    "name": "Hair accessories & clips",
+    "domain": "Fashion & Wearables",
+    "audience": "reseller",
+    "tags": "hair clip, claw clip, scrunchie, headband",
+    "imageQuery": "claw clips pastel collection",
+    "product": {
+      "title": "Oversized matte claw clips (neutral sets)",
+      "blurb": "Claw clips refuse to die as a trend — the move now is curated neutral palettes sold as sets. Pennies per unit, strong margins, tiny shipping weight.",
+      "sourcingType": "DROPSHIP",
+      "sourceName": "AliExpress",
+      "sourcingUrl": "https://www.aliexpress.com/w/wholesale-large-claw-clip-matte.html",
+      "sourceCost": "$0.50–2/clip",
+      "typicalResale": "$8–15, $20+ per set"
+    },
+    "imageUrl": "https://images.pexels.com/photos/8152101/pexels-photo-8152101.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "RDNE Stock project / Pexels"
+  },
+  {
+    "slug": "apparel-pod",
+    "name": "Apparel & print-on-demand",
+    "domain": "Fashion & Wearables",
+    "audience": "reseller",
+    "tags": "tshirt, hoodie, apparel, print on demand",
+    "imageQuery": "blank tshirt mockup rack",
+    "product": {
+      "title": "Niche-humor embroidered sweatshirts",
+      "blurb": "Embroidery reads premium where prints read cheap — small chest motifs for hyper-specific audiences (nurses, plant people, book clubs). POD means no stock risk.",
+      "sourcingType": "PRINT_ON_DEMAND",
+      "sourceName": "Printful (embroidery)",
+      "sourcingUrl": "https://www.printful.com/custom/sweatshirts",
+      "sourceCost": "$18–26 fulfilled",
+      "typicalResale": "$42–65"
+    },
+    "imageUrl": "https://images.pexels.com/photos/8532616/pexels-photo-8532616.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Hanna Pad / Pexels"
+  },
+  {
+    "slug": "upcycled-thrift",
+    "name": "Upcycled / thrift flips",
+    "domain": "Fashion & Wearables",
+    "audience": "maker",
+    "tags": "vintage, thrift, upcycled, reworked, secondhand",
+    "imageQuery": "vintage clothing rack thrift store",
+    "product": {
+      "title": "Reworked vintage sweatshirt crops",
+      "blurb": "Buy by the pound, rework, triple the price — sustainability sells and no two pieces are alike. Sourcing is your local thrift; the skill is the eye, not the sewing.",
+      "sourcingType": "MAKE_YOUR_OWN",
+      "sourceName": "eBay (vintage wholesale lots)",
+      "sourcingUrl": "https://www.ebay.com/sch/i.html?_nkw=vintage+sweatshirt+wholesale+lot",
+      "sourceCost": "$3–8/piece in lots",
+      "typicalResale": "$30–70"
+    },
+    "imageUrl": "https://images.pexels.com/photos/374677/pexels-photo-374677.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Burst / Pexels"
+  },
+  {
+    "slug": "soap-bath",
+    "name": "Soap & bath",
+    "domain": "Beauty & Self-care",
+    "audience": "maker",
+    "tags": "soap, bath, bath bomb, cold process",
+    "imageQuery": "artisan soap bars stacked natural",
+    "product": {
+      "title": "Goat-milk soap gift sets",
+      "blurb": "Sensitive-skin buyers are loyal repeat customers, and gift-set framing lifts the average order. Cold-process basics cost little; the wrap is half the product.",
+      "sourcingType": "MATERIALS",
+      "sourceName": "AliExpress (molds & supplies)",
+      "sourcingUrl": "https://www.aliexpress.com/w/wholesale-soap-making-mold.html",
+      "sourceCost": "$1.50–3/bar in materials",
+      "typicalResale": "$8–14/bar, $25+ sets"
+    },
+    "imageUrl": "https://images.pexels.com/photos/7055166/pexels-photo-7055166.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Pavel Danilyuk / Pexels"
+  },
+  {
+    "slug": "skincare-serums",
+    "name": "Skincare & serums",
+    "domain": "Beauty & Self-care",
+    "audience": "reseller",
+    "tags": "skincare, serum, face, beauty tools",
+    "imageQuery": "skincare serum bottles minimalist",
+    "product": {
+      "title": "Ice rollers & gua sha tools",
+      "blurb": "Skincare tools dodge the regulatory headaches of actual formulations — no ingredient claims, no FDA territory. Demo videos do the selling.",
+      "sourcingType": "DROPSHIP",
+      "sourceName": "AliExpress",
+      "sourcingUrl": "https://www.aliexpress.com/w/wholesale-ice-roller-face.html",
+      "sourceCost": "$2–5",
+      "typicalResale": "$15–28"
+    },
+    "imageUrl": "https://images.pexels.com/photos/8100691/pexels-photo-8100691.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Polina ⠀ / Pexels"
+  },
+  {
+    "slug": "natural-cosmetics",
+    "name": "Natural cosmetics",
+    "domain": "Beauty & Self-care",
+    "audience": "maker",
+    "tags": "lip balm, natural, organic, cosmetics",
+    "imageQuery": "natural cosmetics ingredients herbs",
+    "product": {
+      "title": "Beef-tallow lip balms",
+      "blurb": "The whole-ingredient movement made tallow balms a breakout — three ingredients, a story big skincare can't copy, and tins that cost cents.",
+      "sourcingType": "MATERIALS",
+      "sourceName": "AliExpress (tins & tubes)",
+      "sourcingUrl": "https://www.aliexpress.com/w/wholesale-lip-balm-tin.html",
+      "sourceCost": "$0.80–2/unit in materials",
+      "typicalResale": "$8–14"
+    },
+    "imageUrl": "https://images.pexels.com/photos/8450505/pexels-photo-8450505.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "MART  PRODUCTION / Pexels"
+  },
+  {
+    "slug": "perfume-oils",
+    "name": "Perfume & fragrance oils",
+    "domain": "Beauty & Self-care",
+    "audience": "both",
+    "tags": "perfume, fragrance, oil, roller",
+    "imageQuery": "perfume oil roller bottles amber",
+    "product": {
+      "title": "Solid perfume travel tins",
+      "blurb": "TSA-proof, spill-proof, and blendable in a kitchen — solid perfume is the low-regulation entry into fragrance. Amber tins photograph beautifully.",
+      "sourcingType": "MATERIALS",
+      "sourceName": "AliExpress (tins, waxes, rollers)",
+      "sourcingUrl": "https://www.aliexpress.com/w/wholesale-perfume-roller-bottle.html",
+      "sourceCost": "$1.50–3/unit",
+      "typicalResale": "$14–24"
+    },
+    "imageUrl": "https://images.pexels.com/photos/6693899/pexels-photo-6693899.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Tara Winstead / Pexels"
+  },
+  {
+    "slug": "beard-grooming",
+    "name": "Beard & grooming",
+    "domain": "Beauty & Self-care",
+    "audience": "both",
+    "tags": "beard, grooming, oil, men",
+    "imageQuery": "beard oil bottle barber wood",
+    "product": {
+      "title": "Beard-oil + balm gift kits",
+      "blurb": "Men's grooming buyers arrive at gift season in a panic — kits answer the whole question. Carrier oils and dropper bottles are commodity-cheap.",
+      "sourcingType": "MATERIALS",
+      "sourceName": "AliExpress (dropper bottles, tins)",
+      "sourcingUrl": "https://www.aliexpress.com/w/wholesale-amber-dropper-bottle.html",
+      "sourceCost": "$3–6/kit in materials",
+      "typicalResale": "$25–45"
+    },
+    "imageUrl": "https://images.pexels.com/photos/4625624/pexels-photo-4625624.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "AI25.Studio  Studio / Pexels"
+  },
+  {
+    "slug": "yarn-fiber",
+    "name": "Yarn & fiber supplies",
+    "domain": "Craft & Fiber Arts",
+    "audience": "maker",
+    "tags": "yarn, fiber, wool, dyeing, skein",
+    "imageQuery": "hand dyed yarn skeins colorful",
+    "product": {
+      "title": "Hand-dyed speckled sock yarn",
+      "blurb": "Selling to makers beats selling to buyers — knitters restock forever. Undyed bases plus acid dyes turn a kitchen into a dye studio.",
+      "sourcingType": "MATERIALS",
+      "sourceName": "AliExpress (undyed yarn bases)",
+      "sourcingUrl": "https://www.aliexpress.com/w/wholesale-undyed-wool-yarn.html",
+      "sourceCost": "$4–7/skein undyed",
+      "typicalResale": "$22–32/skein dyed"
+    },
+    "imageUrl": "https://images.pexels.com/photos/2767655/pexels-photo-2767655.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Surene Palvie / Pexels"
+  },
+  {
+    "slug": "embroidery-needlework",
+    "name": "Embroidery & needlework",
+    "domain": "Craft & Fiber Arts",
+    "audience": "both",
+    "tags": "embroidery, needlework, cross stitch, hoop",
+    "imageQuery": "embroidery hoop flowers hands",
+    "product": {
+      "title": "Beginner embroidery kits (your designs)",
+      "blurb": "Kits out-earn finished hoops — you sell the experience, not the hours. One good design sells hundreds of times; hoops and floss cost almost nothing in bulk.",
+      "sourcingType": "MATERIALS",
+      "sourceName": "AliExpress (hoops & floss bulk)",
+      "sourcingUrl": "https://www.aliexpress.com/w/wholesale-embroidery-hoop-bulk.html",
+      "sourceCost": "$3–5/kit in parts",
+      "typicalResale": "$18–30"
+    },
+    "imageUrl": "https://images.pexels.com/photos/10566042/pexels-photo-10566042.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Mohamed Rizly / Pexels"
+  },
+  {
+    "slug": "macrame-weaving",
+    "name": "Macramé & weaving",
+    "domain": "Craft & Fiber Arts",
+    "audience": "maker",
+    "tags": "macrame, weaving, wall hanging, cotton cord",
+    "imageQuery": "macrame wall hanging boho room",
+    "product": {
+      "title": "Macramé plant hangers (boho staple)",
+      "blurb": "The overlap of plant people and boho decor is enormous and macramé sits exactly there. Cotton cord is dirt cheap; each hanger is under an hour of knots.",
+      "sourcingType": "MATERIALS",
+      "sourceName": "AliExpress (cotton cord bulk)",
+      "sourcingUrl": "https://www.aliexpress.com/w/wholesale-macrame-cotton-cord.html",
+      "sourceCost": "$2–4/hanger in cord",
+      "typicalResale": "$18–35"
+    },
+    "imageUrl": "https://images.pexels.com/photos/12956041/pexels-photo-12956041.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Atlantic Ambience / Pexels"
+  },
+  {
+    "slug": "resin-art",
+    "name": "Resin art & coasters",
+    "domain": "Craft & Fiber Arts",
+    "audience": "maker",
+    "tags": "resin, epoxy, coaster, tray",
+    "imageQuery": "resin coasters gold geode",
+    "product": {
+      "title": "Geode-style coaster sets",
+      "blurb": "Resin geodes look like sliced stone and sell like decor, not craft. Molds are reusable forever, and pour videos are self-marketing on CraftTok.",
+      "sourcingType": "MATERIALS",
+      "sourceName": "AliExpress (molds, resin, pigments)",
+      "sourcingUrl": "https://www.aliexpress.com/w/wholesale-resin-coaster-mold.html",
+      "sourceCost": "$3–6/set in materials",
+      "typicalResale": "$30–55/set of 4"
+    },
+    "imageUrl": "https://images.pexels.com/photos/7258198/pexels-photo-7258198.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Thirdman / Pexels"
+  },
+  {
+    "slug": "polymer-clay",
+    "name": "Polymer clay goods",
+    "domain": "Craft & Fiber Arts",
+    "audience": "maker",
+    "tags": "polymer clay, clay earrings, trinket",
+    "imageQuery": "polymer clay earrings colorful making",
+    "product": {
+      "title": "Statement clay earrings (arch & terrazzo)",
+      "blurb": "The gateway craft: a full earring line needs $30 of clay and an oven you already own. Lightweight to wear, cheap to ship, endlessly on-trend.",
+      "sourcingType": "MATERIALS",
+      "sourceName": "AliExpress (clay & findings)",
+      "sourcingUrl": "https://www.aliexpress.com/w/wholesale-polymer-clay-set.html",
+      "sourceCost": "$0.80–2/pair in materials",
+      "typicalResale": "$15–28"
+    },
+    "imageUrl": "https://images.pexels.com/photos/6757764/pexels-photo-6757764.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "cottonbro studio / Pexels"
+  },
+  {
+    "slug": "illustration-prints",
+    "name": "Illustration & art prints",
+    "domain": "Art & Design",
+    "audience": "maker",
+    "tags": "illustration, art print, drawing, artist",
+    "imageQuery": "illustrator drawing tablet studio",
+    "product": {
+      "title": "City-skyline line-art prints (local pride)",
+      "blurb": "Local-pride art sells to a buyer who already knows what they want — their city on a wall. Draw once per city, print on demand forever.",
+      "sourcingType": "PRINT_ON_DEMAND",
+      "sourceName": "Printify (posters & framed)",
+      "sourcingUrl": "https://printify.com/app/products?search=framed%20poster",
+      "sourceCost": "$5–14 fulfilled",
+      "typicalResale": "$25–60"
+    },
+    "imageUrl": "https://images.pexels.com/photos/29940157/pexels-photo-29940157.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Jakub Zerdzicki / Pexels"
+  },
+  {
+    "slug": "custom-portraits",
+    "name": "Custom portraits & pet portraits",
+    "domain": "Art & Design",
+    "audience": "maker",
+    "tags": "portrait, pet portrait, custom, commission",
+    "imageQuery": "artist painting dog portrait",
+    "product": {
+      "title": "Renaissance pet portraits (digital)",
+      "blurb": "Pets in royal costume remain one of Etsy's most reliable gift categories. Digital delivery means zero shipping; printing is the customer's upsell.",
+      "sourcingType": "MAKE_YOUR_OWN",
+      "sourceName": "Etsy (market reference)",
+      "sourcingUrl": "https://www.etsy.com/search?q=royal+pet+portrait+custom",
+      "sourceCost": "Your time (1–2 hrs/piece)",
+      "typicalResale": "$35–80 digital"
+    },
+    "imageUrl": "https://images.pexels.com/photos/7858878/pexels-photo-7858878.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Greta Hoffman / Pexels"
+  },
+  {
+    "slug": "photography-prints",
+    "name": "Photography prints",
+    "domain": "Art & Design",
+    "audience": "maker",
+    "tags": "photography, print, landscape, film",
+    "imageQuery": "photographer holding printed photos",
+    "product": {
+      "title": "Film-photography print drops (limited runs)",
+      "blurb": "Numbered limited runs turn photos into collectibles — scarcity does the pricing. Shoot once, sell 50, retire the file.",
+      "sourcingType": "PRINT_ON_DEMAND",
+      "sourceName": "Printful (fine art prints)",
+      "sourcingUrl": "https://www.printful.com/custom/wall-art/posters",
+      "sourceCost": "$4–12 fulfilled",
+      "typicalResale": "$30–75 limited"
+    },
+    "imageUrl": "https://images.pexels.com/photos/7014874/pexels-photo-7014874.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "George Milton / Pexels"
+  },
+  {
+    "slug": "stickers-decals",
+    "name": "Stickers & decals",
+    "domain": "Art & Design",
+    "audience": "both",
+    "tags": "sticker, decal, vinyl, laptop",
+    "imageQuery": "laptop covered vinyl stickers",
+    "product": {
+      "title": "Waterproof niche sticker packs (6-packs)",
+      "blurb": "Packs beat singles — a $2 sticker is a hard sale, a $12 themed pack is easy. Print sheets at home on vinyl or dropship die-cut runs.",
+      "sourcingType": "MATERIALS",
+      "sourceName": "AliExpress (vinyl sheets & cutters)",
+      "sourcingUrl": "https://www.aliexpress.com/w/wholesale-printable-vinyl-sticker-paper.html",
+      "sourceCost": "$0.30–1/pack in materials",
+      "typicalResale": "$8–15/pack"
+    },
+    "imageUrl": "https://images.pexels.com/photos/17567386/pexels-photo-17567386.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Arindam Raha / Pexels"
+  },
+  {
+    "slug": "enamel-pins",
+    "name": "Enamel pins",
+    "domain": "Art & Design",
+    "audience": "both",
+    "tags": "enamel pin, pin, badge, lapel",
+    "imageQuery": "enamel pins collection jacket",
+    "product": {
+      "title": "Niche-fandom enamel pin runs",
+      "blurb": "Pins are art you manufacture: design it, order 100 from a pin factory, sell to a fandom that collects compulsively. Kickstarter-friendly, too.",
+      "sourcingType": "WHOLESALE",
+      "sourceName": "Alibaba (custom pin manufacturers)",
+      "sourcingUrl": "https://www.alibaba.com/trade/search?SearchText=custom+enamel+pin",
+      "sourceCost": "$1.20–2.50/pin at 100+",
+      "typicalResale": "$10–14/pin"
+    },
+    "imageUrl": "https://images.pexels.com/photos/10503602/pexels-photo-10503602.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "RDNE Stock project / Pexels"
+  },
+  {
+    "slug": "greeting-cards",
+    "name": "Greeting cards",
+    "domain": "Paper & Stationery",
+    "audience": "maker",
+    "tags": "greeting card, card, occasion, funny",
+    "imageQuery": "greeting cards display shop",
+    "product": {
+      "title": "Funny hyper-specific occasion cards",
+      "blurb": "\"Congrats on your divorce\" outsells \"Happy Birthday\" — specificity is the product. Print locally or POD; wholesale to gift shops is the scale move.",
+      "sourcingType": "PRINT_ON_DEMAND",
+      "sourceName": "Printify (cards)",
+      "sourcingUrl": "https://printify.com/app/products?search=greeting%20card",
+      "sourceCost": "$1.50–3 fulfilled",
+      "typicalResale": "$5–8 each"
+    },
+    "imageUrl": "https://images.pexels.com/photos/28780231/pexels-photo-28780231.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Nikki Villanueva / Pexels"
+  },
+  {
+    "slug": "planners-journals",
+    "name": "Planners & journals",
+    "domain": "Paper & Stationery",
+    "audience": "both",
+    "tags": "planner, journal, notebook, organization",
+    "imageQuery": "open planner desk coffee flatlay",
+    "product": {
+      "title": "ADHD-friendly daily planners",
+      "blurb": "Planners designed for specific brains (ADHD, shift workers, nurses) command loyalty generic planners never see. Start digital, go print when it proves out.",
+      "sourcingType": "WHOLESALE",
+      "sourceName": "Alibaba (custom notebook printing)",
+      "sourcingUrl": "https://www.alibaba.com/trade/search?SearchText=custom+planner+printing",
+      "sourceCost": "$3–7/unit at 100+",
+      "typicalResale": "$24–40"
+    },
+    "imageUrl": "https://images.pexels.com/photos/2736499/pexels-photo-2736499.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Content Pixie / Pexels"
+  },
+  {
+    "slug": "wedding-stationery",
+    "name": "Wedding & event stationery",
+    "domain": "Paper & Stationery",
+    "audience": "maker",
+    "tags": "wedding, invitation, stationery, event",
+    "imageQuery": "wedding invitation suite flatlay",
+    "product": {
+      "title": "Editable invitation template suites",
+      "blurb": "Couples want custom-looking invites at template prices — sell the editable file, they print it. One suite design sells hundreds of times with zero fulfillment.",
+      "sourcingType": "MAKE_YOUR_OWN",
+      "sourceName": "Etsy (market reference)",
+      "sourcingUrl": "https://www.etsy.com/search?q=editable+wedding+invitation+template",
+      "sourceCost": "Your design time",
+      "typicalResale": "$15–45/suite"
+    },
+    "imageUrl": "https://images.pexels.com/photos/11650189/pexels-photo-11650189.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Micheile Henderson / Pexels"
+  },
+  {
+    "slug": "calligraphy-lettering",
+    "name": "Calligraphy & lettering",
+    "domain": "Paper & Stationery",
+    "audience": "maker",
+    "tags": "calligraphy, lettering, handwritten, signage",
+    "imageQuery": "calligraphy pen writing script",
+    "product": {
+      "title": "Event signage & place cards (local)",
+      "blurb": "Weddings and corporate events pay real money for on-site lettering — acrylic welcome signs, seating charts, day-of place cards. Local means no shipping and premium pricing.",
+      "sourcingType": "MATERIALS",
+      "sourceName": "AliExpress (acrylic blanks & pens)",
+      "sourcingUrl": "https://www.aliexpress.com/w/wholesale-acrylic-sign-blank.html",
+      "sourceCost": "$3–10/piece in blanks",
+      "typicalResale": "$40–150/piece"
+    },
+    "imageUrl": "https://images.pexels.com/photos/114107/pexels-photo-114107.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Miguel Á. Padriñán / Pexels"
+  },
+  {
+    "slug": "baked-goods",
+    "name": "Baked goods & cakes",
+    "domain": "Food & Drink",
+    "audience": "maker",
+    "tags": "baking, cake, cookies, dessert",
+    "imageQuery": "decorated sugar cookies royal icing",
+    "product": {
+      "title": "Custom sugar-cookie sets (events)",
+      "blurb": "Decorated cookie sets are edible party favors — baby showers and corporate logos pay bakery prices for grocery-store ingredients. Cottage law is the homework.",
+      "sourcingType": "MATERIALS",
+      "sourceName": "AliExpress (cutters & piping tools)",
+      "sourcingUrl": "https://www.aliexpress.com/w/wholesale-cookie-cutter-set.html",
+      "sourceCost": "$4–8/dozen in ingredients",
+      "typicalResale": "$36–60/dozen"
+    },
+    "imageUrl": "https://images.pexels.com/photos/6608131/pexels-photo-6608131.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Jill Wellington / Pexels"
+  },
+  {
+    "slug": "chocolate-confectionery",
+    "name": "Chocolate & confectionery",
+    "domain": "Food & Drink",
+    "audience": "maker",
+    "tags": "chocolate, candy, confectionery, truffle",
+    "imageQuery": "artisan chocolate bonbons glossy",
+    "product": {
+      "title": "Painted bonbons (jewel-box chocolate)",
+      "blurb": "Airbrushed bonbons look like jewelry and price like it. Polycarbonate molds plus cocoa butter colors are the whole studio; gift boxes carry the margin.",
+      "sourcingType": "MATERIALS",
+      "sourceName": "AliExpress (molds & boxes)",
+      "sourcingUrl": "https://www.aliexpress.com/w/wholesale-polycarbonate-chocolate-mold.html",
+      "sourceCost": "$0.60–1.20/piece in materials",
+      "typicalResale": "$2.50–4/piece boxed"
+    },
+    "imageUrl": "https://images.pexels.com/photos/7407278/pexels-photo-7407278.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Тимур Слугин / Pexels"
+  },
+  {
+    "slug": "hot-sauce",
+    "name": "Hot sauce & condiments",
+    "domain": "Food & Drink",
+    "audience": "maker",
+    "tags": "hot sauce, condiment, spicy, fermented",
+    "imageQuery": "hot sauce bottles chili peppers",
+    "product": {
+      "title": "Small-batch fermented hot sauce",
+      "blurb": "Hot sauce buyers collect — nobody owns one bottle. Fermentation gives the story, co-packers solve the food-law maze when you outgrow the kitchen.",
+      "sourcingType": "MATERIALS",
+      "sourceName": "AliExpress (woozy bottles bulk)",
+      "sourcingUrl": "https://www.aliexpress.com/w/wholesale-hot-sauce-bottle-5oz.html",
+      "sourceCost": "$1.50–3/bottle all-in",
+      "typicalResale": "$10–16"
+    },
+    "imageUrl": "https://images.pexels.com/photos/5737237/pexels-photo-5737237.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "RDNE Stock project / Pexels"
+  },
+  {
+    "slug": "coffee-tea",
+    "name": "Coffee, tea & blends",
+    "domain": "Food & Drink",
+    "audience": "both",
+    "tags": "coffee, tea, blend, loose leaf",
+    "imageQuery": "loose leaf tea tins scoop",
+    "product": {
+      "title": "Mood-themed loose-leaf tea blends",
+      "blurb": "Selling moods (\"Deep Focus\", \"Sunday Reset\") beats selling leaves. White-label blenders handle the food compliance; you own the brand and the story.",
+      "sourcingType": "WHOLESALE",
+      "sourceName": "Alibaba (private-label tea)",
+      "sourcingUrl": "https://www.alibaba.com/trade/search?SearchText=private+label+loose+leaf+tea",
+      "sourceCost": "$2–5/tin at volume",
+      "typicalResale": "$14–24/tin"
+    },
+    "imageUrl": "https://images.pexels.com/photos/7074106/pexels-photo-7074106.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Styves Exantus / Pexels"
+  },
+  {
+    "slug": "jam-honey",
+    "name": "Jam, honey & preserves",
+    "domain": "Food & Drink",
+    "audience": "maker",
+    "tags": "jam, honey, preserves, jarred",
+    "imageQuery": "honey jars farmers market",
+    "product": {
+      "title": "Hot honey (chili-infused)",
+      "blurb": "Hot honey crossed from restaurant tables to grocery lists and it's still climbing. Infusion is trivially simple; the label and name do the work.",
+      "sourcingType": "MATERIALS",
+      "sourceName": "AliExpress (hex jars & dippers)",
+      "sourcingUrl": "https://www.aliexpress.com/w/wholesale-hexagon-honey-jar.html",
+      "sourceCost": "$2–4/jar all-in",
+      "typicalResale": "$12–18"
+    },
+    "imageUrl": "https://images.pexels.com/photos/34944360/pexels-photo-34944360.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Vladi  Nikolov / Pexels"
+  },
+  {
+    "slug": "pet-accessories",
+    "name": "Pet accessories & collars",
+    "domain": "Pets",
+    "audience": "both",
+    "tags": "pet, collar, leash, dog, cat",
+    "imageQuery": "dog wearing bandana collar cute",
+    "product": {
+      "title": "Personalized engraved collar tags",
+      "blurb": "Personalization plus pets is the strongest gift combo in ecommerce. An engraver pays for itself in a weekend of orders; blanks cost cents.",
+      "sourcingType": "MATERIALS",
+      "sourceName": "AliExpress (blank tags & engraver)",
+      "sourcingUrl": "https://www.aliexpress.com/w/wholesale-pet-tag-blank.html",
+      "sourceCost": "$0.50–1.50/tag",
+      "typicalResale": "$12–20"
+    },
+    "imageUrl": "https://images.pexels.com/photos/7588709/pexels-photo-7588709.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Frank Barning / Pexels"
+  },
+  {
+    "slug": "pet-treats",
+    "name": "Pet treats & bakery",
+    "domain": "Pets",
+    "audience": "maker",
+    "tags": "pet treats, dog treats, pet bakery",
+    "imageQuery": "dog biscuits homemade bone shaped",
+    "product": {
+      "title": "Dog birthday cake kits",
+      "blurb": "Dog birthdays are real budget lines now. Pup-safe cake kits ship dry — the owner bakes, the dog photos go viral, the tag drives the next order.",
+      "sourcingType": "MATERIALS",
+      "sourceName": "AliExpress (bone molds & packaging)",
+      "sourcingUrl": "https://www.aliexpress.com/w/wholesale-dog-bone-silicone-mold.html",
+      "sourceCost": "$2–4/kit in materials",
+      "typicalResale": "$18–28"
+    },
+    "imageUrl": "https://images.pexels.com/photos/8434641/pexels-photo-8434641.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "MART  PRODUCTION / Pexels"
+  },
+  {
+    "slug": "pet-apparel",
+    "name": "Pet apparel",
+    "domain": "Pets",
+    "audience": "reseller",
+    "tags": "pet apparel, dog clothes, pet costume",
+    "imageQuery": "small dog wearing knit sweater",
+    "product": {
+      "title": "Matching owner-and-dog hoodie sets",
+      "blurb": "Matching sets are made for the share button — the customer's photo is your ad. Pure dropship play with strong holiday spikes.",
+      "sourcingType": "DROPSHIP",
+      "sourceName": "AliExpress",
+      "sourcingUrl": "https://www.aliexpress.com/w/wholesale-matching-dog-owner-hoodie.html",
+      "sourceCost": "$8–15/set",
+      "typicalResale": "$35–60/set"
+    },
+    "imageUrl": "https://images.pexels.com/photos/6471471/pexels-photo-6471471.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Erik Izsóf / Pexels"
+  },
+  {
+    "slug": "baby-clothes",
+    "name": "Baby clothes & knits",
+    "domain": "Kids & Baby",
+    "audience": "maker",
+    "tags": "baby, knits, romper, newborn",
+    "imageQuery": "knitted baby booties soft neutral",
+    "product": {
+      "title": "Heirloom knit baby bonnets",
+      "blurb": "\"Heirloom\" reframes a $6 skein as a keepsake — baby knits are small, fast projects that gift buyers pay premium for. Neutral palettes sell broadest.",
+      "sourcingType": "MATERIALS",
+      "sourceName": "AliExpress (soft baby yarn)",
+      "sourcingUrl": "https://www.aliexpress.com/w/wholesale-baby-yarn-soft.html",
+      "sourceCost": "$2–4/bonnet in yarn",
+      "typicalResale": "$22–35"
+    },
+    "imageUrl": "https://images.pexels.com/photos/5360746/pexels-photo-5360746.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Tilsa Tanaka / Pexels"
+  },
+  {
+    "slug": "toys-plushies",
+    "name": "Toys & plushies",
+    "domain": "Kids & Baby",
+    "audience": "both",
+    "tags": "toys, plush, plushie, amigurumi",
+    "imageQuery": "crochet plush animals handmade",
+    "product": {
+      "title": "Crochet comfort plushies (jellyfish, frogs)",
+      "blurb": "Comfort plushies sell to adults as much as kids — anxiety-friendly, giftable, endlessly photogenic. Handmade charges triple what dropship versions do.",
+      "sourcingType": "MATERIALS",
+      "sourceName": "AliExpress (velvet yarn & stuffing)",
+      "sourcingUrl": "https://www.aliexpress.com/w/wholesale-velvet-chenille-yarn.html",
+      "sourceCost": "$2–4/plush in materials",
+      "typicalResale": "$20–45"
+    },
+    "imageUrl": "https://images.pexels.com/photos/36186907/pexels-photo-36186907.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Heriberto Jahir Medina / Pexels"
+  },
+  {
+    "slug": "nursery-decor",
+    "name": "Nursery decor & printables",
+    "domain": "Kids & Baby",
+    "audience": "both",
+    "tags": "nursery, decor, printable, milestone",
+    "imageQuery": "nursery shelf neutral decor",
+    "product": {
+      "title": "Baby milestone card sets",
+      "blurb": "Every newborn photoshoot needs milestone cards — a design-once product with permanent demand. Sell printable for zero cost or POD the physical set.",
+      "sourcingType": "PRINT_ON_DEMAND",
+      "sourceName": "Printify (cards & prints)",
+      "sourcingUrl": "https://printify.com/app/products?search=card",
+      "sourceCost": "$0 digital / $4–7 printed",
+      "typicalResale": "$8–15 digital, $20–30 printed"
+    },
+    "imageUrl": "https://images.pexels.com/photos/9240642/pexels-photo-9240642.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Alberta Studios / Pexels"
+  },
+  {
+    "slug": "digital-planners",
+    "name": "Digital planners & templates",
+    "domain": "Digital & Services",
+    "audience": "both",
+    "tags": "digital planner, template, goodnotes, ipad",
+    "imageQuery": "ipad digital planner stylus desk",
+    "product": {
+      "title": "GoodNotes digital planners (hyperlinked)",
+      "blurb": "Make once, sell infinitely, ship nothing — the purest margin in commerce. Hyperlinked tabs are the quality bar; niche audiences (students, nurses) are the wedge.",
+      "sourcingType": "MAKE_YOUR_OWN",
+      "sourceName": "Etsy (market reference)",
+      "sourcingUrl": "https://www.etsy.com/search?q=digital+planner+goodnotes",
+      "sourceCost": "Your design time",
+      "typicalResale": "$12–30"
+    },
+    "imageUrl": "https://images.pexels.com/photos/5946157/pexels-photo-5946157.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Sajith R / Pexels"
+  },
+  {
+    "slug": "design-assets",
+    "name": "Presets, fonts & design assets",
+    "domain": "Digital & Services",
+    "audience": "maker",
+    "tags": "presets, fonts, design assets, lightroom",
+    "imageQuery": "designer color palette screen",
+    "product": {
+      "title": "Lightroom preset packs (one aesthetic)",
+      "blurb": "Photographers buy consistency, not filters — a pack that nails one aesthetic (film, moody, clean) becomes their whole feed. Pure digital margins.",
+      "sourcingType": "MAKE_YOUR_OWN",
+      "sourceName": "Creative Market (market reference)",
+      "sourcingUrl": "https://creativemarket.com/search?q=lightroom%20presets",
+      "sourceCost": "Your editing time",
+      "typicalResale": "$15–45/pack"
+    },
+    "imageUrl": "https://images.pexels.com/photos/8117406/pexels-photo-8117406.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Ivan S / Pexels"
+  },
+  {
+    "slug": "notion-templates",
+    "name": "Notion / productivity templates",
+    "domain": "Digital & Services",
+    "audience": "both",
+    "tags": "notion, template, productivity, dashboard",
+    "imageQuery": "laptop productivity dashboard workspace",
+    "product": {
+      "title": "Niche business dashboards (freelancers, Etsy sellers)",
+      "blurb": "Generic life-planners are saturated; job-specific dashboards aren't. A freelancer CRM or reseller inventory tracker solves a workday, not a mood.",
+      "sourcingType": "MAKE_YOUR_OWN",
+      "sourceName": "Notion marketplace (reference)",
+      "sourcingUrl": "https://www.notion.com/templates",
+      "sourceCost": "Your build time",
+      "typicalResale": "$19–49"
+    },
+    "imageUrl": "https://images.pexels.com/photos/577210/pexels-photo-577210.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Lukas Blazek / Pexels"
+  },
+  {
+    "slug": "coaching-consulting",
+    "name": "Coaching & consulting",
+    "domain": "Digital & Services",
+    "audience": "maker",
+    "tags": "coach, coaching, consulting, sessions",
+    "imageQuery": "video call coaching session laptop",
+    "product": {
+      "title": "Productized audit packages",
+      "blurb": "Hourly coaching caps your income; a fixed-price audit (\"Etsy shop review, $149, 48h turnaround\") is buyable like a product. Deliver as video walkthroughs.",
+      "sourcingType": "MAKE_YOUR_OWN",
+      "sourceName": "Your booking page",
+      "sourcingUrl": "https://calendly.com/",
+      "sourceCost": "Your expertise + 2 hrs",
+      "typicalResale": "$99–299/audit"
+    },
+    "imageUrl": "https://images.pexels.com/photos/8055488/pexels-photo-8055488.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Annushka  Ahuja / Pexels"
+  },
+  {
+    "slug": "online-courses",
+    "name": "Online courses",
+    "domain": "Digital & Services",
+    "audience": "maker",
+    "tags": "course, teaching, workshop, online class",
+    "imageQuery": "person filming tutorial ring light",
+    "product": {
+      "title": "Mini-courses for your craft ($29–79)",
+      "blurb": "Every maker niche in this list doubles as a course topic — \"your first 10 candle sales\" teaches what you just lived. Mini beats mega: shorter to make, easier to buy.",
+      "sourcingType": "MAKE_YOUR_OWN",
+      "sourceName": "Teachable (hosting reference)",
+      "sourcingUrl": "https://teachable.com/",
+      "sourceCost": "Your knowledge + a weekend",
+      "typicalResale": "$29–79"
+    },
+    "imageUrl": "https://images.pexels.com/photos/7676472/pexels-photo-7676472.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Ivan S / Pexels"
+  }
+]
