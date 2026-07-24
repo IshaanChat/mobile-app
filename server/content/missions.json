@@ -1,0 +1,32 @@
+{
+  "levels": [
+    { "level": 1, "name": "Explorer", "title": "Find your direction" },
+    { "level": 2, "name": "Founder", "title": "Lock in your idea" },
+    { "level": 3, "name": "Builder", "title": "Set up shop" },
+    { "level": 4, "name": "Connector", "title": "Find your people" },
+    { "level": 5, "name": "Seller", "title": "Make your first sale" }
+  ],
+  "finalName": "Owner",
+  "milestones": [
+    { "id": "open-discover", "level": 1, "title": "Open the Discover feed", "detail": "See what's trending and worth selling right now.", "where": "in-app", "trigger": "open-discover", "tab": "discover", "xp": 10 },
+    { "id": "open-niche", "level": 1, "title": "Open a niche that catches your eye", "detail": "Tap any card to see the product, the margin, and where to source it.", "where": "in-app", "trigger": "open-niche", "tab": "discover", "xp": 10 },
+    { "id": "pick-niche", "level": 1, "title": "Pick your niche", "detail": "Choose the one you want to build in. Everything else tunes to it.", "where": "in-app", "trigger": "pick-niche", "tab": "discover", "xp": 20 },
+
+    { "id": "find-source", "level": 2, "title": "Find where to source your product", "detail": "Open the sourcing link on your niche's product.", "where": "in-app", "trigger": "view-source", "tab": "discover", "xp": 10 },
+    { "id": "name-business", "level": 2, "title": "Name your business", "detail": "Give it a name — you can change it later.", "where": "in-app", "trigger": "name-business", "tab": "journey", "xp": 10 },
+    { "id": "start-business", "level": 2, "title": "Start your business", "detail": "Lock it in and make it official inside the app.", "where": "in-app", "trigger": "start-business", "tab": "journey", "xp": 30 },
+
+    { "id": "setup-shop", "level": 3, "title": "Open a place to sell", "detail": "Set up an Etsy, Shopify, or Instagram shop.", "where": "outside", "xp": 20 },
+    { "id": "product-photos", "level": 3, "title": "Take your first product photos", "detail": "Good light, plain background. This sells the product.", "where": "outside", "xp": 10 },
+    { "id": "list-product", "level": 3, "title": "List your first product", "detail": "Put it up for sale with your own description.", "where": "outside", "xp": 20 },
+
+    { "id": "open-grow", "level": 4, "title": "Open the Grow feed", "detail": "See the communities where your customers already gather.", "where": "in-app", "trigger": "open-grow", "tab": "grow", "xp": 10 },
+    { "id": "find-community", "level": 4, "title": "Find a community for your niche", "detail": "Open one and read who you'll find there.", "where": "in-app", "trigger": "open-community", "tab": "grow", "xp": 10 },
+    { "id": "focus-community", "level": 4, "title": "Focus on one community", "detail": "Pick the one you'll show up in first.", "where": "in-app", "trigger": "pick-community", "tab": "grow", "xp": 20 },
+    { "id": "introduce-yourself", "level": 4, "title": "Introduce yourself there", "detail": "Show up as a person, not an ad — follow the community's playbook.", "where": "outside", "xp": 20 },
+
+    { "id": "first-sale", "level": 5, "title": "Make your first sale", "detail": "The one that turns a hobby into a business.", "where": "outside", "xp": 40 },
+    { "id": "log-sale", "level": 5, "title": "Log your first sale", "detail": "Record it in the app to start tracking your growth.", "where": "in-app", "trigger": "log-sale", "tab": "journey", "xp": 20 },
+    { "id": "second-niche", "level": 5, "title": "Find a second niche to grow into", "detail": "Pick a different niche in Discover — time to expand.", "where": "in-app", "trigger": "pick-second-niche", "tab": "discover", "xp": 20 }
+  ]
+}
