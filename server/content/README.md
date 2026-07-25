@@ -52,9 +52,11 @@ The sample file is placeholder content so the feed renders during
 development. Replace it with your own curation and import with
 `--archive-missing` to retire the samples.
 
-## Growth posts (`communities.json`)
+## Growth posts (`communities/*.json`)
 
-The Growth feed uses the same workflow with `npm run growth:import`. Each
+The Growth feed uses the same workflow with `npm run growth:import`, one
+file per category (`content/communities/home-living.json`, `general.json`
+for cross-niche places, and so on — mirroring `content/products/`). Each
 post reads as a PROFILE of the community — descriptive sections that fill
 the post, with the how-to-approach guidance as a side element at the end:
 

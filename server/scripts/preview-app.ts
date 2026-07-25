@@ -34,7 +34,8 @@ const AUDIENCE_COLORS: Record<string, string> = {
 };
 const PLATFORM_COLORS: Record<string, string> = {
   reddit: '#FF4500', instagram: '#C13584', tiktok: '#0F0F0F', x: '#1D1D1F',
-  youtube: '#CC0000', etsy: '#F1641E', pinterest: '#E60023', facebook: '#1877F2', forum: '#5A67D8',
+  youtube: '#CC0000', etsy: '#F1641E', pinterest: '#E60023', facebook: '#1877F2',
+  discord: '#5865F2', forum: '#5A67D8',
 };
 const KIND_LABELS: Record<string, string> = {
   community: 'Community', hashtag: 'Hashtag', marketplace: 'Marketplace', search: 'Search recipe', event: 'Event',
@@ -513,18 +514,37 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
     banner.classList.add('on');
   }
 
+  // With a large library almost everything overlaps on a token or two, so a
+  // plain hit/miss flag ends up badging most of the feed and means nothing.
+  // Score by how many tokens match, float the strongest to the top, and only
+  // badge a genuine shortlist.
+  var GROW_TOP = 8;
   function matchGrow(){
     var banner = document.getElementById('grow-banner');
-    if(!S.niche){ banner.classList.remove('on'); return; }
+    var screen = document.getElementById('s-grow');
+    var cards = [].slice.call(screen.querySelectorAll('.community'));
+    if(!S.niche){
+      banner.classList.remove('on');
+      cards.forEach(function(c){ c.classList.remove('match'); });
+      return;
+    }
     var want = tokens(S.niche.tags);
-    var count = 0;
-    document.querySelectorAll('#s-grow .community').forEach(function(c){
+    var scored = cards.map(function(c){
       var have = (c.getAttribute('data-tags')||'').toLowerCase();
-      var hit = want.some(function(t){ return t && have.indexOf(t) !== -1; });
-      c.classList.toggle('match', hit);
-      if(hit) count++;
+      var score = 0;
+      want.forEach(function(t){ if(t && have.indexOf(t) !== -1) score++; });
+      return { el: c, score: score };
     });
-    banner.textContent = count ? ('Highlighted ' + count + ' communities for ' + S.niche.name) : ('No exact community match yet for ' + S.niche.name);
+    scored.sort(function(a,b){ return b.score - a.score; });
+    var top = scored.filter(function(s){ return s.score > 0; }).slice(0, GROW_TOP);
+    var inTop = new Set(top.map(function(s){ return s.el; }));
+    scored.forEach(function(s){
+      s.el.classList.toggle('match', inTop.has(s.el));
+      screen.appendChild(s.el);
+    });
+    banner.textContent = top.length
+      ? 'Your best ' + top.length + ' communities for ' + S.niche.name + ' — sorted by fit'
+      : 'No close match yet for ' + S.niche.name + ' — the general ones still apply';
     banner.classList.add('on');
   }
 
@@ -908,7 +928,9 @@ createServer((req, res) => {
       .flatMap((f) => JSON.parse(readFileSync(`${dir}/products/${f}`, 'utf8')))
       .map((p: any) => ({ ...p, niche: nicheBySlug[p.nicheSlug] }))
       .filter((p: any) => p.niche);
-    const communities = JSON.parse(readFileSync(`${dir}/communities.json`, 'utf8'));
+    const communities = readdirSync(`${dir}/communities`)
+      .filter((f) => f.endsWith('.json'))
+      .flatMap((f) => JSON.parse(readFileSync(`${dir}/communities/${f}`, 'utf8')));
     const missions = JSON.parse(readFileSync(`${dir}/missions.json`, 'utf8'));
     const onboarding = JSON.parse(readFileSync(`${dir}/onboarding.json`, 'utf8'));
     res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });

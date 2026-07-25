@@ -11,16 +11,26 @@
  * here touches the database (that's `growth:import`).
  */
 
-import { readFileSync } from 'fs';
+import { readdirSync, readFileSync, statSync } from 'fs';
 import { createServer } from 'http';
 
 const PORT = Number(process.env.PREVIEW_PORT ?? 4100);
-const file = process.argv.slice(2).find((a) => !a.startsWith('-')) ?? 'content/communities.json';
+// Accepts either a single JSON file or the content/communities folder.
+const file = process.argv.slice(2).find((a) => !a.startsWith('-')) ?? 'content/communities';
+
+function loadPosts(): any[] {
+  if (statSync(file).isDirectory()) {
+    return readdirSync(file)
+      .filter((f) => f.endsWith('.json'))
+      .flatMap((f) => JSON.parse(readFileSync(`${file}/${f}`, 'utf8')));
+  }
+  return JSON.parse(readFileSync(file, 'utf8'));
+}
 
 const PLATFORM_COLORS: Record<string, string> = {
   reddit: '#FF4500', instagram: '#C13584', tiktok: '#0F0F0F', x: '#1D1D1F',
   youtube: '#CC0000', etsy: '#F1641E', pinterest: '#E60023', facebook: '#1877F2',
-  forum: '#5A67D8',
+  discord: '#5865F2', forum: '#5A67D8',
 };
 const KIND_LABELS: Record<string, string> = {
   community: 'Community', hashtag: 'Hashtag', marketplace: 'Marketplace',
@@ -149,7 +159,7 @@ function page(posts: any[]) {
 
 createServer((req, res) => {
   try {
-    const posts = JSON.parse(readFileSync(file, 'utf8'));
+    const posts = loadPosts();
     res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
     res.end(page(posts));
   } catch (err: any) {
