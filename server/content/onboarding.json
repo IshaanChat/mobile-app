@@ -1,9 +1,9 @@
 {
   "welcome": {
     "eyebrow": "Welcome",
-    "title": "Let's set up your business.",
-    "body": "This asks more of you than most apps do — because every answer shapes what you'll see. Nothing here is busywork.",
-    "meta": "About 3 minutes · you can add more later",
+    "title": "Let's find your next customers.",
+    "body": "A few questions — in your own words, not a form. What you say here shapes everything you'll see.",
+    "meta": "Under a minute · you can add more later",
     "cta": "Start"
   },
   "shared": [
@@ -17,46 +17,22 @@
       "required": true
     },
     {
-      "id": "age",
-      "chapter": "About you",
-      "type": "number",
-      "title": "How old are you?",
-      "subtitle": "It tunes the advice to where you are in life.",
-      "placeholder": "Age",
-      "required": true
-    },
-    {
-      "id": "gender",
-      "chapter": "About you",
-      "type": "single",
-      "title": "How do you identify?",
-      "subtitle": "Only ever used to describe you, never to judge.",
-      "required": true,
-      "options": [
-        { "value": "WOMAN", "label": "Woman" },
-        { "value": "MAN", "label": "Man" },
-        { "value": "NON_BINARY", "label": "Non-binary" },
-        { "value": "OTHER", "label": "Other" },
-        { "value": "PREFER_NOT_TO_SAY", "label": "Prefer not to say" }
-      ]
-    },
-    {
       "id": "path",
       "chapter": "Your path",
       "type": "fork",
       "title": "Where are you right now?",
-      "subtitle": "This decides what the app shows you first.",
+      "subtitle": "This decides where the app opens and what it shows you first.",
       "required": true,
       "options": [
         {
-          "value": "have",
-          "label": "I already run a business",
-          "hint": "Bring in your shop and start growing it."
+          "value": "new",
+          "label": "I'm starting my own business",
+          "hint": "We'll open in Discover — find something worth selling, and where to source it."
         },
         {
-          "value": "new",
-          "label": "I'm trying to start one",
-          "hint": "Explore what you could sell — we'll walk you from idea to first sale."
+          "value": "have",
+          "label": "I already have a business",
+          "hint": "We'll open in Growth — go straight to where your customers gather."
         }
       ]
     }
@@ -75,60 +51,18 @@
       {
         "id": "bizNiche",
         "chapter": "Your business",
-        "type": "text",
-        "title": "What do you sell?",
-        "subtitle": "A few words — \"ceramic mugs\", \"wedding photography\".",
-        "placeholder": "Your niche",
-        "required": true
-      },
-      {
-        "id": "bizDescription",
-        "chapter": "Your business",
         "type": "textarea",
-        "title": "Describe it in a sentence.",
-        "subtitle": "What you make or do, and who it's for. This is how the app talks about you.",
-        "placeholder": "We make…",
+        "title": "What do you sell?",
+        "subtitle": "In your own words. The more specific, the better we can find your people.",
+        "placeholder": "e.g. handmade stoneware mugs and bowls for coffee people",
         "required": true
-      },
-      {
-        "id": "bizType",
-        "chapter": "Your business",
-        "type": "single",
-        "title": "What kind of business is it?",
-        "subtitle": "It tunes how we score your relationships.",
-        "required": true,
-        "options": [
-          { "value": "PRODUCT_SALES", "label": "I sell products", "hint": "Handmade, vintage, digital goods…" },
-          { "value": "SERVICE", "label": "I offer services", "hint": "Freelance, repair, photography…" },
-          { "value": "KNOWLEDGE", "label": "I teach or coach", "hint": "Courses, coaching, consulting…" },
-          { "value": "OTHER", "label": "Something else", "hint": "Or a mix of everything" }
-        ]
-      },
-      {
-        "id": "avenues",
-        "chapter": "Your business",
-        "type": "multi",
-        "title": "Where can people buy from you?",
-        "subtitle": "Pick every place that applies.",
-        "optional": true,
-        "options": [
-          { "value": "ETSY", "label": "Etsy" },
-          { "value": "SHOPIFY", "label": "Shopify" },
-          { "value": "INSTAGRAM_SHOP", "label": "Instagram" },
-          { "value": "DEPOP", "label": "Depop" },
-          { "value": "AMAZON", "label": "Amazon" },
-          { "value": "EBAY", "label": "eBay" },
-          { "value": "OWN_WEBSITE", "label": "My own site" },
-          { "value": "IN_PERSON", "label": "In person" },
-          { "value": "OTHER", "label": "Somewhere else" }
-        ]
       },
       {
         "id": "idealCustomer",
         "chapter": "Your business",
         "type": "textarea",
-        "title": "Who's your ideal customer?",
-        "subtitle": "Picture one real person. The more specific, the better Growth works.",
+        "title": "Who buys from you?",
+        "subtitle": "Picture one real person. Skip it if you're still working that out.",
         "placeholder": "Someone who…",
         "optional": true
       }
@@ -137,92 +71,23 @@
       {
         "id": "interests",
         "chapter": "Your interests",
-        "type": "multi",
-        "title": "What are you drawn to?",
-        "subtitle": "Pick a few — your Discover feed starts here.",
-        "required": true,
-        "min": 1,
-        "options": [
-          { "value": "Handmade & crafts", "label": "Handmade & crafts" },
-          { "value": "Jewelry", "label": "Jewelry" },
-          { "value": "Beauty", "label": "Beauty" },
-          { "value": "Fashion", "label": "Fashion" },
-          { "value": "Home & decor", "label": "Home & decor" },
-          { "value": "Art & prints", "label": "Art & prints" },
-          { "value": "Food & treats", "label": "Food & treats" },
-          { "value": "Stationery", "label": "Stationery" },
-          { "value": "Digital products", "label": "Digital products" },
-          { "value": "Coaching", "label": "Coaching" },
-          { "value": "Pets", "label": "Pets" },
-          { "value": "Kids & baby", "label": "Kids & baby" }
-        ]
+        "type": "textarea",
+        "title": "What are you into?",
+        "subtitle": "Anything you'd enjoy making or selling. Write it however you like — we'll tune Discover to it.",
+        "placeholder": "e.g. candles, jewelry, anything I can make by hand",
+        "required": true
       },
       {
         "id": "makeOrSell",
         "chapter": "Your interests",
         "type": "single",
-        "title": "Do you want to make things, or sell them?",
-        "subtitle": "There's no wrong answer — it decides where we point you to source.",
-        "required": true,
-        "options": [
-          { "value": "maker", "label": "I want to make things", "hint": "Handmade, by me — I'll buy materials." },
-          { "value": "reseller", "label": "I want to sell things", "hint": "Source finished products and resell them." },
-          { "value": "both", "label": "I'm open to either", "hint": "Show me what works." }
-        ]
-      },
-      {
-        "id": "experience",
-        "chapter": "Your interests",
-        "type": "single",
-        "title": "Have you done this before?",
-        "subtitle": "Be honest — it changes how much we explain.",
-        "required": true,
-        "options": [
-          { "value": "FIRST_TIME", "label": "This is my first time", "hint": "Start me from the beginning." },
-          { "value": "SOME_EXPERIENCE", "label": "I've tried before", "hint": "I know some of it already." },
-          { "value": "EXPERIENCED", "label": "I've run something before", "hint": "Skip the basics." }
-        ]
-      },
-      {
-        "id": "goal",
-        "chapter": "Your goal",
-        "type": "single",
-        "title": "What would make this worth it?",
-        "subtitle": "We'll keep it in view as you go.",
+        "title": "Make things, or sell things?",
+        "subtitle": "It decides where we point you to source. Skip if you're not sure yet.",
         "optional": true,
         "options": [
-          { "value": "side", "label": "A bit of side income", "hint": "A few hundred a month would be great." },
-          { "value": "replace", "label": "Replace my income", "hint": "I want out of the day job." },
-          { "value": "build", "label": "Build something real", "hint": "A brand that outlasts me." },
-          { "value": "learn", "label": "Just to learn", "hint": "I want to see if I can." }
-        ]
-      },
-      {
-        "id": "time",
-        "chapter": "Your goal",
-        "type": "single",
-        "title": "How much time can you give it?",
-        "subtitle": "Honest answers get honest plans.",
-        "optional": true,
-        "options": [
-          { "value": "few", "label": "A few hours a week" },
-          { "value": "evenings", "label": "Evenings and weekends" },
-          { "value": "most", "label": "Most days" },
-          { "value": "full", "label": "This is my full focus" }
-        ]
-      },
-      {
-        "id": "budget",
-        "chapter": "Your goal",
-        "type": "single",
-        "title": "What can you start with?",
-        "subtitle": "Plenty of people start at the bottom of this list.",
-        "optional": true,
-        "options": [
-          { "value": "0", "label": "Almost nothing", "hint": "Under $50 — we'll point you at zero-inventory options." },
-          { "value": "100", "label": "A small amount", "hint": "$50–200" },
-          { "value": "500", "label": "A real starting budget", "hint": "$200–1,000" },
-          { "value": "1000", "label": "More than $1,000" }
+          { "value": "maker", "label": "I want to make them", "hint": "Handmade by me — I'll buy materials." },
+          { "value": "reseller", "label": "I want to sell them", "hint": "Source finished products and resell." },
+          { "value": "both", "label": "Show me both" }
         ]
       }
     ]
@@ -231,13 +96,13 @@
     "have": {
       "eyebrow": "You're set",
       "title": "Welcome, {name}.",
-      "body": "{biz} is set up. Growth already knows where to look for your customers.",
-      "cta": "Go to my business"
+      "body": "{biz} is set up. Growth is already pointed at the communities where your customers spend their time.",
+      "cta": "Show me my communities"
     },
     "new": {
       "eyebrow": "You're set",
       "title": "Welcome, {name}.",
-      "body": "Discover is tuned to what you picked. Find something worth selling and the rest unlocks from there.",
+      "body": "Discover is tuned to what you're into. Find something worth selling, and the rest unlocks from there.",
       "cta": "Start exploring"
     },
     "note": "Anything you skipped lives in the You tab — add it whenever you like."

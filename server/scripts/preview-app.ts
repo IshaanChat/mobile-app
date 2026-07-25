@@ -48,10 +48,12 @@ const pColor = (p: string) => PLATFORM_COLORS[String(p).toLowerCase()] ?? '#5A67
 function nicheCard(n: any) {
   const p = n.product ?? {};
   const aud = AUDIENCE_COLORS[n.audience] ?? '#60646c';
-  return `<div class="card niche" data-slug="${attr(n.slug)}" data-aud="${attr(n.audience)}">
+  const searchText = [n.name, n.domain, p.title, n.tags].filter(Boolean).join(' ').toLowerCase();
+  return `<div class="card niche" data-slug="${attr(n.slug)}" data-aud="${attr(n.audience)}" data-text="${attr(searchText)}">
     <div class="head" onclick="toggleCard(this,'open-niche')">
       <div class="hero" style="background-image:url('${attr(n.imageUrl)}')">
         <div class="chips"><span class="chip" style="background:${aud}">${esc(AUDIENCE_LABELS[n.audience] ?? n.audience)}</span><span class="chip chip-dark">${esc(SOURCING_LABELS[p.sourcingType] ?? '')}</span></div>
+        <span class="match-badge">&#9733; your kind of thing</span>
       </div>
       <div class="body"><div class="titlerow"><div><div class="kicker">${esc(n.domain)}</div><div class="title">${esc(n.name)}</div><div class="tagline">${esc(p.title)}</div></div><div class="chev">&#9660;</div></div></div>
     </div>
@@ -322,6 +324,7 @@ function page(niches: any[], communities: any[], missions: any, onboarding: any)
       <button class="chipbtn" data-f="reseller" onclick="setFilter(this)">Reseller</button>
       <button class="chipbtn" data-f="both" onclick="setFilter(this)">Both</button>
     </div>
+    <div class="banner" id="disc-banner" style="margin-top:12px"></div>
     ${domains.map((d) => `<div class="dom" data-dom="${attr(d)}">${niches.filter((n) => n.domain === d).map(nicheCard).join('')}</div>`).join('')}
   </div>
   <!-- GROW -->
@@ -460,16 +463,37 @@ function page(niches: any[], communities: any[], missions: any, onboarding: any)
   function logSale(){ S.sales = (S.sales||0)+1; save(); complete('log-sale'); toast('Sale logged'); }
   function markDone(btn){ complete(btn.closest('.ms').dataset.id); }
 
-  var STOP = ['and','the','for','with','your','from','that','this','are','you','our','its','all','who','what','how','made','only'];
+  var STOP = ['and','the','for','with','your','from','that','this','are','you','our','its','all','who','what','how','made','only',
+              'like','want','anything','can','make','sell','some','into','love','really','just','stuff','things','maybe'];
+  // Split on commas AND whitespace: curated content carries comma-separated
+  // tags, but anything typed during onboarding is a free-text phrase
+  // ("handmade stoneware mugs and bowls") that has to be tokenized too.
+  function tokens(text){
+    return String(text || '').toLowerCase().split(/[^a-z0-9]+/)
+      .filter(function(t){ return t.length >= 3 && STOP.indexOf(t) === -1; });
+  }
+
+  function matchDiscover(){
+    var banner = document.getElementById('disc-banner');
+    var want = tokens(S.interests);
+    if(!want.length){ banner.classList.remove('on'); return; }
+    var count = 0;
+    document.querySelectorAll('#s-discover .niche').forEach(function(c){
+      var have = (c.getAttribute('data-text') || '');
+      var hit = want.some(function(t){ return have.indexOf(t) !== -1; });
+      c.classList.toggle('match', hit);
+      if(hit) count++;
+    });
+    banner.textContent = count
+      ? 'Highlighted ' + count + ' niches from what you said you\\'re into'
+      : 'Nothing matched exactly — browse everything, something will click';
+    banner.classList.add('on');
+  }
+
   function matchGrow(){
     var banner = document.getElementById('grow-banner');
     if(!S.niche){ banner.classList.remove('on'); return; }
-    // Split on commas AND whitespace: curated niches carry comma-separated
-    // tags, but a business typed during onboarding is a free-text phrase
-    // ("handmade stoneware mugs and bowls") that has to be tokenized too.
-    var want = (S.niche.tags||'').toLowerCase().split(/[,\\s]+/)
-      .map(function(t){ return t.trim(); })
-      .filter(function(t){ return t.length >= 3 && STOP.indexOf(t) === -1; });
+    var want = tokens(S.niche.tags);
     var count = 0;
     document.querySelectorAll('#s-grow .community').forEach(function(c){
       var have = (c.getAttribute('data-tags')||'').toLowerCase();
@@ -654,7 +678,7 @@ function page(niches: any[], communities: any[], missions: any, onboarding: any)
 
   function onbDone(){
     var a = O.answers;
-    S.profile = { name: a.name, age: a.age, gender: a.gender };
+    S.profile = { name: a.name };
     S.path = a.path;
     S.skipped = O.skipped;
     S.onboarded = true;
@@ -663,22 +687,18 @@ function page(niches: any[], communities: any[], missions: any, onboarding: any)
       S.biz = a.bizName;
       // Their own words drive Grow matching from the very first screen.
       S.niche = { slug: 'my-business', name: a.bizNiche, tags: a.bizNiche };
-      S.bizType = a.bizType;
-      S.avenues = a.avenues || [];
       S.idealCustomer = a.idealCustomer || '';
       save();
       // They've already lived the early stages, so credit them in order —
-      // levels gate sequentially, and Journey should open where they
-      // actually are rather than at step one.
+      // levels gate sequentially, and Journey should reflect where they
+      // actually are rather than starting them at step one.
       ['open-discover','open-niche','pick-niche','name-business','start-business']
         .forEach(function(id){ complete(id, true); });
     } else {
-      S.interests = a.interests || [];
+      S.interests = a.interests || '';
       S.audience = a.makeOrSell || 'both';
-      S.experience = a.experience;
-      S.goal = a.goal; S.time = a.time; S.budget = a.budget;
       save();
-      // Point Discover at what they said they want to do.
+      // Point Discover at how they said they want to work.
       if(S.audience && S.audience !== 'both'){
         var btn = document.querySelector('#s-discover .chipbtn[data-f="' + S.audience + '"]');
         if(btn) setFilter(btn);
@@ -686,9 +706,10 @@ function page(niches: any[], communities: any[], missions: any, onboarding: any)
     }
     save();
     document.getElementById('onb').classList.remove('on');
+    matchDiscover();
     matchGrow();
     refresh();
-    setTab(a.path === 'have' ? 'journey' : 'discover');
+    setTab(a.path === 'have' ? 'grow' : 'discover');
   }
 
   function onbOpen(){
@@ -697,6 +718,7 @@ function page(niches: any[], communities: any[], missions: any, onboarding: any)
     onbRender();
   }
 
+  matchDiscover();
   matchGrow();
   refresh();
   if(S.tab){ setTab(S.tab); }
