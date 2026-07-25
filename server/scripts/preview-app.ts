@@ -150,6 +150,7 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
     --accent:#c2647e;
     --accent-soft:rgba(194,100,126,0.1);
     --on-accent:#ffffff;
+    --prospect:#a3919a;
     --engaged:#cf8f2e;
     --customer:#5f9b7a;
     --danger:#cc4f4f;
@@ -168,6 +169,7 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
       --accent:#e3a82b;
       --accent-soft:rgba(227,168,43,0.12);
       --on-accent:#1a1408;
+      --prospect:#79808f;
       --engaged:#5b9cf0;
       --customer:#34c477;
       --danger:#e5484d;
@@ -266,6 +268,46 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   .you-row { background:var(--panel); border:1px solid var(--panel-border); border-radius:14px; padding:14px 16px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; box-shadow:var(--shadow); }
   .you-k { font-size:13px; color:var(--text-dim); } .you-v { font-size:15px; font-weight:600; }
   .reset { background:none; border:none; color:var(--danger); font-size:13px; margin-top:10px; cursor:pointer; }
+
+  /* ---- You: the hub. Ported from the old web app's tabbed business area ---- */
+  .subtabs { display:flex; gap:6px; overflow-x:auto; padding-bottom:4px; margin-bottom:14px; }
+  .subtab { border:1px solid var(--panel-border); background:var(--panel); color:var(--text-dim); border-radius:999px; padding:7px 13px; font-size:13px; font-family:inherit; cursor:pointer; white-space:nowrap; }
+  .subtab:hover { border-color:var(--accent); }
+  .subtab.on { background:var(--accent-soft); border-color:var(--accent); color:var(--text); font-weight:600; }
+  .pane { display:none; } .pane.on { display:block; }
+  .statgrid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin-bottom:14px; }
+  .statcard { background:var(--panel); border:1px solid var(--panel-border); border-radius:14px; padding:13px 15px; box-shadow:var(--shadow); }
+  .stat-v { font-size:22px; font-weight:800; letter-spacing:-0.02em; }
+  .stat-k { font-size:12px; color:var(--text-dim); margin-top:2px; }
+  .hcard { background:var(--panel); border:1px solid var(--panel-border); border-radius:14px; padding:14px 16px; margin-bottom:12px; box-shadow:var(--shadow); }
+  .hcard-h { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+  .hcard-t { font-size:15px; font-weight:600; }
+  .hcard-a { background:none; border:none; color:var(--accent); font-size:12px; font-weight:600; cursor:pointer; font-family:inherit; padding:0; }
+  .lrow { display:flex; justify-content:space-between; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid var(--panel-border); font-size:13px; }
+  .lrow:last-child { border-bottom:none; }
+  .lrow-main { flex:1; min-width:0; }
+  .lrow-sub { color:var(--text-dim); font-size:12px; margin-top:2px; }
+  .sdot { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:7px; vertical-align:1px; }
+  .s-PROSPECT { background:var(--prospect); } .s-ENGAGED { background:var(--engaged); } .s-CUSTOMER { background:var(--customer); }
+  .strength { color:var(--customer); font-weight:700; font-variant:tabular-nums; }
+  .fld { display:flex; flex-direction:column; gap:4px; margin-bottom:12px; }
+  .fld label { font-size:13px; font-weight:500; color:var(--text-dim); }
+  .fld input, .fld textarea, .fld select { background:var(--input-bg); color:var(--text); border:1px solid var(--panel-border); border-radius:10px; padding:9px 12px; font-size:14px; font-family:inherit; width:100%; transition:border-color .15s; }
+  .fld input:focus, .fld textarea:focus, .fld select:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft); }
+  .fld textarea { min-height:74px; resize:vertical; }
+  .fld-row { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:0 10px; }
+  .chiprow { display:flex; flex-wrap:wrap; gap:7px; margin-top:4px; }
+  .schip { background:var(--input-bg); border:1px solid var(--panel-border); color:var(--text-dim); border-radius:999px; padding:6px 13px; font-size:13px; font-family:inherit; cursor:pointer; }
+  .schip.on { border-color:var(--accent); background:var(--accent-soft); color:var(--text); font-weight:600; }
+  .btn-sm { border:1px solid var(--accent); background:transparent; color:var(--accent); font-size:13px; font-weight:600; padding:8px 14px; border-radius:999px; font-family:inherit; cursor:pointer; }
+  .btn-sm:hover { background:var(--accent-soft); }
+  .btn-fill { background:var(--accent); color:var(--on-accent); border:none; font-size:14px; font-weight:600; padding:12px; border-radius:999px; width:100%; font-family:inherit; cursor:pointer; }
+  .addbox { background:var(--input-bg); border-radius:12px; padding:12px 14px; margin-bottom:12px; display:none; }
+  .addbox.on { display:block; }
+  .note { font-size:13px; color:var(--text-dim); line-height:1.5; }
+  .money { font-variant:tabular-nums; }
+  .saved { color:var(--customer); font-size:12px; font-weight:600; margin-left:8px; opacity:0; transition:opacity .2s; }
+  .saved.on { opacity:1; }
   .tabbar { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:430px; background:var(--panel); border-top:1px solid var(--panel-border); display:flex; height:64px; z-index:20; }
   .tab { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; cursor:pointer; color:var(--text-dim); font-size:11px; }
   .tab.on { color:var(--accent); }
@@ -370,13 +412,155 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   </div>
   <!-- YOU -->
   <div class="screen" id="s-you">
-    <div class="top"><h1>You</h1><div class="sub">Your business at a glance.</div></div>
-    <div class="you-row"><span class="you-k">Business</span><span class="you-v" id="you-biz">Not started</span></div>
-    <div class="you-row"><span class="you-k">Your niche</span><span class="you-v" id="you-niche">Not picked</span></div>
-    <div class="you-row"><span class="you-k">Focus community</span><span class="you-v" id="you-comm">None yet</span></div>
-    <div class="you-row"><span class="you-k">Level</span><span class="you-v" id="you-level">1 &middot; Explorer</span></div>
-    <div class="you-row"><span class="you-k">Sales logged</span><span class="you-v" id="you-sales">0</span></div>
-    <button class="reset" onclick="resetAll()">Reset progress</button>
+    <div class="top"><h1 id="you-greet">You</h1><div class="sub" id="you-sub">Your business at a glance.</div></div>
+    <div class="subtabs">
+      <button class="subtab on" data-pane="overview" onclick="setPane(this)">&#128202; Overview</button>
+      <button class="subtab" data-pane="clients" onclick="setPane(this)">&#128214; Clients</button>
+      <button class="subtab" data-pane="money" onclick="setPane(this)">&#128181; Money</button>
+      <button class="subtab" data-pane="business" onclick="setPane(this)">&#127978; Business</button>
+      <button class="subtab" data-pane="socials" onclick="setPane(this)">&#127760; Socials</button>
+      <button class="subtab" data-pane="settings" onclick="setPane(this)">&#9881; Settings</button>
+    </div>
+
+    <div class="pane on" id="p-overview">
+      <div class="statgrid">
+        <div class="statcard"><div class="stat-v" id="ov-people">0</div><div class="stat-k">people in your book</div></div>
+        <div class="statcard"><div class="stat-v money" id="ov-revenue">$0</div><div class="stat-k">all-time revenue</div></div>
+        <div class="statcard"><div class="stat-v" id="ov-listings">0</div><div class="stat-k">listings on the shelf</div></div>
+        <div class="statcard"><div class="stat-v" id="ov-level">1</div><div class="stat-k" id="ov-levelname">Explorer</div></div>
+      </div>
+      <div class="hcard">
+        <div class="hcard-h"><div class="hcard-t">&#128293; Who needs you</div><button class="hcard-a" onclick="goPane('clients')">Open &rarr;</button></div>
+        <div id="ov-attention"></div>
+      </div>
+      <div class="hcard">
+        <div class="hcard-h"><div class="hcard-t">&#9889; Recent moves</div></div>
+        <div id="ov-activity"></div>
+      </div>
+      <div class="hcard">
+        <div class="hcard-h"><div class="hcard-t">&#127942; Strongest relationships</div></div>
+        <div id="ov-top"></div>
+      </div>
+    </div>
+
+    <div class="pane" id="p-clients">
+      <button class="btn-sm" onclick="toggleBox('add-contact')">+ New client</button>
+      <div class="addbox" id="add-contact" style="margin-top:12px">
+        <div class="fld"><label>Name</label><input id="nc-name" placeholder="Who are they?"></div>
+        <div class="fld"><label>Where did you find them?</label><input id="nc-channel" placeholder="e.g. r/Pottery, Instagram, a market"></div>
+        <div class="fld"><label>Notes <span style="opacity:.6">(optional)</span></label><textarea id="nc-notes" placeholder="What do you know about them?"></textarea></div>
+        <div class="fld"><label>Where are they at?</label>
+          <div class="chiprow" id="nc-status">
+            <button class="schip on" data-v="PROSPECT" onclick="pickStatus(this)">&#127793; New lead</button>
+            <button class="schip" data-v="ENGAGED" onclick="pickStatus(this)">&#128172; In conversation</button>
+            <button class="schip" data-v="CUSTOMER" onclick="pickStatus(this)">&#11088; Customer</button>
+          </div>
+        </div>
+        <button class="btn-fill" onclick="addContact()">Add to my book</button>
+      </div>
+      <div id="clients-list"></div>
+    </div>
+
+    <div class="pane" id="p-money">
+      <div class="statgrid">
+        <div class="statcard"><div class="stat-v money" id="mn-total">$0</div><div class="stat-k">all time</div></div>
+        <div class="statcard"><div class="stat-v money" id="mn-avg">$0</div><div class="stat-k">average sale</div></div>
+      </div>
+      <div class="hcard">
+        <div class="hcard-h"><div class="hcard-t">&#128181; Record a sale</div></div>
+        <div class="fld-row">
+          <div class="fld"><label>Amount</label><input id="ns-amount" inputmode="decimal" placeholder="0.00"></div>
+          <div class="fld"><label>Who bought?</label><input id="ns-who" placeholder="Name (optional)"></div>
+        </div>
+        <div class="fld"><label>What was it? <span style="opacity:.6">(optional)</span></label><input id="ns-note" placeholder="e.g. two mugs"></div>
+        <button class="btn-fill" onclick="addSale()">Log the sale</button>
+        <div id="sales-list" style="margin-top:14px"></div>
+      </div>
+      <div class="hcard">
+        <div class="hcard-h"><div class="hcard-t">&#127991; The shelf</div><button class="hcard-a" onclick="toggleBox('add-product')">+ Add</button></div>
+        <div class="addbox" id="add-product">
+          <div class="fld"><label>Product name</label><input id="np-name" placeholder="What are you selling?"></div>
+          <div class="fld-row">
+            <div class="fld"><label>Price</label><input id="np-price" inputmode="decimal" placeholder="0.00"></div>
+            <div class="fld"><label>Stock <span style="opacity:.6">(optional)</span></label><input id="np-stock" inputmode="numeric" placeholder="—"></div>
+          </div>
+          <button class="btn-fill" onclick="addProduct()">Add to the shelf</button>
+        </div>
+        <div id="products-list"></div>
+      </div>
+    </div>
+
+    <div class="pane" id="p-business">
+      <div class="hcard">
+        <div class="hcard-h"><div class="hcard-t">Your business<span class="saved" id="sv-biz">Saved &#10003;</span></div></div>
+        <div class="fld"><label>Business name</label><input id="bp-name" oninput="saveBiz()"></div>
+        <div class="fld"><label>Product / niche</label><input id="bp-niche" oninput="saveBiz()"></div>
+        <div class="fld"><label>Describe it in a sentence</label><textarea id="bp-desc" oninput="saveBiz()" placeholder="What you make or do, and who it's for."></textarea></div>
+        <div class="fld"><label>Where should people land? (shop, site, linktree)</label><input id="bp-url" oninput="saveBiz()" placeholder="etsy.com/shop/yourshop"></div>
+        <div class="fld"><label>What kind of business?</label>
+          <div class="chiprow" id="bp-type">
+            <button class="schip" data-v="PRODUCT_SALES" onclick="pickBizType(this)">I sell products</button>
+            <button class="schip" data-v="SERVICE" onclick="pickBizType(this)">I offer services</button>
+            <button class="schip" data-v="KNOWLEDGE" onclick="pickBizType(this)">I teach or coach</button>
+            <button class="schip" data-v="OTHER" onclick="pickBizType(this)">Something else</button>
+          </div>
+        </div>
+        <div class="fld"><label>Where can people buy from you?</label>
+          <div class="chiprow" id="bp-avenues"></div>
+        </div>
+      </div>
+      <div class="hcard">
+        <div class="hcard-h"><div class="hcard-t">About you<span class="saved" id="sv-me">Saved &#10003;</span></div></div>
+        <div class="fld"><label>Your name</label><input id="me-name" oninput="saveMe()"></div>
+        <div class="fld-row">
+          <div class="fld"><label>Email</label><input id="me-email" oninput="saveMe()" placeholder="you@example.com"></div>
+          <div class="fld"><label>Location</label><input id="me-loc" oninput="saveMe()" placeholder="e.g. Austin, TX"></div>
+        </div>
+        <div class="fld"><label>Bio</label><textarea id="me-bio" oninput="saveMe()" placeholder="A sentence about you — people buy from people."></textarea></div>
+        <div class="fld"><label>What do you want from this business?</label><textarea id="me-goals" oninput="saveMe()" placeholder="e.g. Replace my day-job income within two years"></textarea></div>
+      </div>
+      <div class="hcard">
+        <div class="hcard-h"><div class="hcard-t">All your ventures</div></div>
+        <div id="ventures-list"></div>
+        <div class="note" style="margin-top:8px">Each venture keeps its own clients, sales and Growth communities.</div>
+      </div>
+    </div>
+
+    <div class="pane" id="p-socials">
+      <div class="hcard">
+        <div class="hcard-h"><div class="hcard-t">Where your business lives<span class="saved" id="sv-soc">Saved &#10003;</span></div></div>
+        <div class="note" style="margin-bottom:12px">Growth uses these to meet customers where you already are.</div>
+        <div id="socials-fields"></div>
+        <div class="note" id="soc-count"></div>
+      </div>
+    </div>
+
+    <div class="pane" id="p-settings">
+      <div class="hcard">
+        <div class="hcard-h"><div class="hcard-t">Appearance</div></div>
+        <div class="note">This preview follows your system light/dark setting — the artisan palette in daylight, the charcoal-and-gold one at night.</div>
+      </div>
+      <div class="hcard">
+        <div class="hcard-h"><div class="hcard-t">Relationship reminders</div></div>
+        <div class="note" style="margin-bottom:10px">How long someone can go quiet before they show up in "Who needs you".</div>
+        <div style="display:flex; align-items:center; gap:12px;">
+          <input type="range" min="1" max="30" id="set-cooling" oninput="saveCooling()" style="flex:1">
+          <span style="font-size:14px; white-space:nowrap"><strong id="set-cooling-v">7</strong> days</span>
+        </div>
+      </div>
+      <div class="hcard">
+        <div class="hcard-h"><div class="hcard-t">Your AI<span class="saved" id="sv-ai">Saved &#10003;</span></div></div>
+        <div class="note" style="margin-bottom:12px">Point the app at a model you run yourself (Ollama, LM Studio — anything OpenAI-compatible) for recommendations tailored to your exact business.</div>
+        <div class="fld"><label>Server URL</label><input id="ai-url" oninput="saveAi()" placeholder="http://localhost:11434/v1"></div>
+        <div class="fld"><label>Model name</label><input id="ai-model" oninput="saveAi()" placeholder="qwen2.5:7b"></div>
+        <div class="note" id="ai-state"></div>
+      </div>
+      <div class="hcard">
+        <div class="hcard-h"><div class="hcard-t">Start over</div></div>
+        <div class="note">Clears your profile, clients, sales and Journey progress on this device.</div>
+        <button class="reset" onclick="resetAll()">Reset everything</button>
+      </div>
+    </div>
   </div>
 
   <div class="onb" id="onb">
@@ -484,7 +668,8 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
     complete('name-business');
   }
   function startBiz(){ if(!S.biz){ setTab('journey'); toast('Name your business first'); return; } complete('start-business'); }
-  function logSale(){ S.sales = (S.sales||0)+1; save(); complete('log-sale'); toast('Sale logged'); }
+  // The Journey milestone hands off to the real place sales get recorded.
+  function logSale(){ setTab('you'); goPane('money'); toast('Record it here'); }
   function markDone(btn){ complete(btn.closest('.ms').dataset.id); }
 
   var STOP = ['and','the','for','with','your','from','that','this','are','you','our','its','all','who','what','how','made','only',
@@ -568,12 +753,7 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
     document.getElementById('pc-name').textContent = name;
     document.getElementById('pc-fill').style.width = Math.round(d/total*100) + '%';
     document.getElementById('pc-xp').textContent = d + ' / ' + total + ' milestones';
-    // you tab
-    document.getElementById('you-biz').textContent = S.biz || 'Not started';
-    document.getElementById('you-niche').textContent = S.niche ? S.niche.name : 'Not picked';
-    document.getElementById('you-comm').textContent = S.comm ? S.comm.title : 'None yet';
-    document.getElementById('you-level').textContent = num + ' \\u00b7 ' + name;
-    document.getElementById('you-sales').textContent = S.sales || 0;
+    renderYou(num, name);
     // journey tab dot when new unlockable steps exist
     var hasNew = !!document.querySelector('.level.unlocked .ms:not(.done)');
     document.querySelector('.tab[data-tab="journey"]').classList.toggle('hasnew', hasNew && S.tab!=='journey');
@@ -583,6 +763,312 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   var toastT;
   function toast(msg){ var t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(function(){ t.classList.remove('show'); },1600); }
   function resetAll(){ localStorage.removeItem('sm_app'); S={}; location.reload(); }
+
+  /* ---------------- You: the hub ---------------- */
+  var STATUS_META = {
+    PROSPECT: { emoji:'\\uD83C\\uDF31', title:'New lead' },
+    ENGAGED:  { emoji:'\\uD83D\\uDCAC', title:'In conversation' },
+    CUSTOMER: { emoji:'\\u2B50',        title:'Customer' }
+  };
+  var AVENUES = [
+    ['ETSY','Etsy'],['SHOPIFY','Shopify'],['INSTAGRAM_SHOP','Instagram'],['DEPOP','Depop'],
+    ['AMAZON','Amazon'],['EBAY','eBay'],['OWN_WEBSITE','My own site'],['IN_PERSON','In person'],['OTHER','Elsewhere']
+  ];
+  var SOCIALS = [
+    ['INSTAGRAM','\\uD83D\\uDCF8 Instagram','instagram.com/yourshop'],
+    ['TIKTOK','\\uD83C\\uDFB5 TikTok','tiktok.com/@yourshop'],
+    ['TWITTER','\\uD83D\\uDCAC X','x.com/yourshop'],
+    ['YOUTUBE','\\u25B6\\uFE0F YouTube','youtube.com/@yourshop'],
+    ['REDDIT','\\uD83D\\uDC7D Reddit','reddit.com/u/yourname'],
+    ['FACEBOOK','\\uD83D\\uDC65 Facebook','facebook.com/yourshop'],
+    ['PINTEREST','\\uD83D\\uDCCC Pinterest','pinterest.com/yourshop']
+  ];
+  // Interaction weights, carried over from the old app's scoring.
+  var TOUCH = { MESSAGE:1, MEETING:3, PURCHASE:5, REVIEW:4 };
+
+  function money(n){ return '$' + (Math.round((n||0)*100)/100).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:2}); }
+  function daysSince(iso){ if(!iso) return null; return Math.floor((Date.now()-new Date(iso).getTime())/86400000); }
+  function ago(iso){
+    var m = Math.floor((Date.now()-new Date(iso).getTime())/60000);
+    if(m<1) return 'just now'; if(m<60) return m+'m ago';
+    var h=Math.floor(m/60); if(h<24) return h+'h ago';
+    return Math.floor(h/24)+'d ago';
+  }
+  function coolingDays(){ return (S.settings && S.settings.cooling) || 7; }
+
+  function setPane(btn){
+    document.querySelectorAll('#s-you .subtab').forEach(function(b){ b.classList.toggle('on', b===btn); });
+    document.querySelectorAll('#s-you .pane').forEach(function(p){ p.classList.toggle('on', p.id === 'p'+'-'+btn.dataset.pane); });
+    window.scrollTo(0,0);
+  }
+  function goPane(name){
+    var btn = document.querySelector('#s-you .subtab[data-pane="'+name+'"]');
+    if(btn){ setTab('you'); setPane(btn); }
+  }
+  function toggleBox(id){ document.getElementById(id).classList.toggle('on'); }
+  function pickStatus(btn){ btn.parentElement.querySelectorAll('.schip').forEach(function(b){ b.classList.toggle('on', b===btn); }); }
+  function flash(id){ var e=document.getElementById(id); if(!e) return; e.classList.add('on'); setTimeout(function(){ e.classList.remove('on'); }, 1400); }
+
+  function addContact(){
+    var name = document.getElementById('nc-name').value.trim();
+    if(!name){ toast('They need a name'); return; }
+    var st = document.querySelector('#nc-status .schip.on');
+    S.contacts = S.contacts || [];
+    S.contacts.push({
+      id: 'c'+Date.now(), name: name,
+      channel: document.getElementById('nc-channel').value.trim(),
+      notes: document.getElementById('nc-notes').value.trim(),
+      status: st ? st.dataset.v : 'PROSPECT',
+      strength: 0, touches: [], createdAt: new Date().toISOString(), lastAt: null
+    });
+    save();
+    ['nc-name','nc-channel','nc-notes'].forEach(function(i){ document.getElementById(i).value=''; });
+    document.getElementById('add-contact').classList.remove('on');
+    toast('Added to your book');
+    refresh();
+  }
+  function logTouch(id, type){
+    var c = (S.contacts||[]).filter(function(x){ return x.id===id; })[0];
+    if(!c) return;
+    c.touches = c.touches || [];
+    c.touches.push({ type: type, at: new Date().toISOString() });
+    c.strength = (c.strength||0) + (TOUCH[type]||1);
+    c.lastAt = new Date().toISOString();
+    // Status climbs on its own as the relationship does.
+    if(type==='PURCHASE') c.status='CUSTOMER';
+    else if(c.status==='PROSPECT') c.status='ENGAGED';
+    save(); toast(type.toLowerCase()+' logged'); refresh();
+  }
+  function delContact(id){
+    S.contacts = (S.contacts||[]).filter(function(c){ return c.id!==id; });
+    save(); refresh();
+  }
+
+  function addSale(){
+    var amt = parseFloat(document.getElementById('ns-amount').value);
+    if(!(amt>0)){ toast('Enter an amount'); return; }
+    S.payments = S.payments || [];
+    S.payments.push({
+      id:'p'+Date.now(), amount: amt,
+      who: document.getElementById('ns-who').value.trim(),
+      note: document.getElementById('ns-note').value.trim(),
+      at: new Date().toISOString()
+    });
+    S.sales = (S.sales||0)+1;
+    save();
+    ['ns-amount','ns-who','ns-note'].forEach(function(i){ document.getElementById(i).value=''; });
+    complete('log-sale');
+    toast('Sale recorded \\u2014 ' + money(amt));
+    refresh();
+  }
+  function addProduct(){
+    var n = document.getElementById('np-name').value.trim();
+    if(!n){ toast('Name the product'); return; }
+    S.products = S.products || [];
+    S.products.push({
+      id:'pr'+Date.now(), name:n,
+      price: parseFloat(document.getElementById('np-price').value) || 0,
+      stock: document.getElementById('np-stock').value.trim()==='' ? null : parseInt(document.getElementById('np-stock').value,10)
+    });
+    save();
+    ['np-name','np-price','np-stock'].forEach(function(i){ document.getElementById(i).value=''; });
+    document.getElementById('add-product').classList.remove('on');
+    toast('On the shelf');
+    refresh();
+  }
+  function delProduct(id){ S.products=(S.products||[]).filter(function(p){ return p.id!==id; }); save(); refresh(); }
+
+  function saveBiz(){
+    S.bizProfile = S.bizProfile || {};
+    S.bizProfile.name = document.getElementById('bp-name').value;
+    S.bizProfile.niche = document.getElementById('bp-niche').value;
+    S.bizProfile.desc = document.getElementById('bp-desc').value;
+    S.bizProfile.url  = document.getElementById('bp-url').value;
+    if(S.bizProfile.name) S.biz = S.bizProfile.name;
+    // Editing the niche here re-tunes Growth, same as picking one in Discover.
+    if(S.bizProfile.niche){
+      S.niche = { slug:'my-business', name:S.bizProfile.niche, tags:S.bizProfile.niche };
+      matchGrow();
+    }
+    save(); flash('sv-biz');
+  }
+  function pickBizType(btn){
+    pickStatus(btn);
+    S.bizProfile = S.bizProfile || {}; S.bizProfile.type = btn.dataset.v; save(); flash('sv-biz');
+  }
+  function toggleAvenue(btn){
+    S.bizProfile = S.bizProfile || {}; S.bizProfile.avenues = S.bizProfile.avenues || [];
+    var v = btn.dataset.v, at = S.bizProfile.avenues.indexOf(v);
+    if(at===-1) S.bizProfile.avenues.push(v); else S.bizProfile.avenues.splice(at,1);
+    btn.classList.toggle('on', at===-1);
+    save(); flash('sv-biz');
+  }
+  function saveMe(){
+    S.me = S.me || {};
+    S.me.name = document.getElementById('me-name').value;
+    S.me.email = document.getElementById('me-email').value;
+    S.me.loc = document.getElementById('me-loc').value;
+    S.me.bio = document.getElementById('me-bio').value;
+    S.me.goals = document.getElementById('me-goals').value;
+    if(S.me.name){ S.profile = S.profile || {}; S.profile.name = S.me.name; }
+    save(); flash('sv-me');
+  }
+  function saveSocial(p){
+    S.socialLinks = S.socialLinks || {};
+    S.socialLinks[p] = document.getElementById('soc-'+p).value;
+    save(); flash('sv-soc'); renderSocialCount();
+  }
+  function saveCooling(){
+    S.settings = S.settings || {};
+    S.settings.cooling = Number(document.getElementById('set-cooling').value);
+    document.getElementById('set-cooling-v').textContent = S.settings.cooling;
+    save(); refresh();
+  }
+  function saveAi(){
+    S.settings = S.settings || {};
+    S.settings.aiUrl = document.getElementById('ai-url').value;
+    S.settings.aiModel = document.getElementById('ai-model').value;
+    save(); flash('sv-ai'); renderAiState();
+  }
+  function renderAiState(){
+    var s = S.settings || {};
+    document.getElementById('ai-state').textContent = (s.aiUrl && s.aiModel)
+      ? '\\uD83E\\uDDE0 Connected \\u00b7 ' + s.aiModel
+      : '\\u2699\\uFE0F Not connected \\u2014 using the built-in engine';
+  }
+  function renderSocialCount(){
+    var n = Object.values(S.socialLinks||{}).filter(Boolean).length;
+    document.getElementById('soc-count').textContent = n + ' connected';
+  }
+
+  var youBuilt = false;
+  function buildYouOnce(){
+    if(youBuilt) return; youBuilt = true;
+    document.getElementById('bp-avenues').innerHTML = AVENUES.map(function(a){
+      return '<button class="schip" data-v="'+a[0]+'" onclick="toggleAvenue(this)">'+esc(a[1])+'</button>';
+    }).join('');
+    document.getElementById('socials-fields').innerHTML = SOCIALS.map(function(s){
+      return '<div class="fld"><label>'+s[1]+'</label><input id="soc-'+s[0]+'" placeholder="'+attr(s[2])+'" oninput="saveSocial(\\''+s[0]+'\\')"></div>';
+    }).join('');
+  }
+
+  function renderYou(levelNum, levelName){
+    buildYouOnce();
+    var contacts = S.contacts || [], products = S.products || [], payments = S.payments || [];
+    var total = payments.reduce(function(a,p){ return a+p.amount; }, 0);
+
+    document.getElementById('you-greet').textContent = S.me && S.me.name ? ('Hi, ' + S.me.name.split(' ')[0])
+      : (S.profile && S.profile.name ? ('Hi, ' + S.profile.name.split(' ')[0]) : 'You');
+    document.getElementById('you-sub').textContent = S.biz ? ('Here\\'s where ' + S.biz + ' stands.') : 'Your business at a glance.';
+
+    document.getElementById('ov-people').textContent = contacts.length;
+    document.getElementById('ov-revenue').textContent = money(total);
+    document.getElementById('ov-listings').textContent = products.length;
+    document.getElementById('ov-level').textContent = levelNum;
+    document.getElementById('ov-levelname').textContent = levelName;
+
+    // Who needs you — quiet longer than the cooling-off setting.
+    var cool = coolingDays();
+    var quiet = contacts.map(function(c){ return { c:c, d:daysSince(c.lastAt) }; })
+      .filter(function(x){ return x.d===null || x.d>=cool; })
+      .sort(function(a,b){ return (b.c.strength||0)-(a.c.strength||0); }).slice(0,4);
+    document.getElementById('ov-attention').innerHTML = contacts.length===0
+      ? '<div class="note">Every business starts with one person who cared. Add yours.</div>'
+      : (quiet.length===0 ? '<div class="note">You\\'re on top of everyone. Nothing\\'s going cold. \\uD83D\\uDD25</div>'
+        : quiet.map(function(x){
+            return '<div class="lrow"><div class="lrow-main"><span class="sdot s-'+x.c.status+'"></span>'+esc(x.c.name)+
+              '<div class="lrow-sub">'+(x.d===null?'never contacted':x.d+' days quiet')+(x.c.channel?' \\u00b7 '+esc(x.c.channel):'')+'</div></div>'+
+              '<button class="hcard-a" onclick="logTouch(\\''+x.c.id+'\\',\\'MESSAGE\\')">Check in \\u2192</button></div>';
+          }).join(''));
+
+    // Recent moves across everything logged.
+    var feed = [];
+    contacts.forEach(function(c){ (c.touches||[]).forEach(function(t){ feed.push({ at:t.at, text:esc(c.name)+' \\u00b7 '+t.type.toLowerCase() }); }); });
+    payments.forEach(function(p){ feed.push({ at:p.at, text:money(p.amount)+' sale'+(p.who?' \\u00b7 '+esc(p.who):'') }); });
+    feed.sort(function(a,b){ return new Date(b.at)-new Date(a.at); });
+    document.getElementById('ov-activity').innerHTML = feed.length===0
+      ? '<div class="note">No activity yet \\u2014 log your first interaction and the story starts here.</div>'
+      : feed.slice(0,5).map(function(f){
+          return '<div class="lrow"><div class="lrow-main">'+f.text+'</div><span class="lrow-sub">'+ago(f.at)+'</span></div>';
+        }).join('');
+
+    var top = contacts.filter(function(c){ return (c.strength||0)>0; })
+      .sort(function(a,b){ return b.strength-a.strength; }).slice(0,3);
+    document.getElementById('ov-top').innerHTML = top.length===0
+      ? '<div class="note">Log a few interactions and your strongest relationships surface here.</div>'
+      : top.map(function(c,i){
+          return '<div class="lrow"><div class="lrow-main">'+['\\uD83E\\uDD47','\\uD83E\\uDD48','\\uD83E\\uDD49'][i]+' '+esc(c.name)+'</div><span class="strength">'+Math.round(c.strength)+'</span></div>';
+        }).join('');
+
+    // Clients
+    document.getElementById('clients-list').innerHTML = contacts.length===0
+      ? '<div class="hcard"><div class="note">Nobody in your book yet. Add the first person who showed interest \\u2014 even if they haven\\'t bought.</div></div>'
+      : contacts.slice().sort(function(a,b){ return (b.strength||0)-(a.strength||0); }).map(function(c){
+          var m = STATUS_META[c.status] || STATUS_META.PROSPECT;
+          return '<div class="hcard"><div class="hcard-h"><div class="hcard-t">'+esc(c.name)+'</div>'+
+            '<span class="lrow-sub">'+m.emoji+' '+m.title+'</span></div>'+
+            (c.channel? '<div class="lrow-sub">Found via '+esc(c.channel)+'</div>':'')+
+            (c.notes? '<div class="note" style="margin-top:6px">'+esc(c.notes)+'</div>':'')+
+            '<div class="lrow" style="border:none; padding-bottom:0"><div class="lrow-main lrow-sub">'+
+              (c.lastAt? 'Last touch '+ago(c.lastAt) : 'No contact yet')+' \\u00b7 strength <span class="strength">'+Math.round(c.strength||0)+'</span></div></div>'+
+            '<div class="chiprow" style="margin-top:8px">'+
+              '<button class="schip" onclick="logTouch(\\''+c.id+'\\',\\'MESSAGE\\')">Messaged</button>'+
+              '<button class="schip" onclick="logTouch(\\''+c.id+'\\',\\'MEETING\\')">Met</button>'+
+              '<button class="schip" onclick="logTouch(\\''+c.id+'\\',\\'PURCHASE\\')">Bought</button>'+
+              '<button class="schip" onclick="delContact(\\''+c.id+'\\')" style="color:var(--danger)">Remove</button>'+
+            '</div></div>';
+        }).join('');
+
+    // Money
+    document.getElementById('mn-total').textContent = money(total);
+    document.getElementById('mn-avg').textContent = money(payments.length ? total/payments.length : 0);
+    document.getElementById('sales-list').innerHTML = payments.length===0
+      ? '<div class="note">The first dollar is the hardest \\u2014 and the sweetest. Record it when it lands.</div>'
+      : payments.slice().reverse().slice(0,8).map(function(p){
+          return '<div class="lrow"><div class="lrow-main"><strong class="money">'+money(p.amount)+'</strong>'+
+            (p.note? ' \\u00b7 '+esc(p.note):'')+'<div class="lrow-sub">'+(p.who? esc(p.who)+' \\u00b7 ':'')+ago(p.at)+'</div></div></div>';
+        }).join('');
+    document.getElementById('products-list').innerHTML = products.length===0
+      ? '<div class="note">Give people something to say yes to \\u2014 add your first product.</div>'
+      : products.map(function(p){
+          return '<div class="lrow"><div class="lrow-main">'+esc(p.name)+
+            '<div class="lrow-sub">'+(p.price? money(p.price):'no price')+(p.stock!==null&&p.stock!==undefined? ' \\u00b7 '+p.stock+' in stock':'')+'</div></div>'+
+            '<button class="hcard-a" onclick="delProduct(\\''+p.id+'\\')" style="color:var(--danger)">Remove</button></div>';
+        }).join('');
+
+    // Ventures
+    document.getElementById('ventures-list').innerHTML =
+      '<div class="lrow"><div class="lrow-main"><strong>'+esc(S.biz || 'Your first venture')+'</strong>'+
+      '<div class="lrow-sub">'+esc((S.niche && S.niche.name) || 'No niche picked yet')+'</div></div>'+
+      '<span class="lrow-sub">active</span></div>';
+  }
+
+  // Fill the You forms from saved state on load.
+  function hydrateYou(){
+    buildYouOnce();
+    var b = S.bizProfile || {}, me = S.me || {}, set = S.settings || {};
+    document.getElementById('bp-name').value = b.name || S.biz || '';
+    document.getElementById('bp-niche').value = b.niche || (S.niche? S.niche.name : '');
+    document.getElementById('bp-desc').value = b.desc || '';
+    document.getElementById('bp-url').value = b.url || '';
+    if(b.type) document.querySelectorAll('#bp-type .schip').forEach(function(x){ x.classList.toggle('on', x.dataset.v===b.type); });
+    (b.avenues||[]).forEach(function(v){
+      var el = document.querySelector('#bp-avenues .schip[data-v="'+v+'"]'); if(el) el.classList.add('on');
+    });
+    document.getElementById('me-name').value = me.name || (S.profile? S.profile.name : '') || '';
+    document.getElementById('me-email').value = me.email || '';
+    document.getElementById('me-loc').value = me.loc || '';
+    document.getElementById('me-bio').value = me.bio || '';
+    document.getElementById('me-goals').value = me.goals || '';
+    Object.entries(S.socialLinks||{}).forEach(function(kv){
+      var el = document.getElementById('soc-'+kv[0]); if(el) el.value = kv[1] || '';
+    });
+    document.getElementById('set-cooling').value = set.cooling || 7;
+    document.getElementById('set-cooling-v').textContent = set.cooling || 7;
+    document.getElementById('ai-url').value = set.aiUrl || '';
+    document.getElementById('ai-model').value = set.aiModel || '';
+    renderAiState(); renderSocialCount();
+  }
 
   /* ---------------- Onboarding ---------------- */
   var ONB = ${JSON.stringify(onboarding)};
@@ -909,6 +1395,7 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
 
   matchDiscover();
   matchGrow();
+  hydrateYou();
   refresh();
   if(S.tab){ setTab(S.tab); }
   if(!S.onboarded){ onbOpen(); }
