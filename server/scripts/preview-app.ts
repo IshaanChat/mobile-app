@@ -270,6 +270,22 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   .reset { background:none; border:none; color:var(--danger); font-size:13px; margin-top:10px; cursor:pointer; }
 
   /* ---- You: the hub. Ported from the old web app's tabbed business area ---- */
+  /* ---- Top bar + the missions panel it opens (the old app's rail) ---- */
+  .topbar { position:sticky; top:0; z-index:15; background:var(--bg); display:flex; align-items:center; justify-content:space-between; padding:12px 16px 10px; border-bottom:1px solid var(--panel-border); }
+  .brand { display:flex; align-items:center; gap:7px; font-size:12px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--accent); }
+  .brand-mark { width:20px; height:20px; border-radius:6px; background:var(--accent); color:var(--on-accent); display:flex; align-items:center; justify-content:center; font-size:11px; }
+  .mbtn { position:relative; background:none; border:none; font-size:19px; line-height:1; cursor:pointer; padding:4px 2px; display:flex; align-items:center; gap:7px; color:var(--text-dim); font-family:inherit; }
+  .mbtn-l { font-size:12px; font-weight:600; letter-spacing:.04em; text-transform:uppercase; }
+  .mbtn:hover { color:var(--accent); }
+  .mdot { position:absolute; top:1px; right:-2px; width:9px; height:9px; background:var(--danger); border-radius:50%; display:none; }
+  .mbtn.hasnew .mdot { display:block; }
+  .mpanel { position:fixed; inset:0; margin:0 auto; max-width:430px; background:var(--bg); z-index:60; overflow-y:auto; transform:translateX(104%); transition:transform .26s ease; padding:0 16px 32px; }
+  .mpanel.on { transform:translateX(0); }
+  .mhead { position:sticky; top:0; background:var(--bg); display:flex; align-items:center; justify-content:space-between; padding:14px 0 12px; }
+  .mhead h2 { font-size:20px; margin:0; }
+  .mclose { background:none; border:none; color:var(--text-dim); font-size:22px; cursor:pointer; line-height:1; padding:0 4px; }
+  .mclose:hover { color:var(--accent); }
+
   .subtabs { display:flex; gap:6px; overflow-x:auto; padding-bottom:4px; margin-bottom:14px; }
   .subtab { border:1px solid var(--panel-border); background:var(--panel); color:var(--text-dim); border-radius:999px; padding:7px 13px; font-size:13px; font-family:inherit; cursor:pointer; white-space:nowrap; }
   .subtab:hover { border-color:var(--accent); }
@@ -378,6 +394,11 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   .onb-note { font-size:13px; color:var(--text-dim); line-height:1.5; margin-top:16px; }
 </style></head><body>
 <div class="app">
+  <div class="topbar">
+    <div class="brand"><span class="brand-mark">&#128295;</span> Sales Mechanic</div>
+    <button class="mbtn" id="mbtn" onclick="openMissions()"><span class="mbtn-l">Journey</span>&#128640;<span class="mdot"></span></button>
+  </div>
+
   <!-- DISCOVER -->
   <div class="screen active" id="s-discover">
     <div class="top"><h1>Discover</h1><div class="sub">Trending products &mdash; and where to source them.</div></div>
@@ -399,9 +420,10 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
     <div class="banner" id="grow-banner"></div>
     ${communities.map(communityCard).join('')}
   </div>
-  <!-- JOURNEY -->
-  <div class="screen" id="s-journey">
-    <div class="top"><h1>Journey</h1><div class="sub">Level up from idea to first sale.</div></div>
+  <!-- JOURNEY — not a tab; a panel the top bar opens. -->
+  <div class="mpanel" id="s-journey">
+    <div class="mhead"><h2>Journey</h2><button class="mclose" onclick="closeMissions()">&times;</button></div>
+    <div class="sub" style="color:var(--text-dim); font-size:13px; margin-bottom:14px">Level up from idea to first sale.</div>
     <div class="progress-card">
       <div class="pc-level" id="pc-level">Level 1</div>
       <div class="pc-name" id="pc-name">Explorer</div>
@@ -410,16 +432,13 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
     </div>
     ${levelsHtml}
   </div>
-  <!-- YOU -->
-  <div class="screen" id="s-you">
-    <div class="top"><h1 id="you-greet">You</h1><div class="sub" id="you-sub">Your business at a glance.</div></div>
+  <!-- BUSINESS — how the business is actually doing -->
+  <div class="screen" id="s-shop">
+    <div class="top"><h1 id="you-greet">Business</h1><div class="sub" id="you-sub">Your business at a glance.</div></div>
     <div class="subtabs">
       <button class="subtab on" data-pane="overview" onclick="setPane(this)">&#128202; Overview</button>
       <button class="subtab" data-pane="clients" onclick="setPane(this)">&#128214; Clients</button>
       <button class="subtab" data-pane="money" onclick="setPane(this)">&#128181; Money</button>
-      <button class="subtab" data-pane="business" onclick="setPane(this)">&#127978; Business</button>
-      <button class="subtab" data-pane="socials" onclick="setPane(this)">&#127760; Socials</button>
-      <button class="subtab" data-pane="settings" onclick="setPane(this)">&#9881; Settings</button>
     </div>
 
     <div class="pane on" id="p-overview">
@@ -489,8 +508,18 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
         <div id="products-list"></div>
       </div>
     </div>
+  </div>
 
-    <div class="pane" id="p-business">
+  <!-- YOU — who you are and how the app is set up -->
+  <div class="screen" id="s-you">
+    <div class="top"><h1>You</h1><div class="sub">Your profile, your links, your settings.</div></div>
+    <div class="subtabs">
+      <button class="subtab on" data-pane="profile" onclick="setPane(this)">&#127978; Profile</button>
+      <button class="subtab" data-pane="socials" onclick="setPane(this)">&#127760; Socials</button>
+      <button class="subtab" data-pane="settings" onclick="setPane(this)">&#9881; Settings</button>
+    </div>
+
+    <div class="pane on" id="p-profile">
       <div class="hcard">
         <div class="hcard-h"><div class="hcard-t">Your business<span class="saved" id="sv-biz">Saved &#10003;</span></div></div>
         <div class="fld"><label>Business name</label><input id="bp-name" oninput="saveBiz()"></div>
@@ -577,7 +606,7 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   <div class="tabbar">
     <div class="tab on" data-tab="discover" onclick="setTab('discover')"><span class="ic">&#129517;</span>Discover</div>
     <div class="tab" data-tab="grow" onclick="setTab('grow')"><span class="ic">&#127793;</span>Grow</div>
-    <div class="tab" data-tab="journey" onclick="setTab('journey')"><span class="dot"></span><span class="ic">&#128640;</span>Journey</div>
+    <div class="tab" data-tab="shop" onclick="setTab('shop')"><span class="ic">&#128202;</span>Business</div>
     <div class="tab" data-tab="you" onclick="setTab('you')"><span class="ic">&#128100;</span>You</div>
   </div>
 </div>
@@ -617,7 +646,13 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
     if(el) complete(el.dataset.id);
   }
 
+  // Journey is no longer a tab — it's a panel the top bar opens.
+  function openMissions(){ document.getElementById('s-journey').classList.add('on'); refresh(); }
+  function closeMissions(){ document.getElementById('s-journey').classList.remove('on'); }
+
   function setTab(name){
+    if(name === 'journey'){ openMissions(); return; }
+    closeMissions();
     document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
     document.getElementById('s-'+name).classList.add('active');
     document.querySelectorAll('.tab').forEach(function(t){ t.classList.toggle('on', t.dataset.tab===name); });
@@ -667,9 +702,9 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
     S.biz = v; save();
     complete('name-business');
   }
-  function startBiz(){ if(!S.biz){ setTab('journey'); toast('Name your business first'); return; } complete('start-business'); }
+  function startBiz(){ if(!S.biz){ toast('Name your business first'); return; } complete('start-business'); }
   // The Journey milestone hands off to the real place sales get recorded.
-  function logSale(){ setTab('you'); goPane('money'); toast('Record it here'); }
+  function logSale(){ goPane('money'); toast('Record it here'); }
   function markDone(btn){ complete(btn.closest('.ms').dataset.id); }
 
   var STOP = ['and','the','for','with','your','from','that','this','are','you','our','its','all','who','what','how','made','only',
@@ -754,9 +789,9 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
     document.getElementById('pc-fill').style.width = Math.round(d/total*100) + '%';
     document.getElementById('pc-xp').textContent = d + ' / ' + total + ' milestones';
     renderYou(num, name);
-    // journey tab dot when new unlockable steps exist
+    // Badge the top-bar icon whenever there's an unlocked step waiting.
     var hasNew = !!document.querySelector('.level.unlocked .ms:not(.done)');
-    document.querySelector('.tab[data-tab="journey"]').classList.toggle('hasnew', hasNew && S.tab!=='journey');
+    document.getElementById('mbtn').classList.toggle('hasnew', hasNew);
     save();
   }
 
@@ -796,14 +831,19 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   }
   function coolingDays(){ return (S.settings && S.settings.cooling) || 7; }
 
+  // Which tab owns each pane, now that they're split across two screens.
+  var PANE_TAB = { overview:'shop', clients:'shop', money:'shop', profile:'you', socials:'you', settings:'you' };
   function setPane(btn){
-    document.querySelectorAll('#s-you .subtab').forEach(function(b){ b.classList.toggle('on', b===btn); });
-    document.querySelectorAll('#s-you .pane').forEach(function(p){ p.classList.toggle('on', p.id === 'p'+'-'+btn.dataset.pane); });
+    var screen = btn.closest('.screen');
+    screen.querySelectorAll('.subtab').forEach(function(b){ b.classList.toggle('on', b===btn); });
+    screen.querySelectorAll('.pane').forEach(function(p){ p.classList.toggle('on', p.id === 'p'+'-'+btn.dataset.pane); });
     window.scrollTo(0,0);
   }
   function goPane(name){
-    var btn = document.querySelector('#s-you .subtab[data-pane="'+name+'"]');
-    if(btn){ setTab('you'); setPane(btn); }
+    var btn = document.querySelector('.subtab[data-pane="'+name+'"]');
+    if(!btn) return;
+    setTab(PANE_TAB[name] || 'you');
+    setPane(btn);
   }
   function toggleBox(id){ document.getElementById(id).classList.toggle('on'); }
   function pickStatus(btn){ btn.parentElement.querySelectorAll('.schip').forEach(function(b){ b.classList.toggle('on', b===btn); }); }
