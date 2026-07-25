@@ -142,7 +142,7 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
 <title>Sales Mechanic — base app</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   /* Sales Mechanic — warm, encouraging, built for first-time founders.
      Light "the artisan": blush cream, dusty rose, honey and sage.
@@ -168,7 +168,10 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
     /* A warm wonky serif for anything that speaks, a clean sans for the rest.
        The pairing is what stops this reading as a default template. */
     --font-display:'Fraunces','Iowan Old Style',Georgia,serif;
-    --font-sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    /* Jakarta over Inter: Inter is deliberately neutral, which always reads
+       as a default. This one carries warmth in the a, g and y — enough
+       character for a card title without needing the serif. */
+    --font-sans:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
   }
   @media (prefers-color-scheme: dark) {
     :root {
@@ -198,7 +201,8 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   h1,h2,.onb-title,.onb-rev-title,.next-t,.lvname,.stat-v,.mhead h2 {
     font-family:var(--font-display); font-weight:600; letter-spacing:-0.015em; font-optical-sizing:auto;
   }
-  .title,.hcard-t,.sec-t,.pc-name { font-family:var(--font-sans); font-weight:600; letter-spacing:-0.01em; }
+  .title,.hcard-t,.sec-t,.pc-name { font-family:var(--font-sans); font-weight:600; letter-spacing:-0.022em; }
+  .kicker { font-weight:600; }
   .stat-v, .econ-inline, .econ, .money, .strength, .lvcount, .lvsec-c { font-variant-numeric:tabular-nums; }
   .stat-v { font-weight:700; }
   .app { max-width:430px; margin:0 auto; background:var(--bg); min-height:100vh; position:relative; padding-bottom:76px; }
