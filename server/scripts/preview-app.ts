@@ -59,6 +59,7 @@ function productCard(p: any) {
         <div class="chips"><span class="chip" style="background:${aud}">${esc(AUDIENCE_LABELS[n.audience] ?? n.audience ?? '')}</span><span class="chip chip-dark">${esc(SOURCING_LABELS[p.sourcingType] ?? '')}</span></div>
         <span class="match-badge">&#9733; your kind of thing</span>
       </div>
+      <button class="savebtn" title="Save to your shelf" onclick="event.stopPropagation(); toggleSave('${attr(p.slug)}', this)"><svg><use href="#i-heart"/></svg></button>
       <div class="body"><div class="titlerow"><div><div class="kicker">${esc(n.name ?? '')}</div><div class="title">${esc(p.title)}</div><div class="econ-inline"><span class="cost">${esc(p.sourceCost)}</span><span class="arrow">&rarr;</span><span class="resale">${esc(p.typicalResale)}</span></div></div><div class="chev">&#9660;</div></div></div>
     </div>
     <div class="expand">
@@ -131,7 +132,7 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
         <span class="lv-num">${lv.level}</span>
         <span class="lvsec-t"><span class="lvsec-n">${esc(lv.name)}</span><span class="lvsec-s">${esc(lv.title)}</span></span>
         <span class="lvsec-c" id="lvc-${lv.level}"></span>
-        <span class="lvsec-x">&#9660;</span>
+        <span class="lvsec-x"><svg class="ic-sm"><use href="#i-chev"/></svg></span>
       </div>
       <div class="ms-list">${byLevel(lv.level).map(milestoneRow).join('')}</div>
     </section>`).join('');
@@ -139,6 +140,9 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   return `<!doctype html><html><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sales Mechanic — base app</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   /* Sales Mechanic — warm, encouraging, built for first-time founders.
      Light "the artisan": blush cream, dusty rose, honey and sage.
@@ -161,6 +165,10 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
     --danger:#cc4f4f;
     --scoreboard:#34262b;
     --shadow:0 2px 12px rgba(90,50,60,0.07);
+    /* A warm wonky serif for anything that speaks, a clean sans for the rest.
+       The pairing is what stops this reading as a default template. */
+    --font-display:'Fraunces','Iowan Old Style',Georgia,serif;
+    --font-sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
   }
   @media (prefers-color-scheme: dark) {
     :root {
@@ -183,8 +191,13 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
     }
   }
   * { box-sizing:border-box; }
-  body { margin:0; background:var(--surround); font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; color:var(--text); }
-  h1,h2,h3 { letter-spacing:-0.02em; }
+  body { margin:0; background:var(--surround); font-family:var(--font-sans); color:var(--text); -webkit-font-smoothing:antialiased; }
+  /* Anything that speaks gets the serif; anything functional stays sans. */
+  h1,h2,h3,.title,.onb-title,.onb-rev-title,.next-t,.lvname,.stat-v,.hcard-t,.pc-name,.sec-t,.mhead h2 {
+    font-family:var(--font-display); font-weight:600; letter-spacing:-0.015em; font-optical-sizing:auto;
+  }
+  .stat-v, .econ-inline, .econ, .money, .strength, .lvcount, .lvsec-c { font-variant-numeric:tabular-nums; }
+  .stat-v { font-weight:700; }
   .app { max-width:430px; margin:0 auto; background:var(--bg); min-height:100vh; position:relative; padding-bottom:76px; }
   .screen { display:none; padding:16px; }
   .screen.active { display:block; }
@@ -331,7 +344,7 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   .lvsec.locked .lvsec-n, .lvsec.locked .lvsec-s { opacity:.5; }
 
   .subtabs { display:flex; gap:6px; overflow-x:auto; padding-bottom:4px; margin-bottom:14px; }
-  .subtab { border:1px solid var(--panel-border); background:var(--panel); color:var(--text-dim); border-radius:999px; padding:7px 13px; font-size:13px; font-family:inherit; cursor:pointer; white-space:nowrap; }
+  .subtab { display:flex; align-items:center; gap:6px; border:1px solid var(--panel-border); background:var(--panel); color:var(--text-dim); border-radius:999px; padding:7px 13px; font-size:13px; font-family:inherit; cursor:pointer; white-space:nowrap; }
   .subtab:hover { border-color:var(--accent); }
   .subtab.on { background:var(--accent-soft); border-color:var(--accent); color:var(--text); font-weight:600; }
   .pane { display:none; } .pane.on { display:block; }
@@ -359,7 +372,8 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   .chiprow { display:flex; flex-wrap:wrap; gap:7px; margin-top:4px; }
   .schip { background:var(--input-bg); border:1px solid var(--panel-border); color:var(--text-dim); border-radius:999px; padding:6px 13px; font-size:13px; font-family:inherit; cursor:pointer; }
   .schip.on { border-color:var(--accent); background:var(--accent-soft); color:var(--text); font-weight:600; }
-  .btn-sm { border:1px solid var(--accent); background:transparent; color:var(--accent); font-size:13px; font-weight:600; padding:8px 14px; border-radius:999px; font-family:inherit; cursor:pointer; }
+  .btn-sm { display:inline-flex; align-items:center; gap:6px; border:1px solid var(--accent); background:transparent; color:var(--accent); font-size:13px; font-weight:600; padding:8px 14px; border-radius:999px; font-family:inherit; cursor:pointer; }
+  .hcard-a { display:inline-flex; align-items:center; gap:5px; }
   .btn-sm:hover { background:var(--accent-soft); }
   .btn-fill { background:var(--accent); color:var(--on-accent); border:none; font-size:14px; font-weight:600; padding:12px; border-radius:999px; width:100%; font-family:inherit; cursor:pointer; }
   .addbox { background:var(--input-bg); border-radius:12px; padding:12px 14px; margin-bottom:12px; display:none; }
@@ -371,7 +385,41 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   .tabbar { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:430px; background:var(--panel); border-top:1px solid var(--panel-border); display:flex; height:64px; z-index:20; }
   .tab { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; cursor:pointer; color:var(--text-dim); font-size:11px; }
   .tab.on { color:var(--accent); }
-  .tab .ic { font-size:20px; line-height:1; }
+  /* One stroke weight, one corner treatment — the icon set reads as a set. */
+  svg.ic { width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; display:block; }
+  svg.ic-sm { width:16px; height:16px; stroke-width:1.9; }
+  svg.ic-xs { width:13px; height:13px; stroke-width:2; }
+  .tab.on svg.ic { stroke-width:2; }
+  .inline-ic { display:inline-flex; align-items:center; gap:7px; }
+
+  /* Streak — a quiet reason to come back tomorrow. */
+  .streak { display:flex; align-items:center; gap:5px; font-size:13px; font-weight:700; color:var(--engaged); font-variant-numeric:tabular-nums; }
+  .streak svg { stroke:var(--engaged); }
+  .streak.cold { color:var(--text-dim); } .streak.cold svg { stroke:var(--text-dim); }
+
+  /* Save to shelf. */
+  .savebtn { position:absolute; top:12px; right:12px; width:34px; height:34px; border-radius:50%; border:none; background:rgba(255,255,255,.86); color:#7a5560; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:transform .14s, background .14s; }
+  .savebtn:hover { transform:scale(1.08); }
+  .savebtn:active { transform:scale(.92); }
+  .card.saved .savebtn { background:var(--accent); color:#fff; }
+  .card.saved .savebtn svg { fill:currentColor; }
+  .savebtn svg { width:17px; height:17px; fill:none; stroke:currentColor; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round; }
+
+  /* Press feedback — small, but it's what makes a UI feel built. */
+  .card .head:active { transform:scale(.994); }
+  .card .head { transition:transform .12s; }
+  .schip:active, .chipbtn:active, .subtab:active { transform:scale(.96); }
+  .schip, .chipbtn, .subtab { transition:transform .1s, border-color .15s, background .15s, color .15s; }
+
+  /* Level-up moment. */
+  .burst { position:fixed; left:50%; top:38%; transform:translate(-50%,-50%); z-index:70; pointer-events:none; }
+  .burst i { position:absolute; width:8px; height:8px; border-radius:2px; opacity:0; }
+  @keyframes fly { 0%{opacity:1; transform:translate(0,0) rotate(0deg);} 100%{opacity:0; transform:translate(var(--dx),var(--dy)) rotate(var(--rot));} }
+  .levelup { position:fixed; left:50%; top:34%; transform:translate(-50%,-50%) scale(.9); z-index:71; background:var(--panel); border:1.5px solid var(--accent); border-radius:20px; padding:22px 26px; text-align:center; box-shadow:0 18px 50px rgba(60,30,40,.28); opacity:0; pointer-events:none; transition:opacity .25s, transform .25s; }
+  .levelup.on { opacity:1; transform:translate(-50%,-50%) scale(1); }
+  .levelup-k { font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); }
+  .levelup-t { font-family:var(--font-display); font-size:26px; font-weight:600; margin-top:6px; letter-spacing:-0.02em; }
+  .levelup-s { font-size:13px; color:var(--text-dim); margin-top:4px; }
   .tab .dot { position:absolute; margin-left:16px; margin-top:-14px; width:8px; height:8px; background:var(--danger); border-radius:50%; display:none; }
   .tab.hasnew .dot { display:block; }
   .toast { position:fixed; bottom:80px; left:50%; transform:translateX(-50%); background:var(--scoreboard); color:#fdf7f4; font-size:13px; font-weight:600; padding:10px 16px; border-radius:999px; opacity:0; transition:opacity .25s; z-index:30; }
@@ -437,12 +485,38 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   .onb-center .onb-mark { margin-left:auto; margin-right:auto; }
   .onb-note { font-size:13px; color:var(--text-dim); line-height:1.5; margin-top:16px; }
 </style></head><body>
+<svg style="display:none" aria-hidden="true"><defs>
+  <symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.6 8.4l-2 5.2-5.2 2 2-5.2z"/></symbol>
+  <symbol id="i-sprout" viewBox="0 0 24 24"><path d="M12 21v-7"/><path d="M12 14c0-3.3-2.7-6-6-6H4c0 3.3 2.7 6 6 6z"/><path d="M12 12c0-3.3 2.7-6 6-6h2c0 3.3-2.7 6-6 6z"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-6"/><path d="M22 20H2"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 13l4.5 4.5L19 7"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-out" viewBox="0 0 24 24"><path d="M8 16L16 8"/><path d="M9 8h7v7"/></symbol>
+  <symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 21c3.6 0 6-2.4 6-5.6 0-4.2-4.4-5.6-3.4-10.4C11.4 6 9 8.4 9 11c0-1.2-.6-2.2-1.4-2.8C6.6 9.6 6 11.6 6 13.8 6 18 8.4 21 12 21z"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-9a4 4 0 017-2.6A4 4 0 0119 11c0 4.6-7 9-7 9z"/></symbol>
+  <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 4h8v5a4 4 0 01-8 0z"/><path d="M8 5H5v2a3 3 0 003 3"/><path d="M16 5h3v2a3 3 0 01-3 3"/><path d="M12 13v4M9 20h6"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8.5 11V8a3.5 3.5 0 017 0v3"/></symbol>
+  <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h11M19 7h1M4 17h4M12 17h8"/><circle cx="17" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13.5a3.5 3.5 0 005 0l3-3a3.5 3.5 0 00-5-5l-1 1"/><path d="M14 10.5a3.5 3.5 0 00-5 0l-3 3a3.5 3.5 0 005 5l1-1"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M5 4h9a3 3 0 013 3v13H8a3 3 0 01-3-3z"/><path d="M5 17h12"/></symbol>
+  <symbol id="i-note" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="10" rx="2"/><circle cx="12" cy="12" r="2.4"/></symbol>
+  <symbol id="i-shop" viewBox="0 0 24 24"><path d="M4 9h16l-1 11H5z"/><path d="M8.5 9V6.5a3.5 3.5 0 017 0V9"/></symbol>
+  <symbol id="i-tag" viewBox="0 0 24 24"><path d="M4 11V5h6l9 9-6 6z"/><circle cx="7.8" cy="8.2" r="1.1"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l1.9 5.6L19.5 10l-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.4z"/><path d="M18.5 16l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/></symbol>
+</defs></svg>
+
 <div class="app">
   <div class="topbar">
-    <div class="brand"><span class="brand-mark">&#128295;</span> Sales Mechanic</div>
-    <button class="mbtn" id="mbtn" onclick="openMissions()">
-      <span class="mbtn-ring" id="mbtn-ring"></span>Journey<span class="mdot"></span>
-    </button>
+    <div class="brand"><span class="brand-mark"><svg class="ic-xs"><use href="#i-spark"/></svg></span> Sales Mechanic</div>
+    <div style="display:flex; align-items:center; gap:10px">
+      <div class="streak" id="streak" title="Days in a row"><svg class="ic-sm"><use href="#i-flame"/></svg><span id="streak-n">1</span></div>
+      <button class="mbtn" id="mbtn" onclick="openMissions()">
+        <span class="mbtn-ring" id="mbtn-ring"></span>Journey<span class="mdot"></span>
+      </button>
+    </div>
   </div>
 
   <!-- DISCOVER -->
@@ -453,6 +527,7 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
       <button class="chipbtn" data-f="maker" onclick="setFilter(this)">Maker</button>
       <button class="chipbtn" data-f="reseller" onclick="setFilter(this)">Reseller</button>
       <button class="chipbtn" data-f="both" onclick="setFilter(this)">Both</button>
+      <button class="chipbtn" data-f="saved" onclick="setFilter(this)" id="chip-saved">Saved</button>
     </div>
     <div class="banner" id="disc-banner" style="margin-top:12px"></div>
     ${domains.map((d) => `<section class="dom" data-dom="${attr(d)}">
@@ -472,7 +547,7 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
     <div class="mgrab"></div>
     <div class="mhead">
       <div><h2>Your journey</h2><div class="msub" id="pc-xp">Idea to first sale, one step at a time.</div></div>
-      <button class="mclose" onclick="closeMissions()">&times;</button>
+      <button class="mclose" onclick="closeMissions()" aria-label="Close"><svg class="ic-sm"><use href="#i-x"/></svg></button>
     </div>
     <div class="lvhead">
       <span class="lvname" id="pc-name">Explorer</span>
@@ -486,9 +561,9 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   <div class="screen" id="s-shop">
     <div class="top"><h1 id="you-greet">Business</h1><div class="sub" id="you-sub">Your business at a glance.</div></div>
     <div class="subtabs">
-      <button class="subtab on" data-pane="overview" onclick="setPane(this)">&#128202; Overview</button>
-      <button class="subtab" data-pane="clients" onclick="setPane(this)">&#128214; Clients</button>
-      <button class="subtab" data-pane="money" onclick="setPane(this)">&#128181; Money</button>
+      <button class="subtab on" data-pane="overview" onclick="setPane(this)"><svg class="ic-sm"><use href="#i-chart"/></svg>Overview</button>
+      <button class="subtab" data-pane="clients" onclick="setPane(this)"><svg class="ic-sm"><use href="#i-book"/></svg>Clients</button>
+      <button class="subtab" data-pane="money" onclick="setPane(this)"><svg class="ic-sm"><use href="#i-note"/></svg>Money</button>
     </div>
 
     <div class="pane on" id="p-overview">
@@ -499,21 +574,21 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
         <div class="statcard"><div class="stat-v" id="ov-level">1</div><div class="stat-k" id="ov-levelname">Explorer</div></div>
       </div>
       <div class="hcard">
-        <div class="hcard-h"><div class="hcard-t">&#128293; Who needs you</div><button class="hcard-a" onclick="goPane('clients')">Open &rarr;</button></div>
+        <div class="hcard-h"><div class="hcard-t inline-ic"><svg class="ic-sm"><use href="#i-flame"/></svg>Who needs you</div><button class="hcard-a" onclick="goPane('clients')">Open &rarr;</button></div>
         <div id="ov-attention"></div>
       </div>
       <div class="hcard">
-        <div class="hcard-h"><div class="hcard-t">&#9889; Recent moves</div></div>
+        <div class="hcard-h"><div class="hcard-t inline-ic"><svg class="ic-sm"><use href="#i-spark"/></svg>Recent moves</div></div>
         <div id="ov-activity"></div>
       </div>
       <div class="hcard">
-        <div class="hcard-h"><div class="hcard-t">&#127942; Strongest relationships</div></div>
+        <div class="hcard-h"><div class="hcard-t inline-ic"><svg class="ic-sm"><use href="#i-trophy"/></svg>Strongest relationships</div></div>
         <div id="ov-top"></div>
       </div>
     </div>
 
     <div class="pane" id="p-clients">
-      <button class="btn-sm" onclick="toggleBox('add-contact')">+ New client</button>
+      <button class="btn-sm" onclick="toggleBox('add-contact')"><svg class="ic-sm"><use href="#i-plus"/></svg>New client</button>
       <div class="addbox" id="add-contact" style="margin-top:12px">
         <div class="fld"><label>Name</label><input id="nc-name" placeholder="Who are they?"></div>
         <div class="fld"><label>Where did you find them?</label><input id="nc-channel" placeholder="e.g. r/Pottery, Instagram, a market"></div>
@@ -536,7 +611,7 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
         <div class="statcard"><div class="stat-v money" id="mn-avg">$0</div><div class="stat-k">average sale</div></div>
       </div>
       <div class="hcard">
-        <div class="hcard-h"><div class="hcard-t">&#128181; Record a sale</div></div>
+        <div class="hcard-h"><div class="hcard-t inline-ic"><svg class="ic-sm"><use href="#i-note"/></svg>Record a sale</div></div>
         <div class="fld-row">
           <div class="fld"><label>Amount</label><input id="ns-amount" inputmode="decimal" placeholder="0.00"></div>
           <div class="fld"><label>Who bought?</label><input id="ns-who" placeholder="Name (optional)"></div>
@@ -546,7 +621,7 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
         <div id="sales-list" style="margin-top:14px"></div>
       </div>
       <div class="hcard">
-        <div class="hcard-h"><div class="hcard-t">&#127991; The shelf</div><button class="hcard-a" onclick="toggleBox('add-product')">+ Add</button></div>
+        <div class="hcard-h"><div class="hcard-t inline-ic"><svg class="ic-sm"><use href="#i-tag"/></svg>The shelf</div><button class="hcard-a" onclick="toggleBox('add-product')">+ Add</button></div>
         <div class="addbox" id="add-product">
           <div class="fld"><label>Product name</label><input id="np-name" placeholder="What are you selling?"></div>
           <div class="fld-row">
@@ -564,9 +639,9 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   <div class="screen" id="s-you">
     <div class="top"><h1>You</h1><div class="sub">Your profile, your links, your settings.</div></div>
     <div class="subtabs">
-      <button class="subtab on" data-pane="profile" onclick="setPane(this)">&#127978; Profile</button>
-      <button class="subtab" data-pane="socials" onclick="setPane(this)">&#127760; Socials</button>
-      <button class="subtab" data-pane="settings" onclick="setPane(this)">&#9881; Settings</button>
+      <button class="subtab on" data-pane="profile" onclick="setPane(this)"><svg class="ic-sm"><use href="#i-shop"/></svg>Profile</button>
+      <button class="subtab" data-pane="socials" onclick="setPane(this)"><svg class="ic-sm"><use href="#i-link"/></svg>Socials</button>
+      <button class="subtab" data-pane="settings" onclick="setPane(this)"><svg class="ic-sm"><use href="#i-sliders"/></svg>Settings</button>
     </div>
 
     <div class="pane on" id="p-profile">
@@ -654,10 +729,10 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   </div>
 
   <div class="tabbar">
-    <div class="tab on" data-tab="discover" onclick="setTab('discover')"><span class="ic">&#129517;</span>Discover</div>
-    <div class="tab" data-tab="grow" onclick="setTab('grow')"><span class="ic">&#127793;</span>Grow</div>
-    <div class="tab" data-tab="shop" onclick="setTab('shop')"><span class="ic">&#128202;</span>Business</div>
-    <div class="tab" data-tab="you" onclick="setTab('you')"><span class="ic">&#128100;</span>You</div>
+    <div class="tab on" data-tab="discover" onclick="setTab('discover')"><svg class="ic"><use href="#i-compass"/></svg>Discover</div>
+    <div class="tab" data-tab="grow" onclick="setTab('grow')"><svg class="ic"><use href="#i-sprout"/></svg>Grow</div>
+    <div class="tab" data-tab="shop" onclick="setTab('shop')"><svg class="ic"><use href="#i-chart"/></svg>Business</div>
+    <div class="tab" data-tab="you" onclick="setTab('you')"><svg class="ic"><use href="#i-user"/></svg>You</div>
   </div>
 </div>
 <div class="toast" id="toast"></div>
@@ -686,9 +761,17 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
     if(!id || isDone(id)) return;
     var el = document.querySelector('.ms[data-id="'+id+'"]');
     if(!el) return;
-    if(!levelUnlocked(parseInt(el.dataset.level,10))) return;
+    var lv = parseInt(el.dataset.level,10);
+    if(!levelUnlocked(lv)) return;
+    var wasDone = levelDone(lv);
     done().push(id); save();
-    if(!silent){ toast('\\u2713 ' + (TITLES[id]||'Milestone complete')); }
+    // Finishing a level is the moment worth marking.
+    if(!wasDone && levelDone(lv) && !silent){
+      var meta = LEVELS.filter(function(l){ return l.level===lv; })[0];
+      if(meta) celebrate(meta.name, meta.title);
+    } else if(!silent){
+      toast('\\u2713 ' + (TITLES[id]||'Milestone complete'));
+    }
     refresh();
   }
   function fire(trigger){
@@ -775,10 +858,101 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
     document.querySelectorAll('#s-discover .chipbtn').forEach(function(b){ b.classList.toggle('on', b===btn); });
     var f = btn.dataset.f;
     document.querySelectorAll('#s-discover .product').forEach(function(c){
-      var aud = c.getAttribute('data-aud');
-      var show = (f==='all') || aud===f;
+      var show = f==='all' ? true
+        : f==='saved' ? c.classList.contains('saved')
+        : c.getAttribute('data-aud')===f;
       c.style.display = show ? '' : 'none';
     });
+  }
+
+  /* ---- Save to shelf ---- */
+  function toggleSave(slug, btn){
+    S.saved = S.saved || [];
+    var card = btn.closest('.card');
+    var at = S.saved.indexOf(slug);
+    if(at === -1){ S.saved.push(slug); card.classList.add('saved'); toast('Saved to your shelf'); }
+    else { S.saved.splice(at,1); card.classList.remove('saved'); }
+    save(); renderSavedChip();
+  }
+  function renderSavedChip(){
+    var n = (S.saved||[]).length;
+    var chip = document.getElementById('chip-saved');
+    if(chip) chip.textContent = n ? ('Saved \\u00b7 ' + n) : 'Saved';
+  }
+  function applySaved(){
+    (S.saved||[]).forEach(function(slug){
+      var c = document.querySelector('#s-discover .product[data-slug="'+slug+'"]');
+      if(c) c.classList.add('saved');
+    });
+    renderSavedChip();
+  }
+
+  /* ---- Streak: days in a row, counted honestly ---- */
+  function today(){ return new Date().toISOString().slice(0,10); }
+  function tickStreak(){
+    S.streak = S.streak || { n:0, last:null };
+    var t = today();
+    if(S.streak.last !== t){
+      var y = new Date(Date.now()-86400000).toISOString().slice(0,10);
+      S.streak.n = (S.streak.last === y) ? S.streak.n + 1 : 1;
+      S.streak.last = t;
+      save();
+    }
+    var el = document.getElementById('streak-n');
+    if(el) el.textContent = S.streak.n;
+    document.getElementById('streak').classList.toggle('cold', S.streak.n < 2);
+  }
+
+  /* ---- Level-up moment ---- */
+  var COLORS = ['#c2647e','#5f9b7a','#cf8f2e','#a8536c','#4a7c61'];
+  function burst(){
+    var wrap = document.createElement('div'); wrap.className = 'burst';
+    for(var i=0;i<26;i++){
+      var b = document.createElement('i');
+      var a = Math.random()*Math.PI*2, d = 90 + Math.random()*150;
+      b.style.background = COLORS[i % COLORS.length];
+      b.style.setProperty('--dx', Math.cos(a)*d + 'px');
+      b.style.setProperty('--dy', Math.sin(a)*d + 'px');
+      b.style.setProperty('--rot', (Math.random()*540-270) + 'deg');
+      b.style.animation = 'fly ' + (700 + Math.random()*500) + 'ms cubic-bezier(.2,.7,.3,1) forwards';
+      wrap.appendChild(b);
+    }
+    document.body.appendChild(wrap);
+    setTimeout(function(){ wrap.remove(); }, 1400);
+  }
+  function celebrate(levelName, title){
+    burst();
+    var el = document.createElement('div');
+    el.className = 'levelup';
+    el.innerHTML = '<div class="levelup-k">Level up</div><div class="levelup-t">' + esc(levelName) + '</div>' +
+      '<div class="levelup-s">' + esc(title) + '</div>';
+    document.body.appendChild(el);
+    requestAnimationFrame(function(){ el.classList.add('on'); });
+    setTimeout(function(){ el.classList.remove('on'); setTimeout(function(){ el.remove(); }, 300); }, 2100);
+  }
+
+  /* ---- Numbers that count up rather than snap ---- */
+  function countTo(el, target, prefix){
+    if(!el) return;
+    var from = Number(String(el.dataset.v || 0));
+    el.dataset.v = target;
+    // rAF never fires on a hidden tab, so animating there would leave the
+    // number frozen at its old value. Snap instead — and honour anyone who
+    // has asked for less motion.
+    var snap = from === target || document.hidden ||
+      (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+    if(snap){ el.textContent = (prefix||'') + fmtNum(target, prefix); return; }
+    var t0 = performance.now(), dur = 550;
+    function step(t){
+      var k = Math.min(1, (t-t0)/dur), e = 1 - Math.pow(1-k, 3);
+      el.textContent = (prefix||'') + fmtNum(from + (target-from)*e, prefix);
+      if(k < 1) requestAnimationFrame(step);
+      else el.textContent = (prefix||'') + fmtNum(target, prefix);
+    }
+    requestAnimationFrame(step);
+  }
+  function fmtNum(v, prefix){
+    return prefix ? Math.round(v).toLocaleString('en-US') : String(Math.round(v));
   }
 
   function chooseNiche(btn){
@@ -1125,9 +1299,9 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
       : (S.profile && S.profile.name ? ('Hi, ' + S.profile.name.split(' ')[0]) : 'You');
     document.getElementById('you-sub').textContent = S.biz ? ('Here\\'s where ' + S.biz + ' stands.') : 'Your business at a glance.';
 
-    document.getElementById('ov-people').textContent = contacts.length;
-    document.getElementById('ov-revenue').textContent = money(total);
-    document.getElementById('ov-listings').textContent = products.length;
+    countTo(document.getElementById('ov-people'), contacts.length);
+    countTo(document.getElementById('ov-revenue'), total, '$');
+    countTo(document.getElementById('ov-listings'), products.length);
     document.getElementById('ov-level').textContent = levelNum;
     document.getElementById('ov-levelname').textContent = levelName;
 
@@ -1560,6 +1734,8 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   matchDiscover();
   matchGrow();
   hydrateYou();
+  applySaved();
+  tickStreak();
   refresh();
   if(S.tab){ setTab(S.tab); }
   if(!S.onboarded){ onbOpen(); }
