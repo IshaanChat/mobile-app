@@ -126,8 +126,13 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   const domains = [...new Set(products.map((p) => p.niche?.domain).filter(Boolean))];
   const byLevel = (lv: number) => missions.milestones.filter((m: any) => m.level === lv);
   const levelsHtml = missions.levels.map((lv: any) => `
-    <section class="level" data-level="${lv.level}">
-      <div class="level-h"><span class="lv-num">${lv.level}</span><span class="lv-name">${esc(lv.name)}</span><span class="lv-title">${esc(lv.title)}</span><span class="lv-lock">&#128274;</span></div>
+    <section class="level lvsec" data-level="${lv.level}">
+      <div class="lvsec-h" onclick="toggleLevel(${lv.level})">
+        <span class="lv-num">${lv.level}</span>
+        <span class="lvsec-t"><span class="lvsec-n">${esc(lv.name)}</span><span class="lvsec-s">${esc(lv.title)}</span></span>
+        <span class="lvsec-c" id="lvc-${lv.level}"></span>
+        <span class="lvsec-x">&#9660;</span>
+      </div>
       <div class="ms-list">${byLevel(lv.level).map(milestoneRow).join('')}</div>
     </section>`).join('');
 
@@ -274,17 +279,56 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   .topbar { position:sticky; top:0; z-index:15; background:var(--bg); display:flex; align-items:center; justify-content:space-between; padding:12px 16px 10px; border-bottom:1px solid var(--panel-border); }
   .brand { display:flex; align-items:center; gap:7px; font-size:12px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--accent); }
   .brand-mark { width:20px; height:20px; border-radius:6px; background:var(--accent); color:var(--on-accent); display:flex; align-items:center; justify-content:center; font-size:11px; }
-  .mbtn { position:relative; background:none; border:none; font-size:19px; line-height:1; cursor:pointer; padding:4px 2px; display:flex; align-items:center; gap:7px; color:var(--text-dim); font-family:inherit; }
-  .mbtn-l { font-size:12px; font-weight:600; letter-spacing:.04em; text-transform:uppercase; }
-  .mbtn:hover { color:var(--accent); }
-  .mdot { position:absolute; top:1px; right:-2px; width:9px; height:9px; background:var(--danger); border-radius:50%; display:none; }
+  .mbtn { position:relative; display:flex; align-items:center; gap:9px; border:1px solid var(--panel-border); background:var(--panel); color:var(--text); border-radius:999px; padding:7px 13px; font-size:13px; font-weight:600; font-family:inherit; cursor:pointer; transition:border-color .15s, background .15s; }
+  .mbtn:hover { border-color:var(--accent); }
+  .mbtn.hasnew { border-color:var(--accent); background:var(--accent-soft); }
+  .mbtn-ring { position:relative; width:18px; height:18px; border-radius:50%; background:conic-gradient(var(--accent) var(--pct,0%), var(--panel-border) 0); display:flex; align-items:center; justify-content:center; }
+  .mbtn-ring:after { content:''; width:11px; height:11px; border-radius:50%; background:var(--panel); }
+  .mbtn.hasnew .mbtn-ring:after { background:var(--bg); }
+  .mdot { position:absolute; top:-2px; right:-2px; width:9px; height:9px; background:var(--danger); border-radius:50%; border:2px solid var(--bg); display:none; }
   .mbtn.hasnew .mdot { display:block; }
-  .mpanel { position:fixed; inset:0; margin:0 auto; max-width:430px; background:var(--bg); z-index:60; overflow-y:auto; transform:translateX(104%); transition:transform .26s ease; padding:0 16px 32px; }
-  .mpanel.on { transform:translateX(0); }
-  .mhead { position:sticky; top:0; background:var(--bg); display:flex; align-items:center; justify-content:space-between; padding:14px 0 12px; }
-  .mhead h2 { font-size:20px; margin:0; }
-  .mclose { background:none; border:none; color:var(--text-dim); font-size:22px; cursor:pointer; line-height:1; padding:0 4px; }
+
+  /* The journey sheet — slides up over whatever you were doing. */
+  .mscrim { position:fixed; inset:0; background:rgba(30,18,22,.42); z-index:55; opacity:0; pointer-events:none; transition:opacity .25s; }
+  .mscrim.on { opacity:1; pointer-events:auto; }
+  .mpanel { position:fixed; left:0; right:0; bottom:0; margin:0 auto; max-width:430px; height:90vh; background:var(--bg); border-radius:22px 22px 0 0; z-index:60; overflow-y:auto; transform:translateY(101%); transition:transform .3s cubic-bezier(.32,.72,0,1); padding:0 16px 32px; box-shadow:0 -10px 44px rgba(60,30,40,.22); }
+  .mpanel.on { transform:translateY(0); }
+  .mgrab { width:38px; height:4px; border-radius:999px; background:var(--panel-border); margin:9px auto 2px; }
+  .mhead { position:sticky; top:0; background:var(--bg); display:flex; align-items:flex-start; justify-content:space-between; padding:6px 0 12px; z-index:2; }
+  .mhead h2 { font-size:21px; margin:0; }
+  .mhead .msub { font-size:13px; color:var(--text-dim); margin-top:2px; }
+  .mclose { background:none; border:none; color:var(--text-dim); font-size:24px; cursor:pointer; line-height:1; padding:0 2px; }
   .mclose:hover { color:var(--accent); }
+
+  /* Level progression as segments, not a single bar. */
+  .lvhead { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:8px; }
+  .lvname { font-size:17px; font-weight:600; }
+  .lvcount { font-size:12px; color:var(--text-dim); font-variant:tabular-nums; }
+  .lvbar { display:flex; gap:5px; margin-bottom:20px; }
+  .lvseg { flex:1; height:6px; border-radius:999px; background:var(--panel-border); transition:background .3s; }
+  .lvseg.done { background:var(--customer); }
+  .lvseg.cur { background:var(--accent); }
+
+  /* "Next up" — the one thing to do, front and centre. */
+  .nextcard { border:1.5px solid var(--accent); background:var(--accent-soft); border-radius:16px; padding:15px 16px; margin-bottom:22px; }
+  .next-k { font-size:11px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--accent); }
+  .next-t { font-size:17px; font-weight:600; margin-top:5px; line-height:1.3; }
+  .next-d { font-size:13px; color:var(--text-dim); margin-top:4px; line-height:1.45; }
+  .next-act { margin-top:12px; }
+  .next-done { text-align:center; padding:6px 0 2px; }
+
+  .lvsec { border-top:1px solid var(--panel-border); }
+  .lvsec-h { display:flex; align-items:center; gap:10px; padding:14px 2px; cursor:pointer; }
+  .lvsec-h .lv-num { flex:0 0 24px; }
+  .lvsec-t { flex:1; }
+  .lvsec-n { font-size:15px; font-weight:600; }
+  .lvsec-s { font-size:12px; color:var(--text-dim); margin-top:1px; }
+  .lvsec-c { font-size:12px; color:var(--text-dim); font-variant:tabular-nums; }
+  .lvsec-x { color:var(--text-dim); font-size:11px; transition:transform .18s; }
+  .lvsec.open .lvsec-x { transform:rotate(180deg); }
+  .lvsec .ms-list { display:none; padding-bottom:8px; }
+  .lvsec.open .ms-list { display:block; }
+  .lvsec.locked .lvsec-n, .lvsec.locked .lvsec-s { opacity:.5; }
 
   .subtabs { display:flex; gap:6px; overflow-x:auto; padding-bottom:4px; margin-bottom:14px; }
   .subtab { border:1px solid var(--panel-border); background:var(--panel); color:var(--text-dim); border-radius:999px; padding:7px 13px; font-size:13px; font-family:inherit; cursor:pointer; white-space:nowrap; }
@@ -396,7 +440,9 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
 <div class="app">
   <div class="topbar">
     <div class="brand"><span class="brand-mark">&#128295;</span> Sales Mechanic</div>
-    <button class="mbtn" id="mbtn" onclick="openMissions()"><span class="mbtn-l">Journey</span>&#128640;<span class="mdot"></span></button>
+    <button class="mbtn" id="mbtn" onclick="openMissions()">
+      <span class="mbtn-ring" id="mbtn-ring"></span>Journey<span class="mdot"></span>
+    </button>
   </div>
 
   <!-- DISCOVER -->
@@ -420,16 +466,20 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
     <div class="banner" id="grow-banner"></div>
     ${communities.map(communityCard).join('')}
   </div>
-  <!-- JOURNEY — not a tab; a panel the top bar opens. -->
+  <!-- JOURNEY — not a tab; a sheet the top bar opens. -->
+  <div class="mscrim" id="mscrim" onclick="closeMissions()"></div>
   <div class="mpanel" id="s-journey">
-    <div class="mhead"><h2>Journey</h2><button class="mclose" onclick="closeMissions()">&times;</button></div>
-    <div class="sub" style="color:var(--text-dim); font-size:13px; margin-bottom:14px">Level up from idea to first sale.</div>
-    <div class="progress-card">
-      <div class="pc-level" id="pc-level">Level 1</div>
-      <div class="pc-name" id="pc-name">Explorer</div>
-      <div class="pc-bar"><div class="pc-fill" id="pc-fill"></div></div>
-      <div class="pc-xp" id="pc-xp">0 XP</div>
+    <div class="mgrab"></div>
+    <div class="mhead">
+      <div><h2>Your journey</h2><div class="msub" id="pc-xp">Idea to first sale, one step at a time.</div></div>
+      <button class="mclose" onclick="closeMissions()">&times;</button>
     </div>
+    <div class="lvhead">
+      <span class="lvname" id="pc-name">Explorer</span>
+      <span class="lvcount" id="pc-level">Level 1</span>
+    </div>
+    <div class="lvbar" id="lvbar"></div>
+    <div class="nextcard" id="nextcard"></div>
     ${levelsHtml}
   </div>
   <!-- BUSINESS — how the business is actually doing -->
@@ -646,9 +696,61 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
     if(el) complete(el.dataset.id);
   }
 
-  // Journey is no longer a tab — it's a panel the top bar opens.
-  function openMissions(){ document.getElementById('s-journey').classList.add('on'); refresh(); }
-  function closeMissions(){ document.getElementById('s-journey').classList.remove('on'); }
+  // Journey is no longer a tab — it's a sheet the top bar opens.
+  function openMissions(){
+    document.getElementById('s-journey').classList.add('on');
+    document.getElementById('mscrim').classList.add('on');
+    refresh();
+    // Open straight onto wherever they actually are.
+    var cur = LEVELS.filter(function(lv){ return !levelDone(lv.level) && levelUnlocked(lv.level); })[0];
+    document.querySelectorAll('.lvsec').forEach(function(s){
+      s.classList.toggle('open', !!cur && Number(s.dataset.level) === cur.level);
+    });
+  }
+  function closeMissions(){
+    document.getElementById('s-journey').classList.remove('on');
+    document.getElementById('mscrim').classList.remove('on');
+  }
+  function toggleLevel(lv){
+    var sec = document.querySelector('.lvsec[data-level="'+lv+'"]');
+    if(sec) sec.classList.toggle('open');
+  }
+
+  // The single next thing to do, lifted out of the list so it's unmissable.
+  function renderNext(){
+    var card = document.getElementById('nextcard');
+    if(!card) return;
+    var el = document.querySelector('.level.unlocked .ms:not(.done)');
+    if(!el){
+      card.innerHTML = '<div class="next-done"><div class="next-k">All done</div>' +
+        '<div class="next-t">You\\'ve walked the whole journey.</div>' +
+        '<div class="next-d">Keep selling — the app tracks it all from here.</div></div>';
+      return;
+    }
+    var title = el.querySelector('.ms-title').textContent;
+    var detail = el.querySelector('.ms-detail').textContent;
+    var outside = el.querySelector('.ms-where').classList.contains('out');
+    var goBtn = el.querySelector('.mini-btn[data-tab]');
+    card.innerHTML = '<div class="next-k">Next up</div>' +
+      '<div class="next-t">' + esc(title) + '</div>' +
+      '<div class="next-d">' + esc(detail) + '</div>' +
+      '<div class="next-act"><button class="btn-fill" onclick="doNext()">' +
+      (goBtn ? 'Go do it \\u2197' : (outside ? 'Show me where' : 'Take me to it')) +
+      '</button></div>';
+  }
+  function doNext(){
+    var el = document.querySelector('.level.unlocked .ms:not(.done)');
+    if(!el) return;
+    var goBtn = el.querySelector('.mini-btn[data-tab]');
+    if(goBtn){ goBtn.click(); return; }
+    // No destination — open its level and put it in front of them instead.
+    var sec = document.querySelector('.lvsec[data-level="'+el.dataset.level+'"]');
+    if(sec) sec.classList.add('open');
+    el.scrollIntoView({ behavior:'smooth', block:'center' });
+    el.style.transition = 'background .3s';
+    el.style.background = 'var(--accent-soft)';
+    setTimeout(function(){ el.style.background = ''; }, 1300);
+  }
 
   function setTab(name){
     if(name === 'journey'){ openMissions(); return; }
@@ -784,10 +886,32 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
     var cur = LEVELS.find(function(lv){ return !levelDone(lv.level); });
     var name = cur ? cur.name : FINAL;
     var num = cur ? cur.level : LEVELS.length;
-    document.getElementById('pc-level').textContent = cur ? ('Level ' + num) : 'Complete';
+    document.getElementById('pc-level').textContent = cur ? ('Level ' + num + ' of ' + LEVELS.length) : 'Complete';
     document.getElementById('pc-name').textContent = name;
-    document.getElementById('pc-fill').style.width = Math.round(d/total*100) + '%';
-    document.getElementById('pc-xp').textContent = d + ' / ' + total + ' milestones';
+    document.getElementById('pc-xp').textContent = d === total
+      ? 'Every step done — the rest is just doing it again, bigger.'
+      : d + ' of ' + total + ' steps done';
+
+    // One segment per level: filled when finished, accented when current.
+    document.getElementById('lvbar').innerHTML = LEVELS.map(function(lv){
+      var done = levelDone(lv.level);
+      return '<div class="lvseg' + (done ? ' done' : (lv.level === num && cur ? ' cur' : '')) + '"></div>';
+    }).join('');
+
+    // Per-level counts on the collapsed rows.
+    LEVELS.forEach(function(lv){
+      var all = document.querySelectorAll('.ms[data-level="'+lv.level+'"]');
+      var got = 0;
+      all.forEach(function(el){ if(isDone(el.dataset.id)) got++; });
+      var c = document.getElementById('lvc-'+lv.level);
+      if(c) c.textContent = levelDone(lv.level) ? '\\u2713' : got + '/' + all.length;
+    });
+
+    // The ring in the top-bar button doubles as a progress readout.
+    var ring = document.getElementById('mbtn-ring');
+    if(ring) ring.style.setProperty('--pct', Math.round(d/total*100) + '%');
+
+    renderNext();
     renderYou(num, name);
     // Badge the top-bar icon whenever there's an unlocked step waiting.
     var hasNew = !!document.querySelector('.level.unlocked .ms:not(.done)');
