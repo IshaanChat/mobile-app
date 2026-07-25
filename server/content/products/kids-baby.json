@@ -1,0 +1,47 @@
+[
+  {
+    "slug": "heirloom-knit-baby-bonnets",
+    "nicheSlug": "baby-clothes",
+    "title": "Heirloom knit baby bonnets",
+    "blurb": "\"Heirloom\" reframes a $6 skein as a keepsake — baby knits are small, fast projects that gift buyers pay premium for. Neutral palettes sell broadest.",
+    "sourcingType": "MATERIALS",
+    "sourceName": "AliExpress (soft baby yarn)",
+    "sourcingUrl": "https://www.aliexpress.com/w/wholesale-baby-yarn-soft.html",
+    "sourceCost": "$2–4/bonnet in yarn",
+    "typicalResale": "$22–35",
+    "hotness": 60,
+    "imageQuery": "knitted baby booties soft neutral",
+    "imageUrl": "https://images.pexels.com/photos/5360746/pexels-photo-5360746.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Tilsa Tanaka / Pexels"
+  },
+  {
+    "slug": "crochet-comfort-plushies-jellyfish-frogs",
+    "nicheSlug": "toys-plushies",
+    "title": "Crochet comfort plushies (jellyfish, frogs)",
+    "blurb": "Comfort plushies sell to adults as much as kids — anxiety-friendly, giftable, endlessly photogenic. Handmade charges triple what dropship versions do.",
+    "sourcingType": "MATERIALS",
+    "sourceName": "AliExpress (velvet yarn & stuffing)",
+    "sourcingUrl": "https://www.aliexpress.com/w/wholesale-velvet-chenille-yarn.html",
+    "sourceCost": "$2–4/plush in materials",
+    "typicalResale": "$20–45",
+    "hotness": 60,
+    "imageQuery": "crochet plush animals handmade",
+    "imageUrl": "https://images.pexels.com/photos/36186907/pexels-photo-36186907.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Heriberto Jahir Medina / Pexels"
+  },
+  {
+    "slug": "baby-milestone-card-sets",
+    "nicheSlug": "nursery-decor",
+    "title": "Baby milestone card sets",
+    "blurb": "Every newborn photoshoot needs milestone cards — a design-once product with permanent demand. Sell printable for zero cost or POD the physical set.",
+    "sourcingType": "PRINT_ON_DEMAND",
+    "sourceName": "Printify (cards & prints)",
+    "sourcingUrl": "https://printify.com/app/products?search=card",
+    "sourceCost": "$0 digital / $4–7 printed",
+    "typicalResale": "$8–15 digital, $20–30 printed",
+    "hotness": 60,
+    "imageQuery": "nursery shelf neutral decor",
+    "imageUrl": "https://images.pexels.com/photos/9240642/pexels-photo-9240642.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Alberta Studios / Pexels"
+  }
+]

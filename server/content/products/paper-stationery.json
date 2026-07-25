@@ -1,0 +1,62 @@
+[
+  {
+    "slug": "funny-hyper-specific-occasion-cards",
+    "nicheSlug": "greeting-cards",
+    "title": "Funny hyper-specific occasion cards",
+    "blurb": "\"Congrats on your divorce\" outsells \"Happy Birthday\" — specificity is the product. Print locally or POD; wholesale to gift shops is the scale move.",
+    "sourcingType": "PRINT_ON_DEMAND",
+    "sourceName": "Printify (cards)",
+    "sourcingUrl": "https://printify.com/app/products?search=greeting%20card",
+    "sourceCost": "$1.50–3 fulfilled",
+    "typicalResale": "$5–8 each",
+    "hotness": 60,
+    "imageQuery": "greeting cards display shop",
+    "imageUrl": "https://images.pexels.com/photos/28780231/pexels-photo-28780231.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Nikki Villanueva / Pexels"
+  },
+  {
+    "slug": "adhd-friendly-daily-planners",
+    "nicheSlug": "planners-journals",
+    "title": "ADHD-friendly daily planners",
+    "blurb": "Planners designed for specific brains (ADHD, shift workers, nurses) command loyalty generic planners never see. Start digital, go print when it proves out.",
+    "sourcingType": "WHOLESALE",
+    "sourceName": "Alibaba (custom notebook printing)",
+    "sourcingUrl": "https://www.alibaba.com/trade/search?SearchText=custom+planner+printing",
+    "sourceCost": "$3–7/unit at 100+",
+    "typicalResale": "$24–40",
+    "hotness": 60,
+    "imageQuery": "open planner desk coffee flatlay",
+    "imageUrl": "https://images.pexels.com/photos/2736499/pexels-photo-2736499.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Content Pixie / Pexels"
+  },
+  {
+    "slug": "editable-invitation-template-suites",
+    "nicheSlug": "wedding-stationery",
+    "title": "Editable invitation template suites",
+    "blurb": "Couples want custom-looking invites at template prices — sell the editable file, they print it. One suite design sells hundreds of times with zero fulfillment.",
+    "sourcingType": "MAKE_YOUR_OWN",
+    "sourceName": "Etsy (market reference)",
+    "sourcingUrl": "https://www.etsy.com/search?q=editable+wedding+invitation+template",
+    "sourceCost": "Your design time",
+    "typicalResale": "$15–45/suite",
+    "hotness": 60,
+    "imageQuery": "wedding invitation suite flatlay",
+    "imageUrl": "https://images.pexels.com/photos/11650189/pexels-photo-11650189.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Micheile Henderson / Pexels"
+  },
+  {
+    "slug": "event-signage-place-cards-local",
+    "nicheSlug": "calligraphy-lettering",
+    "title": "Event signage & place cards (local)",
+    "blurb": "Weddings and corporate events pay real money for on-site lettering — acrylic welcome signs, seating charts, day-of place cards. Local means no shipping and premium pricing.",
+    "sourcingType": "MATERIALS",
+    "sourceName": "AliExpress (acrylic blanks & pens)",
+    "sourcingUrl": "https://www.aliexpress.com/w/wholesale-acrylic-sign-blank.html",
+    "sourceCost": "$3–10/piece in blanks",
+    "typicalResale": "$40–150/piece",
+    "hotness": 60,
+    "imageQuery": "calligraphy pen writing script",
+    "imageUrl": "https://images.pexels.com/photos/114107/pexels-photo-114107.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Miguel Á. Padriñán / Pexels"
+  }
+]

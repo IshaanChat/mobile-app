@@ -13,7 +13,7 @@
  * deploy, nothing touches the live app.
  */
 
-import { readFileSync } from 'fs';
+import { readdirSync, readFileSync } from 'fs';
 import { createServer } from 'http';
 
 const PORT = Number(process.env.PREVIEW_PORT ?? 4300);
@@ -45,24 +45,26 @@ const attr = (s: any) => esc(s).replace(/"/g, '&quot;');
 const lines = (s: any) => String(s ?? '').split('\n').map((l) => l.trim()).filter(Boolean);
 const pColor = (p: string) => PLATFORM_COLORS[String(p).toLowerCase()] ?? '#5A67D8';
 
-function nicheCard(n: any) {
-  const p = n.product ?? {};
+// Discover is a feed of PRODUCTS — the niche is a label on the card, not the
+// unit you scroll. Each product carries its niche so filtering, matching and
+// "choose this" still work at the niche level.
+function productCard(p: any) {
+  const n = p.niche ?? {};
   const aud = AUDIENCE_COLORS[n.audience] ?? '#60646c';
-  const searchText = [n.name, n.domain, p.title, n.tags].filter(Boolean).join(' ').toLowerCase();
-  return `<div class="card niche" data-slug="${attr(n.slug)}" data-aud="${attr(n.audience)}" data-text="${attr(searchText)}">
+  const searchText = [p.title, p.blurb, n.name, n.domain, n.tags].filter(Boolean).join(' ').toLowerCase();
+  return `<div class="card product" data-slug="${attr(p.slug)}" data-niche="${attr(p.nicheSlug)}" data-aud="${attr(n.audience)}" data-text="${attr(searchText)}">
     <div class="head" onclick="toggleCard(this,'open-niche')">
-      <div class="hero" style="background-image:url('${attr(n.imageUrl)}')">
-        <div class="chips"><span class="chip" style="background:${aud}">${esc(AUDIENCE_LABELS[n.audience] ?? n.audience)}</span><span class="chip chip-dark">${esc(SOURCING_LABELS[p.sourcingType] ?? '')}</span></div>
+      <div class="hero" style="background-image:url('${attr(p.imageUrl)}')">
+        <div class="chips"><span class="chip" style="background:${aud}">${esc(AUDIENCE_LABELS[n.audience] ?? n.audience ?? '')}</span><span class="chip chip-dark">${esc(SOURCING_LABELS[p.sourcingType] ?? '')}</span></div>
         <span class="match-badge">&#9733; your kind of thing</span>
       </div>
-      <div class="body"><div class="titlerow"><div><div class="kicker">${esc(n.domain)}</div><div class="title">${esc(n.name)}</div><div class="tagline">${esc(p.title)}</div></div><div class="chev">&#9660;</div></div></div>
+      <div class="body"><div class="titlerow"><div><div class="kicker">${esc(n.name ?? '')}</div><div class="title">${esc(p.title)}</div><div class="econ-inline"><span class="cost">${esc(p.sourceCost)}</span><span class="arrow">&rarr;</span><span class="resale">${esc(p.typicalResale)}</span></div></div><div class="chev">&#9660;</div></div></div>
     </div>
     <div class="expand">
       <p class="para">${esc(p.blurb)}</p>
-      <div class="mini"><div class="mini-t">The math</div><div class="econ"><span class="cost">${esc(p.sourceCost)}</span><span class="arrow">&rarr;</span><span class="resale">${esc(p.typicalResale)}</span></div></div>
       <div class="mini"><div class="mini-t">Where to source</div><div class="src-b">${esc(p.sourceName)} &middot; ${esc(SOURCING_LABELS[p.sourcingType] ?? '')}</div></div>
       <a class="btn ghost" href="${attr(p.sourcingUrl)}" target="_blank" rel="noreferrer" onclick="fire('view-source')">Source it &#8599;</a>
-      <button class="btn primary pick-niche" data-slug="${attr(n.slug)}" data-name="${attr(n.name)}" data-tags="${attr(n.tags)}" onclick="chooseNiche(this)">Choose this niche</button>
+      <button class="btn primary" data-slug="${attr(p.nicheSlug)}" data-name="${attr(n.name ?? '')}" data-tags="${attr(n.tags ?? '')}" onclick="chooseNiche(this)">Build a business around this</button>
     </div>
   </div>`;
 }
@@ -119,8 +121,8 @@ function milestoneRow(m: any) {
   </div>`;
 }
 
-function page(niches: any[], communities: any[], missions: any, onboarding: any) {
-  const domains = [...new Set(niches.map((n) => n.domain))];
+function page(products: any[], communities: any[], missions: any, onboarding: any) {
+  const domains = [...new Set(products.map((p) => p.niche?.domain).filter(Boolean))];
   const byLevel = (lv: number) => missions.milestones.filter((m: any) => m.level === lv);
   const levelsHtml = missions.levels.map((lv: any) => `
     <section class="level" data-level="${lv.level}">
@@ -198,6 +200,8 @@ function page(niches: any[], communities: any[], missions: any, onboarding: any)
   .kicker { color:var(--text-dim); font-size:11px; text-transform:uppercase; letter-spacing:0.4px; }
   .title { font-size:18px; font-weight:600; margin-top:2px; }
   .tagline { color:var(--text-dim); font-size:14px; margin-top:3px; line-height:1.4; }
+  .econ-inline { font-size:14px; font-variant:tabular-nums; margin-top:5px; }
+  .dom-h { font-size:12px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--text-dim); margin:22px 0 10px; }
   .chev { color:var(--text-dim); font-size:12px; padding-top:4px; transition:transform .15s; }
   .card.open .chev { transform:rotate(180deg); }
   .expand { display:none; padding:0 16px 16px; }
@@ -341,7 +345,10 @@ function page(niches: any[], communities: any[], missions: any, onboarding: any)
       <button class="chipbtn" data-f="both" onclick="setFilter(this)">Both</button>
     </div>
     <div class="banner" id="disc-banner" style="margin-top:12px"></div>
-    ${domains.map((d) => `<div class="dom" data-dom="${attr(d)}">${niches.filter((n) => n.domain === d).map(nicheCard).join('')}</div>`).join('')}
+    ${domains.map((d) => `<section class="dom" data-dom="${attr(d)}">
+      <div class="dom-h">${esc(d)}</div>
+      ${products.filter((p) => p.niche?.domain === d).map(productCard).join('')}
+    </section>`).join('')}
   </div>
   <!-- GROW -->
   <div class="screen" id="s-grow">
@@ -445,7 +452,7 @@ function page(niches: any[], communities: any[], missions: any, onboarding: any)
   function setFilter(btn){
     document.querySelectorAll('#s-discover .chipbtn').forEach(function(b){ b.classList.toggle('on', b===btn); });
     var f = btn.dataset.f;
-    document.querySelectorAll('#s-discover .niche').forEach(function(c){
+    document.querySelectorAll('#s-discover .product').forEach(function(c){
       var aud = c.getAttribute('data-aud');
       var show = (f==='all') || aud===f;
       c.style.display = show ? '' : 'none';
@@ -494,14 +501,14 @@ function page(niches: any[], communities: any[], missions: any, onboarding: any)
     var want = tokens(S.interests);
     if(!want.length){ banner.classList.remove('on'); return; }
     var count = 0;
-    document.querySelectorAll('#s-discover .niche').forEach(function(c){
+    document.querySelectorAll('#s-discover .product').forEach(function(c){
       var have = (c.getAttribute('data-text') || '');
       var hit = want.some(function(t){ return have.indexOf(t) !== -1; });
       c.classList.toggle('match', hit);
       if(hit) count++;
     });
     banner.textContent = count
-      ? 'Highlighted ' + count + ' niches from what you said you\\'re into'
+      ? 'Highlighted ' + count + ' products from what you said you\\'re into'
       : 'Nothing matched exactly — browse everything, something will click';
     banner.classList.add('on');
   }
@@ -560,11 +567,12 @@ function page(niches: any[], communities: any[], missions: any, onboarding: any)
   /* ---------------- Onboarding ---------------- */
   var ONB = ${JSON.stringify(onboarding)};
   var NICHES = ${JSON.stringify(
-    niches.map((n: any) => ({
-      slug: n.slug, name: n.name, domain: n.domain, tags: n.tags, imageUrl: n.imageUrl,
-      productTitle: n.product?.title ?? '', blurb: n.product?.blurb ?? '',
-      sourcingType: n.product?.sourcingType ?? '', sourceName: n.product?.sourceName ?? '',
-      sourceCost: n.product?.sourceCost ?? '', typicalResale: n.product?.typicalResale ?? '',
+    products.map((p: any) => ({
+      slug: p.nicheSlug, name: p.niche?.name ?? '', domain: p.niche?.domain ?? '',
+      tags: p.niche?.tags ?? '', imageUrl: p.imageUrl,
+      productTitle: p.title, blurb: p.blurb,
+      sourcingType: p.sourcingType, sourceName: p.sourceName,
+      sourceCost: p.sourceCost, typicalResale: p.typicalResale,
     }))
   )};
   // Beginner-friendly fallbacks when an answer matches nothing — low cost to
@@ -891,11 +899,20 @@ function page(niches: any[], communities: any[], missions: any, onboarding: any)
 createServer((req, res) => {
   try {
     const niches = JSON.parse(readFileSync(`${dir}/niches.json`, 'utf8'));
+    // The product database: one file per category, all loaded and joined to
+    // their niche. Adding a category is just another file in the folder.
+    const nicheBySlug: Record<string, any> = {};
+    for (const n of niches) nicheBySlug[n.slug] = n;
+    const products = readdirSync(`${dir}/products`)
+      .filter((f) => f.endsWith('.json'))
+      .flatMap((f) => JSON.parse(readFileSync(`${dir}/products/${f}`, 'utf8')))
+      .map((p: any) => ({ ...p, niche: nicheBySlug[p.nicheSlug] }))
+      .filter((p: any) => p.niche);
     const communities = JSON.parse(readFileSync(`${dir}/communities.json`, 'utf8'));
     const missions = JSON.parse(readFileSync(`${dir}/missions.json`, 'utf8'));
     const onboarding = JSON.parse(readFileSync(`${dir}/onboarding.json`, 'utf8'));
     res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-    res.end(page(niches, communities, missions, onboarding));
+    res.end(page(products, communities, missions, onboarding));
   } catch (err: any) {
     res.writeHead(500, { 'Content-Type': 'text/plain' });
     res.end(`Could not render: ${err.message}`);

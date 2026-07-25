@@ -23,7 +23,8 @@ const API = 'https://api.pexels.com/v1/search';
 interface Post {
   slug: string;
   title: string;
-  tags: string;
+  // Communities carry tags; products rely on imageQuery instead.
+  tags?: string;
   imageQuery?: string;
   imageUrl?: string;
   imageCredit?: string;
@@ -80,7 +81,7 @@ async function run() {
       skipped++;
       continue;
     }
-    const query = (post.imageQuery || post.tags.split(',')[0] || post.title).trim();
+    const query = (post.imageQuery || (post.tags || '').split(',')[0] || post.title).trim();
     try {
       const photo = await pexelsPhoto(query);
       if (!photo) {

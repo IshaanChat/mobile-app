@@ -1,0 +1,47 @@
+[
+  {
+    "slug": "personalized-engraved-collar-tags",
+    "nicheSlug": "pet-accessories",
+    "title": "Personalized engraved collar tags",
+    "blurb": "Personalization plus pets is the strongest gift combo in ecommerce. An engraver pays for itself in a weekend of orders; blanks cost cents.",
+    "sourcingType": "MATERIALS",
+    "sourceName": "AliExpress (blank tags & engraver)",
+    "sourcingUrl": "https://www.aliexpress.com/w/wholesale-pet-tag-blank.html",
+    "sourceCost": "$0.50–1.50/tag",
+    "typicalResale": "$12–20",
+    "hotness": 60,
+    "imageQuery": "dog wearing bandana collar cute",
+    "imageUrl": "https://images.pexels.com/photos/7588709/pexels-photo-7588709.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Frank Barning / Pexels"
+  },
+  {
+    "slug": "dog-birthday-cake-kits",
+    "nicheSlug": "pet-treats",
+    "title": "Dog birthday cake kits",
+    "blurb": "Dog birthdays are real budget lines now. Pup-safe cake kits ship dry — the owner bakes, the dog photos go viral, the tag drives the next order.",
+    "sourcingType": "MATERIALS",
+    "sourceName": "AliExpress (bone molds & packaging)",
+    "sourcingUrl": "https://www.aliexpress.com/w/wholesale-dog-bone-silicone-mold.html",
+    "sourceCost": "$2–4/kit in materials",
+    "typicalResale": "$18–28",
+    "hotness": 60,
+    "imageQuery": "dog biscuits homemade bone shaped",
+    "imageUrl": "https://images.pexels.com/photos/8434641/pexels-photo-8434641.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "MART  PRODUCTION / Pexels"
+  },
+  {
+    "slug": "matching-owner-and-dog-hoodie-sets",
+    "nicheSlug": "pet-apparel",
+    "title": "Matching owner-and-dog hoodie sets",
+    "blurb": "Matching sets are made for the share button — the customer's photo is your ad. Pure dropship play with strong holiday spikes.",
+    "sourcingType": "DROPSHIP",
+    "sourceName": "AliExpress",
+    "sourcingUrl": "https://www.aliexpress.com/w/wholesale-matching-dog-owner-hoodie.html",
+    "sourceCost": "$8–15/set",
+    "typicalResale": "$35–60/set",
+    "hotness": 60,
+    "imageQuery": "small dog wearing knit sweater",
+    "imageUrl": "https://images.pexels.com/photos/6471471/pexels-photo-6471471.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageCredit": "Erik Izsóf / Pexels"
+  }
+]
