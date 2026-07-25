@@ -1,9 +1,9 @@
 {
   "welcome": {
     "eyebrow": "Welcome",
-    "title": "Let's find your next customers.",
-    "body": "A few questions — in your own words, not a form. What you say here shapes everything you'll see.",
-    "meta": "Under a minute · you can add more later",
+    "title": "Most people who sell things online had no idea how, either.",
+    "body": "You don't need a product, a plan, or a clue where to start. Answer a couple of questions in your own words and we'll show you what's actually out there.",
+    "meta": "A minute or two · no right answers",
     "cta": "Start"
   },
   "shared": [
@@ -11,8 +11,8 @@
       "id": "name",
       "chapter": "About you",
       "type": "text",
-      "title": "What's your name?",
-      "subtitle": "The one your customers will know you by.",
+      "title": "First — what's your name?",
+      "subtitle": "The one you'd want customers to know you by.",
       "placeholder": "Your name",
       "required": true
     },
@@ -27,16 +27,54 @@
         {
           "value": "new",
           "label": "I'm starting my own business",
-          "hint": "We'll open in Discover — find something worth selling, and where to source it."
+          "hint": "Even if that's all you know so far. We'll open in Discover."
         },
         {
           "value": "have",
           "label": "I already have a business",
-          "hint": "We'll open in Growth — go straight to where your customers gather."
+          "hint": "Skip the exploring — we'll open in Growth, where your customers are."
         }
       ]
     }
   ],
+  "prompts": {
+    "chapter": "In your words",
+    "title": "Pick one to answer.",
+    "subtitle": "Any of them. There's no wrong answer here — we're just listening for what you'd actually enjoy.",
+    "titleSecond": "One more.",
+    "subtitleSecond": "Different angle. This is the last thing we'll ask.",
+    "change": "← Pick a different one",
+    "options": [
+      { "id": "time", "label": "I lose track of time when I'm…", "placeholder": "cooking, fixing things, being outside…" },
+      { "id": "help", "label": "People always ask me for help with…", "placeholder": "what my friends come to me for" },
+      { "id": "weekend", "label": "With a free weekend, I'd make…", "placeholder": "anything at all" },
+      { "id": "excited", "label": "I get weirdly excited about…", "placeholder": "the thing you'd talk about too long" },
+      { "id": "stopped", "label": "What's stopped me so far is…", "placeholder": "money, time, not knowing where to start…" },
+      { "id": "success", "label": "I'd know this worked if…", "placeholder": "what would make it feel real" },
+      { "id": "hands", "label": "The last thing I made with my hands was…", "placeholder": "however long ago" },
+      { "id": "always", "label": "I've always wanted to try…", "placeholder": "the thing you keep circling back to" },
+      { "id": "hour", "label": "I could talk for an hour about…", "placeholder": "and people have had to stop me" },
+      { "id": "friends", "label": "My friends would say I'm the one who…", "placeholder": "always ___" }
+    ]
+  },
+  "reveal": {
+    "chapter": "Here's what that could be",
+    "lead": "People are already doing this:",
+    "costLabel": "costs about",
+    "sellLabel": "sells for",
+    "models": {
+      "MATERIALS": "You'd make these yourself. The materials are the only thing you risk.",
+      "MAKE_YOUR_OWN": "You'd build these yourself, from scratch, on your own schedule.",
+      "DROPSHIP": "You'd never touch these. A supplier ships them straight to the buyer.",
+      "WHOLESALE": "You'd buy a batch cheap and sell them on, one at a time.",
+      "PRINT_ON_DEMAND": "You just design it. A printer makes and ships it when someone buys — you hold nothing."
+    },
+    "closer": "No shop. No staff. No permission needed.",
+    "closerSecond": "That's two completely different ways in — and there are 47 more waiting in Discover.",
+    "cta": "Show me",
+    "ctaSecond": "One more",
+    "fallbackLead": "Not sure yet? Most people aren't. Here's one anyway:"
+  },
   "forks": {
     "have": [
       {
@@ -67,30 +105,7 @@
         "optional": true
       }
     ],
-    "new": [
-      {
-        "id": "interests",
-        "chapter": "Your interests",
-        "type": "textarea",
-        "title": "What are you into?",
-        "subtitle": "Anything you'd enjoy making or selling. Write it however you like — we'll tune Discover to it.",
-        "placeholder": "e.g. candles, jewelry, anything I can make by hand",
-        "required": true
-      },
-      {
-        "id": "makeOrSell",
-        "chapter": "Your interests",
-        "type": "single",
-        "title": "Make things, or sell things?",
-        "subtitle": "It decides where we point you to source. Skip if you're not sure yet.",
-        "optional": true,
-        "options": [
-          { "value": "maker", "label": "I want to make them", "hint": "Handmade by me — I'll buy materials." },
-          { "value": "reseller", "label": "I want to sell them", "hint": "Source finished products and resell." },
-          { "value": "both", "label": "Show me both" }
-        ]
-      }
-    ]
+    "new": []
   },
   "finish": {
     "have": {
@@ -102,8 +117,8 @@
     "new": {
       "eyebrow": "You're set",
       "title": "Welcome, {name}.",
-      "body": "Discover is tuned to what you're into. Find something worth selling, and the rest unlocks from there.",
-      "cta": "Start exploring"
+      "body": "Discover is tuned to what you said. Nothing's decided yet — go look at what's possible, and the rest unlocks from there.",
+      "cta": "Show me what's out there"
     },
     "note": "Anything you skipped lives in the You tab — add it whenever you like."
   }

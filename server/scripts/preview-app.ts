@@ -309,6 +309,22 @@ function page(niches: any[], communities: any[], missions: any, onboarding: any)
   .onb-skip { display:block; width:100%; background:none; border:none; color:var(--text-dim); font-size:14px; font-family:inherit; padding:14px 0 2px; cursor:pointer; }
   .onb-skip:hover { color:var(--accent); }
   .onb-skip.hide { display:none; }
+  .onb-plist { display:flex; flex-direction:column; gap:8px; }
+  .onb-prompt { text-align:left; background:var(--panel); border:1px solid var(--panel-border); border-radius:12px; padding:14px 16px; font-size:15px; font-family:inherit; color:var(--text); cursor:pointer; transition:border-color .15s, background .15s; }
+  .onb-prompt:hover { border-color:var(--accent); background:var(--accent-soft); }
+  .onb-plabel { font-size:16px; font-weight:600; color:var(--accent); margin-bottom:12px; line-height:1.35; }
+  .onb-change { background:none; border:none; color:var(--text-dim); font-size:13px; padding:12px 0 0; cursor:pointer; font-family:inherit; }
+  .onb-change:hover { color:var(--accent); }
+  .onb-rev-img { width:100%; height:170px; border-radius:16px; background-size:cover; background-position:center; margin-bottom:18px; }
+  .onb-rev-lead { font-size:14px; color:var(--text-dim); margin-bottom:6px; }
+  .onb-rev-title { font-size:24px; font-weight:600; line-height:1.25; letter-spacing:-0.02em; margin:0; }
+  .onb-rev-blurb { font-size:14px; color:var(--text-dim); line-height:1.55; margin-top:10px; }
+  .onb-rev-nums { display:flex; gap:26px; margin:18px 0; padding:14px 16px; background:var(--input-bg); border-radius:14px; }
+  .onb-rev-k { font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--text-dim); }
+  .onb-rev-v { font-size:17px; font-weight:700; margin-top:3px; }
+  .onb-rev-v.sell { color:var(--customer); }
+  .onb-rev-model { font-size:14px; line-height:1.55; border-left:2px solid var(--accent); padding-left:14px; }
+  .onb-rev-closer { font-size:14px; color:var(--text-dim); margin-top:18px; line-height:1.5; }
   .onb-center { text-align:center; }
   .onb-mark { width:54px; height:54px; border-radius:16px; background:var(--accent); color:var(--on-accent); font-size:26px; display:flex; align-items:center; justify-content:center; margin-bottom:22px; }
   .onb-center .onb-mark { margin-left:auto; margin-right:auto; }
@@ -543,20 +559,63 @@ function page(niches: any[], communities: any[], missions: any, onboarding: any)
 
   /* ---------------- Onboarding ---------------- */
   var ONB = ${JSON.stringify(onboarding)};
+  var NICHES = ${JSON.stringify(
+    niches.map((n: any) => ({
+      slug: n.slug, name: n.name, domain: n.domain, tags: n.tags, imageUrl: n.imageUrl,
+      productTitle: n.product?.title ?? '', blurb: n.product?.blurb ?? '',
+      sourcingType: n.product?.sourcingType ?? '', sourceName: n.product?.sourceName ?? '',
+      sourceCost: n.product?.sourceCost ?? '', typicalResale: n.product?.typicalResale ?? '',
+    }))
+  )};
+  // Beginner-friendly fallbacks when an answer matches nothing — low cost to
+  // start, and between them they cover three different ways in.
+  var STARTERS = ['stickers-decals','apparel-pod','digital-planners','candles-fragrance','hair-accessories'];
   var O = { i: -1, answers: {}, skipped: [] };
 
   function onbSteps(){
     var p = O.answers.path;
+    // The beginner path is where the world gets opened up: two prompts they
+    // pick themselves, each followed by a reveal built from their own words.
+    if(p === 'new') return ONB.shared.concat([
+      { id:'p1', type:'prompt', n:1 },
+      { id:'r1', type:'reveal', n:1 },
+      { id:'p2', type:'prompt', n:2 },
+      { id:'r2', type:'reveal', n:2 }
+    ]);
     return ONB.shared.concat(p && ONB.forks[p] ? ONB.forks[p] : []);
   }
   function onbVal(id){ return O.answers[id]; }
 
   function onbValid(step){
+    if(step.type === 'reveal') return true;
+    if(step.type === 'prompt'){
+      var a = O.answers['p' + step.n];
+      return !!(a && a.promptId && String(a.text || '').trim());
+    }
     var v = onbVal(step.id);
     if(step.optional && !step.required) return true;
     if(step.type === 'multi') return Array.isArray(v) && v.length >= (step.min || 1);
-    if(step.type === 'number'){ var n = Number(v); return Number.isInteger(n) && n >= 13 && n <= 120; }
     return typeof v === 'string' ? v.trim().length > 0 : v !== undefined && v !== null;
+  }
+
+  // Pick the niche that best answers what they typed. Reveal two avoids the
+  // first one's sourcing model so they leave knowing there's more than one
+  // way to do this.
+  function revealFor(text, excludeType){
+    var want = tokens(text);
+    var best = null, bestScore = 0;
+    NICHES.forEach(function(n){
+      if(excludeType && n.sourcingType === excludeType) return;
+      var hay = (n.name + ' ' + n.domain + ' ' + n.tags + ' ' + n.productTitle + ' ' + n.blurb).toLowerCase();
+      var score = 0;
+      want.forEach(function(t){ if(hay.indexOf(t) !== -1) score++; });
+      if(score > bestScore){ bestScore = score; best = n; }
+    });
+    if(best) return { niche: best, matched: true };
+    var pool = NICHES.filter(function(n){
+      return STARTERS.indexOf(n.slug) !== -1 && (!excludeType || n.sourcingType !== excludeType);
+    });
+    return { niche: pool[0] || NICHES[0], matched: false };
   }
 
   function onbRender(){
@@ -601,6 +660,68 @@ function page(niches: any[], communities: any[], missions: any, onboarding: any)
     back.classList.toggle('show', O.i > 0);
     main.className = 'onb-main onb-fade';
 
+    // Reveal: not a question — what their own words could turn into.
+    if(step.type === 'reveal'){
+      var R = ONB.reveal;
+      var src = O.answers['p' + step.n] || {};
+      var res = revealFor(src.text, step.n === 2 ? O.firstModel : null);
+      var n = res.niche;
+      if(step.n === 1) O.firstModel = n.sourcingType;
+      main.innerHTML =
+        '<div class="onb-chapter">' + esc(R.chapter) + '</div>' +
+        (n.imageUrl ? '<div class="onb-rev-img" style="background-image:url(\\'' + attr(n.imageUrl) + '\\')"></div>' : '') +
+        '<div class="onb-rev-lead">' + esc(res.matched ? R.lead : R.fallbackLead) + '</div>' +
+        '<h1 class="onb-rev-title">' + esc(n.productTitle) + '</h1>' +
+        '<p class="onb-rev-blurb">' + esc(n.blurb) + '</p>' +
+        '<div class="onb-rev-nums">' +
+          '<div><div class="onb-rev-k">' + esc(R.costLabel) + '</div><div class="onb-rev-v">' + esc(n.sourceCost) + '</div></div>' +
+          '<div><div class="onb-rev-k">' + esc(R.sellLabel) + '</div><div class="onb-rev-v sell">' + esc(n.typicalResale) + '</div></div>' +
+        '</div>' +
+        '<div class="onb-rev-model">' + esc(R.models[n.sourcingType] || '') + '</div>' +
+        '<div class="onb-rev-closer">' + esc(step.n === 1 ? R.closer : R.closerSecond) + '</div>';
+      foot.innerHTML = '<button class="onb-cta" onclick="onbNext()">' +
+        esc(step.n === 1 ? R.ctaSecond : R.cta) + '</button>';
+      return;
+    }
+
+    // Prompt: they choose which question to answer, then answer it openly.
+    if(step.type === 'prompt'){
+      var P = ONB.prompts;
+      var key = 'p' + step.n;
+      var cur = O.answers[key] || {};
+      var otherId = (O.answers[step.n === 1 ? 'p2' : 'p1'] || {}).promptId;
+      var pick = P.options.filter(function(o){ return o.id === cur.promptId; })[0];
+      var inner = '<div class="onb-chapter">' + esc(P.chapter) + '</div>' +
+        '<h1 class="onb-title">' + esc(step.n === 1 ? P.title : P.titleSecond) + '</h1>' +
+        '<p class="onb-sub">' + esc(step.n === 1 ? P.subtitle : P.subtitleSecond) + '</p><div class="onb-body">';
+      if(!pick){
+        inner += '<div class="onb-plist">' + P.options
+          .filter(function(o){ return o.id !== otherId; })
+          .map(function(o){
+            return '<button class="onb-prompt" onclick="onbPickPrompt(' + step.n + ',\\'' + o.id + '\\')">' +
+              esc(o.label) + '</button>';
+          }).join('') + '</div>';
+      } else {
+        inner += '<div class="onb-plabel">' + esc(pick.label) + '</div>' +
+          '<textarea class="onb-in" id="onb-input" placeholder="' + attr(pick.placeholder) + '">' +
+          esc(cur.text || '') + '</textarea>' +
+          '<button class="onb-change" onclick="onbClearPrompt(' + step.n + ')">' + esc(P.change) + '</button>';
+      }
+      main.innerHTML = inner + '</div>';
+      foot.innerHTML = pick
+        ? '<button class="onb-cta" id="onb-cta" onclick="onbNext()"' + (onbValid(step) ? '' : ' disabled') + '>Continue</button>'
+        : '';
+      var pin = document.getElementById('onb-input');
+      if(pin){
+        pin.focus();
+        pin.oninput = function(){
+          O.answers[key] = { promptId: cur.promptId, text: pin.value };
+          document.getElementById('onb-cta').disabled = !onbValid(step);
+        };
+      }
+      return;
+    }
+
     var html = '<div class="onb-chapter">' + esc(step.chapter) + '</div>' +
       '<h1 class="onb-title">' + esc(step.title) + '</h1>' +
       '<p class="onb-sub">' + esc(step.subtitle) + '</p><div class="onb-body">';
@@ -643,6 +764,14 @@ function page(niches: any[], communities: any[], missions: any, onboarding: any)
     }
   }
 
+  function onbPickPrompt(n, id){
+    O.answers['p' + n] = { promptId: id, text: '' };
+    onbRender();
+  }
+  function onbClearPrompt(n){
+    delete O.answers['p' + n];
+    onbRender();
+  }
   function onbPick(val){
     var step = onbSteps()[O.i];
     O.answers[step.id] = val;
@@ -695,14 +824,10 @@ function page(niches: any[], communities: any[], missions: any, onboarding: any)
       ['open-discover','open-niche','pick-niche','name-business','start-business']
         .forEach(function(id){ complete(id, true); });
     } else {
-      S.interests = a.interests || '';
-      S.audience = a.makeOrSell || 'both';
+      // Both prompt answers together are what Discover tunes to.
+      S.prompts = [a.p1, a.p2].filter(Boolean);
+      S.interests = S.prompts.map(function(p){ return p.text; }).join(' ');
       save();
-      // Point Discover at how they said they want to work.
-      if(S.audience && S.audience !== 'both'){
-        var btn = document.querySelector('#s-discover .chipbtn[data-f="' + S.audience + '"]');
-        if(btn) setFilter(btn);
-      }
     }
     save();
     document.getElementById('onb').classList.remove('on');
