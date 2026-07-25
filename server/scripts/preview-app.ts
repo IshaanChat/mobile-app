@@ -192,10 +192,13 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   }
   * { box-sizing:border-box; }
   body { margin:0; background:var(--surround); font-family:var(--font-sans); color:var(--text); -webkit-font-smoothing:antialiased; }
-  /* Anything that speaks gets the serif; anything functional stays sans. */
-  h1,h2,h3,.title,.onb-title,.onb-rev-title,.next-t,.lvname,.stat-v,.hcard-t,.pc-name,.sec-t,.mhead h2 {
+  /* The serif is for single moments — a screen title, one question, one big
+     number. Repeated down a feed it gets heavy, so card titles and section
+     headings stay sans. */
+  h1,h2,.onb-title,.onb-rev-title,.next-t,.lvname,.stat-v,.mhead h2 {
     font-family:var(--font-display); font-weight:600; letter-spacing:-0.015em; font-optical-sizing:auto;
   }
+  .title,.hcard-t,.sec-t,.pc-name { font-family:var(--font-sans); font-weight:600; letter-spacing:-0.01em; }
   .stat-v, .econ-inline, .econ, .money, .strength, .lvcount, .lvsec-c { font-variant-numeric:tabular-nums; }
   .stat-v { font-weight:700; }
   .app { max-width:430px; margin:0 auto; background:var(--bg); min-height:100vh; position:relative; padding-bottom:76px; }
