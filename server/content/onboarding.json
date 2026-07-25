@@ -39,41 +39,110 @@
   ],
   "prompts": {
     "chapter": "In your words",
-    "title": "Pick one to answer.",
-    "subtitle": "Any of them. There's no wrong answer here — we're just listening for what you'd actually enjoy.",
-    "titleSecond": "One more.",
-    "subtitleSecond": "Different angle. This is the last thing we'll ask.",
-    "change": "← Pick a different one",
+    "title": "Pick a question to answer.",
+    "subtitle": "Whichever one you've got an answer to. Which one you pick tells us as much as what you write.",
+    "titleSecond": "One more question.",
+    "subtitleSecond": "Pick a different angle this time — it's the last thing we'll ask.",
+    "change": "← Pick a different question",
     "options": [
-      { "id": "time", "label": "I lose track of time when I'm…", "placeholder": "cooking, fixing things, being outside…" },
-      { "id": "help", "label": "People always ask me for help with…", "placeholder": "what my friends come to me for" },
-      { "id": "weekend", "label": "With a free weekend, I'd make…", "placeholder": "anything at all" },
-      { "id": "excited", "label": "I get weirdly excited about…", "placeholder": "the thing you'd talk about too long" },
-      { "id": "stopped", "label": "What's stopped me so far is…", "placeholder": "money, time, not knowing where to start…" },
-      { "id": "success", "label": "I'd know this worked if…", "placeholder": "what would make it feel real" },
-      { "id": "hands", "label": "The last thing I made with my hands was…", "placeholder": "however long ago" },
-      { "id": "always", "label": "I've always wanted to try…", "placeholder": "the thing you keep circling back to" },
-      { "id": "hour", "label": "I could talk for an hour about…", "placeholder": "and people have had to stop me" },
-      { "id": "friends", "label": "My friends would say I'm the one who…", "placeholder": "always ___" }
+      {
+        "id": "time",
+        "mode": "product",
+        "label": "What do you lose track of time doing?",
+        "placeholder": "cooking, fixing things, being outside…",
+        "lead": "Whatever you'd do for free, someone is charging for."
+      },
+      {
+        "id": "always",
+        "mode": "product",
+        "label": "What have you always wanted to try?",
+        "placeholder": "the thing you keep circling back to",
+        "lead": "You keep circling this for a reason. Here's the low-risk version of it."
+      },
+      {
+        "id": "help",
+        "mode": "already",
+        "label": "What do people come to you for help with?",
+        "placeholder": "what your friends always ask you about",
+        "lead": "People already trust you with this. That's the part most businesses never get."
+      },
+      {
+        "id": "hour",
+        "mode": "already",
+        "label": "What could you talk about for an hour?",
+        "placeholder": "and people have had to stop you",
+        "lead": "That's not a hobby, that's expertise. It's the thing customers can smell on you."
+      },
+      {
+        "id": "hands",
+        "mode": "already",
+        "label": "What's the last thing you made with your hands?",
+        "placeholder": "however long ago, however small",
+        "lead": "You've already made something. Most people never get that far."
+      },
+      {
+        "id": "stopped",
+        "mode": "unblock",
+        "label": "What's stopped you from starting before?",
+        "placeholder": "money, time, not knowing where to begin…",
+        "lead": "Fair. So let's start with something that asks almost nothing of you."
+      },
+      {
+        "id": "worries",
+        "mode": "unblock",
+        "label": "What's the part that worries you most?",
+        "placeholder": "the bit that makes you hesitate",
+        "lead": "Then here's the smallest possible version — one you could quit tomorrow with nothing lost."
+      },
+      {
+        "id": "worth",
+        "mode": "math",
+        "label": "What would make this feel worth it?",
+        "placeholder": "what would make you say it worked",
+        "lead": "Let's put a number on that."
+      },
+      {
+        "id": "extra",
+        "mode": "math",
+        "label": "What would you do with an extra $500 a month?",
+        "placeholder": "be honest",
+        "lead": "$500 is closer than it sounds. Here's what it actually takes."
+      }
     ]
   },
   "reveal": {
-    "chapter": "Here's what that could be",
-    "lead": "People are already doing this:",
     "costLabel": "costs about",
     "sellLabel": "sells for",
     "models": {
       "MATERIALS": "You'd make these yourself. The materials are the only thing you risk.",
-      "MAKE_YOUR_OWN": "You'd build these yourself, from scratch, on your own schedule.",
+      "MAKE_YOUR_OWN": "You'd make these yourself, from scratch, on your own schedule.",
       "DROPSHIP": "You'd never touch these. A supplier ships them straight to the buyer.",
       "WHOLESALE": "You'd buy a batch cheap and sell them on, one at a time.",
       "PRINT_ON_DEMAND": "You just design it. A printer makes and ships it when someone buys — you hold nothing."
     },
-    "closer": "No shop. No staff. No permission needed.",
+    "modes": {
+      "product": {
+        "chapter": "Here's what that could be",
+        "closer": "No shop. No staff. No permission needed."
+      },
+      "already": {
+        "chapter": "You're further along than you think",
+        "closer": "The skill is the hard part, and you have it. The rest is just knowing where to stand."
+      },
+      "unblock": {
+        "chapter": "Let's take that off the table",
+        "closer": "Nothing to buy up front, nothing to store, nothing to lose if you stop."
+      },
+      "math": {
+        "chapter": "Here's the actual math",
+        "closer": "Not a fortune. But it's real, and it's arithmetic — not luck."
+      }
+    },
+    "mathTemplate": "Clear about ${margin} a sale. That's {count} sales to reach $500.",
+    "fallbackNote": "Not sure yet? Most people aren't. Here's one anyway.",
     "closerSecond": "That's two completely different ways in — and there are 47 more waiting in Discover.",
     "cta": "Show me",
-    "ctaSecond": "One more",
-    "fallbackLead": "Not sure yet? Most people aren't. Here's one anyway:"
+    "ctaSecond": "One more"
   },
   "forks": {
     "have": [

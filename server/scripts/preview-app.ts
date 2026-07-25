@@ -598,10 +598,31 @@ function page(niches: any[], communities: any[], missions: any, onboarding: any)
     return typeof v === 'string' ? v.trim().length > 0 : v !== undefined && v !== null;
   }
 
+  // Nothing to buy, nothing to store — what we show someone who told us
+  // they're blocked or worried.
+  var ZERO_START = ['digital-planners','notion-templates','design-assets','apparel-pod','stickers-decals'];
+
+  function firstNum(s){
+    var m = String(s || '').match(/(\\d[\\d,]*)/);
+    return m ? Number(m[1].replace(/,/g, '')) : 0;
+  }
+
   // Pick the niche that best answers what they typed. Reveal two avoids the
   // first one's sourcing model so they leave knowing there's more than one
-  // way to do this.
-  function revealFor(text, excludeType){
+  // way to do this. For "unblock" the mode decides, not the answer — the
+  // whole point is showing something that asks nothing of them.
+  function revealFor(text, excludeType, mode){
+    if(mode === 'unblock'){
+      // Honour ZERO_START's order, not the content file's — the first entries
+      // genuinely cost nothing, and "nothing to buy up front" next to a $20
+      // price tag reads as a lie.
+      var zero = ZERO_START.map(function(slug){
+        return NICHES.filter(function(n){ return n.slug === slug; })[0];
+      }).filter(function(n){
+        return n && (!excludeType || n.sourcingType !== excludeType);
+      });
+      if(zero.length) return { niche: zero[0], matched: true };
+    }
     var want = tokens(text);
     var best = null, bestScore = 0;
     NICHES.forEach(function(n){
@@ -660,25 +681,40 @@ function page(niches: any[], communities: any[], missions: any, onboarding: any)
     back.classList.toggle('show', O.i > 0);
     main.className = 'onb-main onb-fade';
 
-    // Reveal: not a question — what their own words could turn into.
+    // Reveal: not a question. Which prompt they CHOSE decides how we answer
+    // — someone who picked "what's stopped you" needs a different response
+    // than someone who picked "what could you talk about for an hour".
     if(step.type === 'reveal'){
       var R = ONB.reveal;
       var src = O.answers['p' + step.n] || {};
-      var res = revealFor(src.text, step.n === 2 ? O.firstModel : null);
+      var opt = R && ONB.prompts.options.filter(function(o){ return o.id === src.promptId; })[0] || {};
+      var mode = opt.mode || 'product';
+      var M = R.modes[mode] || R.modes.product;
+      var res = revealFor(src.text, step.n === 2 ? O.firstModel : null, mode);
       var n = res.niche;
       if(step.n === 1) O.firstModel = n.sourcingType;
+
+      var extra = '';
+      if(mode === 'math'){
+        var margin = Math.max(1, firstNum(n.typicalResale) - firstNum(n.sourceCost));
+        extra = '<div class="onb-rev-model">' +
+          esc(R.mathTemplate.replace('{margin}', margin).replace('{count}', Math.ceil(500 / margin))) +
+          '</div>';
+      }
+
       main.innerHTML =
-        '<div class="onb-chapter">' + esc(R.chapter) + '</div>' +
+        '<div class="onb-chapter">' + esc(M.chapter) + '</div>' +
         (n.imageUrl ? '<div class="onb-rev-img" style="background-image:url(\\'' + attr(n.imageUrl) + '\\')"></div>' : '') +
-        '<div class="onb-rev-lead">' + esc(res.matched ? R.lead : R.fallbackLead) + '</div>' +
+        '<div class="onb-rev-lead">' + esc(opt.lead || '') + '</div>' +
         '<h1 class="onb-rev-title">' + esc(n.productTitle) + '</h1>' +
-        '<p class="onb-rev-blurb">' + esc(n.blurb) + '</p>' +
+        '<p class="onb-rev-blurb">' + esc(res.matched ? n.blurb : R.fallbackNote + ' ' + n.blurb) + '</p>' +
         '<div class="onb-rev-nums">' +
           '<div><div class="onb-rev-k">' + esc(R.costLabel) + '</div><div class="onb-rev-v">' + esc(n.sourceCost) + '</div></div>' +
           '<div><div class="onb-rev-k">' + esc(R.sellLabel) + '</div><div class="onb-rev-v sell">' + esc(n.typicalResale) + '</div></div>' +
         '</div>' +
+        extra +
         '<div class="onb-rev-model">' + esc(R.models[n.sourcingType] || '') + '</div>' +
-        '<div class="onb-rev-closer">' + esc(step.n === 1 ? R.closer : R.closerSecond) + '</div>';
+        '<div class="onb-rev-closer">' + esc(step.n === 1 ? M.closer : R.closerSecond) + '</div>';
       foot.innerHTML = '<button class="onb-cta" onclick="onbNext()">' +
         esc(step.n === 1 ? R.ctaSecond : R.cta) + '</button>';
       return;
