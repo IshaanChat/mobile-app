@@ -117,7 +117,7 @@ function milestoneRow(m: any) {
   </div>`;
 }
 
-function page(niches: any[], communities: any[], missions: any) {
+function page(niches: any[], communities: any[], missions: any, onboarding: any) {
   const domains = [...new Set(niches.map((n) => n.domain))];
   const byLevel = (lv: number) => missions.milestones.filter((m: any) => m.level === lv);
   const levelsHtml = missions.levels.map((lv: any) => `
@@ -268,6 +268,49 @@ function page(niches: any[], communities: any[], missions: any) {
   .toast { position:fixed; bottom:80px; left:50%; transform:translateX(-50%); background:var(--scoreboard); color:#fdf7f4; font-size:13px; font-weight:600; padding:10px 16px; border-radius:999px; opacity:0; transition:opacity .25s; z-index:30; }
   .toast.show { opacity:1; }
   .empty { color:var(--text-dim); font-size:14px; text-align:center; padding:30px 0; display:none; }
+
+  /* ---- Onboarding: one question per screen, generous space, quiet chrome ---- */
+  .onb { position:fixed; inset:0; z-index:100; background:var(--bg); display:none; }
+  .onb.on { display:block; }
+  .onb-inner { max-width:430px; margin:0 auto; height:100%; display:flex; flex-direction:column; padding:20px 28px 28px; }
+  .onb-top { display:flex; align-items:center; gap:14px; min-height:32px; }
+  .onb-back { background:none; border:none; color:var(--text-dim); font-size:20px; cursor:pointer; padding:0; width:20px; text-align:left; visibility:hidden; }
+  .onb-back.show { visibility:visible; }
+  .onb-track { flex:1; height:3px; background:var(--panel-border); border-radius:999px; overflow:hidden; }
+  .onb-prog { height:100%; width:0%; background:var(--accent); border-radius:999px; transition:width .35s ease; }
+  .onb-main { flex:1; display:flex; flex-direction:column; justify-content:center; overflow-y:auto; padding:24px 0; }
+  .onb-fade { animation:onb-in .32s ease both; }
+  @keyframes onb-in { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:none; } }
+  .onb-chapter { font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); margin-bottom:14px; }
+  .onb-title { font-size:30px; font-weight:600; line-height:1.2; letter-spacing:-0.02em; margin:0; }
+  .onb-sub { font-size:15px; color:var(--text-dim); line-height:1.55; margin:10px 0 0; }
+  .onb-meta { font-size:13px; color:var(--text-dim); margin-top:20px; }
+  .onb-body { margin-top:28px; }
+  .onb-in { width:100%; border:1px solid var(--panel-border); background:var(--input-bg); color:var(--text); border-radius:14px; padding:15px 16px; font-size:18px; font-family:inherit; transition:border-color .15s, box-shadow .15s; }
+  .onb-in:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft); }
+  textarea.onb-in { min-height:110px; resize:none; font-size:16px; line-height:1.5; }
+  .onb-opts { display:flex; flex-direction:column; gap:10px; }
+  .onb-opt { text-align:left; width:100%; background:var(--panel); border:1.5px solid var(--panel-border); border-radius:14px; padding:15px 16px; cursor:pointer; font-family:inherit; color:var(--text); transition:border-color .15s, background .15s, transform .1s; }
+  .onb-opt:hover { border-color:var(--accent); }
+  .onb-opt:active { transform:scale(.99); }
+  .onb-opt.sel { border-color:var(--accent); background:var(--accent-soft); }
+  .onb-opt-l { font-size:16px; font-weight:600; }
+  .onb-opt-h { font-size:13px; color:var(--text-dim); margin-top:3px; line-height:1.45; }
+  .onb-chips { display:flex; flex-wrap:wrap; gap:9px; }
+  .onb-chip { background:var(--panel); border:1.5px solid var(--panel-border); color:var(--text); border-radius:999px; padding:10px 16px; font-size:14px; font-family:inherit; cursor:pointer; transition:border-color .15s, background .15s; }
+  .onb-chip:hover { border-color:var(--accent); }
+  .onb-chip.sel { border-color:var(--accent); background:var(--accent-soft); font-weight:600; }
+  .onb-foot { padding-top:12px; }
+  .onb-cta { width:100%; background:var(--accent); color:var(--on-accent); border:none; border-radius:999px; padding:16px; font-size:15px; font-weight:600; font-family:inherit; cursor:pointer; transition:opacity .15s, transform .1s; }
+  .onb-cta:disabled { opacity:.4; cursor:default; }
+  .onb-cta:not(:disabled):hover { transform:translateY(-1px); }
+  .onb-skip { display:block; width:100%; background:none; border:none; color:var(--text-dim); font-size:14px; font-family:inherit; padding:14px 0 2px; cursor:pointer; }
+  .onb-skip:hover { color:var(--accent); }
+  .onb-skip.hide { display:none; }
+  .onb-center { text-align:center; }
+  .onb-mark { width:54px; height:54px; border-radius:16px; background:var(--accent); color:var(--on-accent); font-size:26px; display:flex; align-items:center; justify-content:center; margin-bottom:22px; }
+  .onb-center .onb-mark { margin-left:auto; margin-right:auto; }
+  .onb-note { font-size:13px; color:var(--text-dim); line-height:1.5; margin-top:16px; }
 </style></head><body>
 <div class="app">
   <!-- DISCOVER -->
@@ -309,6 +352,17 @@ function page(niches: any[], communities: any[], missions: any) {
     <button class="reset" onclick="resetAll()">Reset progress</button>
   </div>
 
+  <div class="onb" id="onb">
+    <div class="onb-inner">
+      <div class="onb-top" id="onb-top">
+        <button class="onb-back" id="onb-back" onclick="onbBack()">&#8592;</button>
+        <div class="onb-track"><div class="onb-prog" id="onb-prog"></div></div>
+      </div>
+      <div class="onb-main" id="onb-main"></div>
+      <div class="onb-foot" id="onb-foot"></div>
+    </div>
+  </div>
+
   <div class="tabbar">
     <div class="tab on" data-tab="discover" onclick="setTab('discover')"><span class="ic">&#129517;</span>Discover</div>
     <div class="tab" data-tab="grow" onclick="setTab('grow')"><span class="ic">&#127793;</span>Grow</div>
@@ -320,6 +374,8 @@ function page(niches: any[], communities: any[], missions: any) {
 <script>
   var LEVELS = ${JSON.stringify(missions.levels)};
   var FINAL = ${JSON.stringify(missions.finalName)};
+  function esc(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function attr(s){ return esc(s).replace(/"/g,'&quot;'); }
   var TITLES = {}; document.querySelectorAll('.ms').forEach(function(el){ TITLES[el.dataset.id] = el.querySelector('.ms-title').textContent; });
   var S = load();
 
@@ -404,10 +460,16 @@ function page(niches: any[], communities: any[], missions: any) {
   function logSale(){ S.sales = (S.sales||0)+1; save(); complete('log-sale'); toast('Sale logged'); }
   function markDone(btn){ complete(btn.closest('.ms').dataset.id); }
 
+  var STOP = ['and','the','for','with','your','from','that','this','are','you','our','its','all','who','what','how','made','only'];
   function matchGrow(){
     var banner = document.getElementById('grow-banner');
     if(!S.niche){ banner.classList.remove('on'); return; }
-    var want = (S.niche.tags||'').toLowerCase().split(',').map(function(t){return t.trim();}).filter(Boolean);
+    // Split on commas AND whitespace: curated niches carry comma-separated
+    // tags, but a business typed during onboarding is a free-text phrase
+    // ("handmade stoneware mugs and bowls") that has to be tokenized too.
+    var want = (S.niche.tags||'').toLowerCase().split(/[,\\s]+/)
+      .map(function(t){ return t.trim(); })
+      .filter(function(t){ return t.length >= 3 && STOP.indexOf(t) === -1; });
     var count = 0;
     document.querySelectorAll('#s-grow .community').forEach(function(c){
       var have = (c.getAttribute('data-tags')||'').toLowerCase();
@@ -455,9 +517,190 @@ function page(niches: any[], communities: any[], missions: any) {
   function toast(msg){ var t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(function(){ t.classList.remove('show'); },1600); }
   function resetAll(){ localStorage.removeItem('sm_app'); S={}; location.reload(); }
 
+  /* ---------------- Onboarding ---------------- */
+  var ONB = ${JSON.stringify(onboarding)};
+  var O = { i: -1, answers: {}, skipped: [] };
+
+  function onbSteps(){
+    var p = O.answers.path;
+    return ONB.shared.concat(p && ONB.forks[p] ? ONB.forks[p] : []);
+  }
+  function onbVal(id){ return O.answers[id]; }
+
+  function onbValid(step){
+    var v = onbVal(step.id);
+    if(step.optional && !step.required) return true;
+    if(step.type === 'multi') return Array.isArray(v) && v.length >= (step.min || 1);
+    if(step.type === 'number'){ var n = Number(v); return Number.isInteger(n) && n >= 13 && n <= 120; }
+    return typeof v === 'string' ? v.trim().length > 0 : v !== undefined && v !== null;
+  }
+
+  function onbRender(){
+    var main = document.getElementById('onb-main');
+    var foot = document.getElementById('onb-foot');
+    var back = document.getElementById('onb-back');
+    var steps = onbSteps();
+
+    // Welcome
+    if(O.i < 0){
+      document.getElementById('onb-prog').style.width = '0%';
+      back.classList.remove('show');
+      main.className = 'onb-main onb-fade';
+      main.innerHTML = '<div class="onb-mark">&#128295;</div>' +
+        '<div class="onb-chapter">' + esc(ONB.welcome.eyebrow) + '</div>' +
+        '<h1 class="onb-title">' + esc(ONB.welcome.title) + '</h1>' +
+        '<p class="onb-sub">' + esc(ONB.welcome.body) + '</p>' +
+        '<div class="onb-meta">' + esc(ONB.welcome.meta) + '</div>';
+      foot.innerHTML = '<button class="onb-cta" onclick="onbNext()">' + esc(ONB.welcome.cta) + '</button>';
+      return;
+    }
+
+    // Finish
+    if(O.i >= steps.length){
+      var p = O.answers.path || 'new';
+      var f = ONB.finish[p];
+      var nm = (O.answers.name || '').split(' ')[0];
+      document.getElementById('onb-prog').style.width = '100%';
+      back.classList.remove('show');
+      main.className = 'onb-main onb-fade onb-center';
+      main.innerHTML = '<div class="onb-mark">&#10003;</div>' +
+        '<div class="onb-chapter">' + esc(f.eyebrow) + '</div>' +
+        '<h1 class="onb-title">' + esc(f.title.replace('{name}', nm)) + '</h1>' +
+        '<p class="onb-sub">' + esc(f.body.replace('{biz}', O.answers.bizName || 'Your business')) + '</p>' +
+        (O.skipped.length ? '<div class="onb-note">' + esc(ONB.finish.note) + '</div>' : '');
+      foot.innerHTML = '<button class="onb-cta" onclick="onbDone()">' + esc(f.cta) + '</button>';
+      return;
+    }
+
+    var step = steps[O.i];
+    document.getElementById('onb-prog').style.width = Math.round((O.i) / steps.length * 100) + '%';
+    back.classList.toggle('show', O.i > 0);
+    main.className = 'onb-main onb-fade';
+
+    var html = '<div class="onb-chapter">' + esc(step.chapter) + '</div>' +
+      '<h1 class="onb-title">' + esc(step.title) + '</h1>' +
+      '<p class="onb-sub">' + esc(step.subtitle) + '</p><div class="onb-body">';
+
+    var v = onbVal(step.id);
+    if(step.type === 'text' || step.type === 'number'){
+      html += '<input class="onb-in" id="onb-input" type="' + (step.type === 'number' ? 'tel' : 'text') +
+        '" placeholder="' + attr(step.placeholder || '') + '" value="' + attr(v || '') + '">';
+    } else if(step.type === 'textarea'){
+      html += '<textarea class="onb-in" id="onb-input" placeholder="' + attr(step.placeholder || '') + '">' + esc(v || '') + '</textarea>';
+    } else if(step.type === 'single' || step.type === 'fork'){
+      html += '<div class="onb-opts">' + step.options.map(function(o){
+        return '<button class="onb-opt' + (v === o.value ? ' sel' : '') + '" onclick="onbPick(\\'' + o.value + '\\')">' +
+          '<div class="onb-opt-l">' + esc(o.label) + '</div>' +
+          (o.hint ? '<div class="onb-opt-h">' + esc(o.hint) + '</div>' : '') + '</button>';
+      }).join('') + '</div>';
+    } else if(step.type === 'multi'){
+      var sel = Array.isArray(v) ? v : [];
+      html += '<div class="onb-chips">' + step.options.map(function(o){
+        return '<button class="onb-chip' + (sel.indexOf(o.value) !== -1 ? ' sel' : '') +
+          '" onclick="onbToggle(\\'' + String(o.value).replace(/'/g, "\\\\'") + '\\')">' + esc(o.label) + '</button>';
+      }).join('') + '</div>';
+    }
+    html += '</div>';
+    main.innerHTML = html;
+
+    var last = O.i === steps.length - 1;
+    foot.innerHTML = '<button class="onb-cta" id="onb-cta" onclick="onbNext()"' + (onbValid(step) ? '' : ' disabled') + '>' +
+      (last ? 'Finish' : 'Continue') + '</button>' +
+      (step.optional ? '<button class="onb-skip" onclick="onbSkip()">Skip for now</button>' : '');
+
+    var input = document.getElementById('onb-input');
+    if(input){
+      input.focus();
+      input.oninput = function(){
+        O.answers[step.id] = input.value;
+        document.getElementById('onb-cta').disabled = !onbValid(step);
+      };
+      input.onkeydown = function(e){ if(e.key === 'Enter' && step.type !== 'textarea' && onbValid(step)){ onbNext(); } };
+    }
+  }
+
+  function onbPick(val){
+    var step = onbSteps()[O.i];
+    O.answers[step.id] = val;
+    onbRender();
+    setTimeout(onbNext, 240);
+  }
+  function onbToggle(val){
+    var step = onbSteps()[O.i];
+    var cur = Array.isArray(O.answers[step.id]) ? O.answers[step.id].slice() : [];
+    var at = cur.indexOf(val);
+    if(at === -1) cur.push(val); else cur.splice(at, 1);
+    O.answers[step.id] = cur;
+    onbRender();
+  }
+  function onbSkip(){
+    var step = onbSteps()[O.i];
+    if(O.skipped.indexOf(step.id) === -1) O.skipped.push(step.id);
+    delete O.answers[step.id];
+    O.i++;
+    onbRender();
+  }
+  function onbNext(){
+    if(O.i >= 0){
+      var step = onbSteps()[O.i];
+      if(step && !onbValid(step)) return;
+      var at = O.skipped.indexOf(step ? step.id : '');
+      if(at !== -1) O.skipped.splice(at, 1);
+    }
+    O.i++;
+    onbRender();
+  }
+  function onbBack(){ if(O.i > 0){ O.i--; onbRender(); } }
+
+  function onbDone(){
+    var a = O.answers;
+    S.profile = { name: a.name, age: a.age, gender: a.gender };
+    S.path = a.path;
+    S.skipped = O.skipped;
+    S.onboarded = true;
+
+    if(a.path === 'have'){
+      S.biz = a.bizName;
+      // Their own words drive Grow matching from the very first screen.
+      S.niche = { slug: 'my-business', name: a.bizNiche, tags: a.bizNiche };
+      S.bizType = a.bizType;
+      S.avenues = a.avenues || [];
+      S.idealCustomer = a.idealCustomer || '';
+      save();
+      // They've already lived the early stages, so credit them in order —
+      // levels gate sequentially, and Journey should open where they
+      // actually are rather than at step one.
+      ['open-discover','open-niche','pick-niche','name-business','start-business']
+        .forEach(function(id){ complete(id, true); });
+    } else {
+      S.interests = a.interests || [];
+      S.audience = a.makeOrSell || 'both';
+      S.experience = a.experience;
+      S.goal = a.goal; S.time = a.time; S.budget = a.budget;
+      save();
+      // Point Discover at what they said they want to do.
+      if(S.audience && S.audience !== 'both'){
+        var btn = document.querySelector('#s-discover .chipbtn[data-f="' + S.audience + '"]');
+        if(btn) setFilter(btn);
+      }
+    }
+    save();
+    document.getElementById('onb').classList.remove('on');
+    matchGrow();
+    refresh();
+    setTab(a.path === 'have' ? 'journey' : 'discover');
+  }
+
+  function onbOpen(){
+    O = { i: -1, answers: {}, skipped: [] };
+    document.getElementById('onb').classList.add('on');
+    onbRender();
+  }
+
   matchGrow();
   refresh();
   if(S.tab){ setTab(S.tab); }
+  if(!S.onboarded){ onbOpen(); }
 </script>
 </body></html>`;
 }
@@ -467,8 +710,9 @@ createServer((req, res) => {
     const niches = JSON.parse(readFileSync(`${dir}/niches.json`, 'utf8'));
     const communities = JSON.parse(readFileSync(`${dir}/communities.json`, 'utf8'));
     const missions = JSON.parse(readFileSync(`${dir}/missions.json`, 'utf8'));
+    const onboarding = JSON.parse(readFileSync(`${dir}/onboarding.json`, 'utf8'));
     res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-    res.end(page(niches, communities, missions));
+    res.end(page(niches, communities, missions, onboarding));
   } catch (err: any) {
     res.writeHead(500, { 'Content-Type': 'text/plain' });
     res.end(`Could not render: ${err.message}`);
