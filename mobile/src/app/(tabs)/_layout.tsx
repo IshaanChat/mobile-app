@@ -1,22 +1,28 @@
 import { Redirect, Tabs } from 'expo-router';
-import { SymbolView, SFSymbol } from 'expo-symbols';
+import { useState } from 'react';
 import { ActivityIndicator, ColorValue, Pressable, StyleSheet } from 'react-native';
 
+import { Icon, type IconName } from '@/components/icon';
+import { JourneySheet } from '@/components/journey-sheet';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
+import { TopBar } from '@/components/top-bar';
 import { Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { useAppData } from '@/state/app-data';
 
-function icon(name: SFSymbol) {
-  return ({ color }: { color: ColorValue }) => (
-    <SymbolView name={name} tintColor={color as string} style={styles.icon} />
+// The active tab draws a touch heavier rather than filling in — the set is
+// one stroke weight, so weight is the only emphasis it can carry.
+function icon(name: IconName) {
+  return ({ color, focused }: { color: ColorValue; focused: boolean }) => (
+    <Icon name={name} size={24} color={color as string} strokeWidth={focused ? 2 : 1.7} />
   );
 }
 
 export default function TabsLayout() {
   const theme = useTheme();
   const { mode, error, refresh } = useAppData();
+  const [journeyOpen, setJourneyOpen] = useState(false);
 
   if (mode === 'loading') {
     return (
@@ -50,33 +56,31 @@ export default function TabsLayout() {
 
   if (mode === 'onboarding') return <Redirect href="/onboarding" />;
 
-  // Instagram-style: icons only, no labels.
+  // Four tabs, and Journey is not one of them — it's a sheet the top bar
+  // opens, so the bottom row stays the four places you actually live in.
   return (
-    <Tabs
-      screenOptions={{
-        headerShown: false,
-        tabBarShowLabel: false,
-        tabBarActiveTintColor: theme.accent,
-        tabBarInactiveTintColor: theme.textSecondary,
-        tabBarStyle: { backgroundColor: theme.background, borderTopColor: theme.border },
-      }}>
-      <Tabs.Screen name="index" options={{ title: 'Home', tabBarIcon: icon('house.fill') }} />
-      <Tabs.Screen name="discover" options={{ title: 'Discover', tabBarIcon: icon('safari.fill') }} />
-      <Tabs.Screen name="create" options={{ title: 'Create', tabBarIcon: icon('plus.app.fill') }} />
-      <Tabs.Screen
-        name="growth"
-        options={{ title: 'Growth', tabBarIcon: icon('chart.line.uptrend.xyaxis') }}
-      />
-      <Tabs.Screen
-        name="business"
-        options={{ title: 'Business', tabBarIcon: icon('person.crop.circle.fill') }}
-      />
-    </Tabs>
+    <>
+      <Tabs
+        screenOptions={{
+          header: () => <TopBar onOpenJourney={() => setJourneyOpen(true)} />,
+          tabBarShowLabel: true,
+          tabBarActiveTintColor: theme.accent,
+          tabBarInactiveTintColor: theme.textSecondary,
+          tabBarLabelStyle: styles.tabLabel,
+          tabBarStyle: { backgroundColor: theme.background, borderTopColor: theme.border },
+        }}>
+        <Tabs.Screen name="index" options={{ title: 'Discover', tabBarIcon: icon('compass') }} />
+        <Tabs.Screen name="grow" options={{ title: 'Grow', tabBarIcon: icon('sprout') }} />
+        <Tabs.Screen name="business" options={{ title: 'Business', tabBarIcon: icon('chart') }} />
+        <Tabs.Screen name="you" options={{ title: 'You', tabBarIcon: icon('user') }} />
+      </Tabs>
+      <JourneySheet open={journeyOpen} onClose={() => setJourneyOpen(false)} />
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  icon: { width: 26, height: 26 },
+  tabLabel: { fontSize: 11 },
   center: {
     flex: 1,
     alignItems: 'center',

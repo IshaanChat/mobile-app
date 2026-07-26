@@ -83,8 +83,11 @@ export default function OnboardingScreen() {
 
   // Someone who already finished onboarding has no business here. (All hooks
   // are above this line — these returns must not change hook order.)
-  if (mode === 'active') return <Redirect href="/" />;
-  if (mode === 'explorer') return <Redirect href="/discover" />;
+  // The fork lands people in different places: someone who already has a
+  // business needs customers (Grow), someone starting out needs something
+  // to sell (Discover, which is the index route).
+  if (mode === 'active') return <Redirect href="/grow" />;
+  if (mode === 'explorer') return <Redirect href="/" />;
 
   const shared = ['name', 'age', 'gender', 'path'] as const;
   const steps: readonly string[] =
@@ -139,11 +142,11 @@ export default function OnboardingScreen() {
         // passing through 'explorer', which would redirect mid-flow.
         onProfileCreated(profile);
         onBusinessCreated(business);
-        router.replace('/');
+        router.replace('/grow');
       } else {
         await persistInterests(interests);
         onProfileCreated(profile);
-        router.replace('/discover');
+        router.replace('/');
       }
     } catch (err: any) {
       setError(err?.message ?? 'Something went wrong. Try again.');

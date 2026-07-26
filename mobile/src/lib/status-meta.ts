@@ -1,26 +1,28 @@
 // Friendly, journey-flavored presentation of the raw contact status enum.
 // Ported from the web client so both surfaces describe the relationship
 // journey identically; `color` is a theme key rather than a CSS variable.
+//
+// There's deliberately no emoji here. Status is carried by the
+// prospect/engaged/customer colours, which are the same three the CRM uses
+// everywhere else — a 🌱 next to a name would say the same thing twice, in
+// a typeface we don't control.
 import type { ContactStatus } from '@/types';
 
 export const STATUS_META: Record<
   ContactStatus,
-  { emoji: string; title: string; subtitle: string; color: 'prospect' | 'engaged' | 'customer' }
+  { title: string; subtitle: string; color: 'prospect' | 'engaged' | 'customer' }
 > = {
   PROSPECT: {
-    emoji: '🌱',
     title: 'New lead',
     subtitle: "Found them, haven't really talked yet",
     color: 'prospect',
   },
   ENGAGED: {
-    emoji: '💬',
     title: 'In conversation',
     subtitle: "We're talking — there's something here",
     color: 'engaged',
   },
   CUSTOMER: {
-    emoji: '⭐',
     title: 'Customer',
     subtitle: "They've bought from me",
     color: 'customer',
@@ -30,8 +32,7 @@ export const STATUS_META: Record<
 export const STATUS_ORDER: ContactStatus[] = ['PROSPECT', 'ENGAGED', 'CUSTOMER'];
 
 export function statusLabel(status: ContactStatus): string {
-  const meta = STATUS_META[status];
-  return `${meta.emoji} ${meta.title}`;
+  return STATUS_META[status].title;
 }
 
 export function money(n: number): string {
