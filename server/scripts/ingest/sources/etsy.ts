@@ -8,18 +8,22 @@
 
 import type { Adapter, Signal } from '../types';
 
-const KEY = process.env.ETSY_API_KEY ?? '';
+// Read lazily, not at module scope. TypeScript hoists the emitted requires
+// above every statement, so a module-scope read happens before run.ts can
+// call loadEnvFile() — and every adapter would report itself unconfigured
+// no matter what was in .env.
+const key = () => process.env.ETSY_API_KEY ?? '';
 
 export const etsy: Adapter = {
   name: 'etsy',
-  configured: () => Boolean(KEY),
-  missing: () => 'ETSY_API_KEY (developers.etsy.com — instant)',
+  configured: () => Boolean(key()),
+  missing: () => 'ETSY_API_KEY (developers.etsy.com — review can take a few days)',
 
   async search(keyword: string): Promise<Signal[]> {
     const url =
       'https://openapi.etsy.com/v3/application/listings/active' +
       `?keywords=${encodeURIComponent(keyword)}&limit=25&sort_on=score`;
-    const res = await fetch(url, { headers: { 'x-api-key': KEY } });
+    const res = await fetch(url, { headers: { 'x-api-key': key() } });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const json: any = await res.json();
 
@@ -35,6 +39,9 @@ export const etsy: Adapter = {
     return [
       {
         source: 'etsy',
+        // Overwritten by safeSearch with the scope the runner intended; Etsy
+        // is always describing a market rather than one listing.
+        scope: 'category',
         productTitle: results[0]?.title,
         listings: Number(json?.count) || results.length,
         price: median,

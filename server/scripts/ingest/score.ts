@@ -1,15 +1,14 @@
 // Turn raw signals into one 0–100 heat number.
 //
 // The hard part is that sources measure different things at wildly different
-// magnitudes: AliExpress orders run to tens of thousands, Reddit mentions to
-// tens. Comparing them raw would let YouTube views drown out everything. So
-// each metric is squashed onto 0–1 with a log curve against a reference
-// "this is a strong number" point, then blended.
+// magnitudes: AliExpress orders run to tens of thousands, ad runs to tens of
+// days. Comparing them raw would let one drown out everything. So each metric
+// is squashed onto 0–1 with a log curve against a reference "this is a strong
+// number" point, then blended.
 //
 // Weighting reflects how much each signal is worth believing:
 //   units sold  — someone paid money. Strongest evidence there is.
-//   demand      — people searching/watching. Real, but intent not purchase.
-//   community   — chatter. Weakest, and easiest to fake.
+//   ad pressure — someone is paying daily to push it, and hasn't stopped.
 // Saturation is subtracted rather than added: lots of competing listings means
 // a crowded market, which is a reason to be cautious, not excited.
 
@@ -17,7 +16,29 @@ import type { Signal, Signals, SourceName } from './types';
 import { todayISO } from './types';
 
 /** Reference points where a metric counts as "strong" (scores ~0.8). */
-const REF = { unitsSold: 3000, views: 500_000, mentions: 60, listings: 400 };
+const REF = { unitsSold: 3000, adDaysLive: 45, ads: 8 };
+
+/**
+ * Crowding, 0–1, on a linear ramp between the same thresholds `saturationOf`
+ * uses for its words.
+ *
+ * A log squash is the wrong shape here. Against a reference of 400 it scored
+ * 20 listings at 0.5 crowding and 80 at 0.73 — so a card could say "low
+ * competition" while the heat behind it had already been docked as if the
+ * market were flooded. The number and the word have to agree.
+ */
+function crowdingOf(listings?: number): number {
+  if (listings === undefined) return 0;
+  if (listings <= 120) return 0;
+  return Math.min(1, (listings - 120) / 480);
+}
+
+/**
+ * What a marketplace listing count is worth on its own: proof a real market
+ * exists, and nothing at all about how big it is. Deliberately middling —
+ * it has to beat silence without ever rivalling evidence of a sale.
+ */
+const MARKET_EXISTS = 0.5;
 
 /** Log squash so an order of magnitude matters more than a doubling. */
 export function squash(value: number, reference: number): number {
@@ -26,20 +47,36 @@ export function squash(value: number, reference: number): number {
   return Math.max(0, Math.min(1.2, v));
 }
 
-const sum = (ns: (number | undefined)[]) => {
-  const vals = ns.filter((n): n is number => typeof n === 'number' && Number.isFinite(n));
-  return vals.length ? vals.reduce((a, b) => a + b, 0) : undefined;
-};
 const maxOf = (ns: (number | undefined)[]) => {
   const vals = ns.filter((n): n is number => typeof n === 'number' && Number.isFinite(n));
   return vals.length ? Math.max(...vals) : undefined;
 };
 
+/**
+ * Ad pressure, 0–1. Duration dominates count on purpose: ten creatives
+ * launched last week is a test, one creative running seven weeks is a
+ * business paying for it every day and choosing not to stop.
+ */
+export function adPressure(adDaysLive?: number, ads?: number): number | undefined {
+  if (adDaysLive === undefined && ads === undefined) return undefined;
+  return 0.7 * squash(adDaysLive ?? 0, REF.adDaysLive) + 0.3 * squash(ads ?? 0, REF.ads);
+}
+
 export function combine(signals: Signal[]): Signals {
-  const unitsSold = sum(signals.map((s) => s.unitsSold));
+  // The scope gate, and the most important line in this file. Only signals
+  // about the sellable thing may claim units sold — otherwise the maker half
+  // of the catalog gets scored on how much clay and wax the world buys.
+  const sellable = signals.filter((s) => s.scope === 'product');
+  // Max, not sum: a search returns up to twenty listings for the same
+  // product, and adding their volumes together invented a number twenty
+  // times too big. The best-selling listing is the honest answer.
+  const unitsSold = maxOf(sellable.map((s) => s.unitsSold));
+
   const listings = maxOf(signals.map((s) => s.listings));
-  const mentions = sum(signals.map((s) => s.mentions));
-  const views = sum(signals.map((s) => s.views));
+  const ads = maxOf(signals.map((s) => s.ads));
+  const adDaysLive = maxOf(signals.map((s) => s.adDaysLive));
+  const adReach = maxOf(signals.map((s) => s.adReach));
+  const pressure = adPressure(adDaysLive, ads);
 
   const prices = signals
     .map((s) => s.price)
@@ -47,38 +84,59 @@ export function combine(signals: Signal[]): Signals {
     .sort((a, b) => a - b);
 
   const sold = squash(unitsSold ?? 0, REF.unitsSold);
-  const demand = squash(views ?? 0, REF.views);
-  const chatter = squash(mentions ?? 0, REF.mentions);
-  const crowding = squash(listings ?? 0, REF.listings);
+  const crowding = crowdingOf(listings);
 
   // Re-weight across whatever actually reported, so a product seen only by
   // AliExpress isn't punished for the sources that stayed silent.
+  //
+  // The market term carries little weight but has to be here rather than only
+  // in the ceiling: the ceiling multiplies, so for the four fifths of the
+  // catalog that can never report a sale it would only ever have scaled a
+  // zero, and every maker product would sit at heat 0 forever.
   const parts: [number, number][] = [];
-  if (unitsSold !== undefined) parts.push([sold, 0.55]);
-  if (views !== undefined) parts.push([demand, 0.3]);
-  if (mentions !== undefined) parts.push([chatter, 0.15]);
+  if (unitsSold !== undefined) parts.push([sold, 0.6]);
+  if (pressure !== undefined) parts.push([pressure, 0.4]);
+  if (listings !== undefined) parts.push([MARKET_EXISTS, 0.2]);
 
   const weightTotal = parts.reduce((a, [, w]) => a + w, 0);
   const positive = weightTotal > 0 ? parts.reduce((a, [v, w]) => a + v * w, 0) / weightTotal : 0;
 
-  // Re-weighting alone would let 80 Reddit mentions score as high as 4,000
-  // sales, since each would be the only thing reporting. So the ceiling is
-  // set by the best evidence available: chatter on its own can suggest, it
-  // can't confirm.
-  const ceiling = unitsSold !== undefined ? 1 : views !== undefined ? 0.7 : 0.4;
+  // Re-weighting alone would let a single fortnight-old ad score as high as
+  // 4,000 sales, since it would be the only thing reporting. So the ceiling
+  // is set by the best evidence available.
+  //
+  // The marketplace rung matters more than it looks: four fifths of the
+  // catalog can never legitimately report unitsSold, so without a rung for
+  // "a real market exists, size unknown" every maker product would cap at
+  // 0.4 and the Trending feed would look dead on arrival.
+  //
+  // Ad evidence stops at 0.85 rather than 1. That gap is the coverage
+  // discount, made explicit: Meta's commercial data is EU-reaching ads only,
+  // so it is a leading indicator for a US seller, not a mirror.
+  const ceiling =
+    unitsSold !== undefined ? 1
+    : (adDaysLive ?? 0) >= 21 ? 0.85
+    : pressure !== undefined ? 0.6
+    : listings !== undefined ? 0.55
+    : 0.4;
 
   // A crowded market shaves up to a quarter off, never more.
   const heat = Math.round(Math.max(0, Math.min(1, positive * ceiling - crowding * 0.25)) * 100);
 
-  const sources = [...new Set(signals.map((s) => s.source))] as SourceName[];
+  const sources = [...new Set(signals.map((s) => s.source))].sort() as SourceName[];
+  const withAdvertiser = signals.find((s) => s.advertiserName);
+  const coverage = signals.find((s) => s.adCoverage)?.adCoverage;
 
   return {
     heat,
     ...(unitsSold !== undefined ? { unitsSold } : {}),
     ...(listings !== undefined ? { listings } : {}),
-    ...(mentions !== undefined ? { mentions } : {}),
-    ...(views !== undefined ? { views } : {}),
     ...(prices.length ? { priceLow: prices[0], priceHigh: prices[prices.length - 1] } : {}),
+    ...(ads !== undefined ? { ads } : {}),
+    ...(adDaysLive !== undefined ? { adDaysLive } : {}),
+    ...(adReach !== undefined ? { adReach } : {}),
+    ...(coverage ? { adCoverage: coverage } : {}),
+    ...(withAdvertiser?.advertiserName ? { advertiserName: withAdvertiser.advertiserName } : {}),
     sources,
     polledAt: todayISO(),
   };

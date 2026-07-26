@@ -1,0 +1,49 @@
+{
+  "_comment": "A real-shaped ads_archive response, hand-trimmed. Keeps the Meta adapter testable with no token and no network — which matters because approval isn't guaranteed and the parsing still has to be right if it ever lands. Field names and shapes match the Graph API docs: ad_creative_bodies and ad_creative_link_titles are ARRAYS, times are ISO, eu_total_reach is a number.",
+  "data": [
+    {
+      "id": "1029384756",
+      "page_id": "55512345",
+      "page_name": "Verdant Home",
+      "ad_delivery_start_time": "2026-05-02T00:00:00+0000",
+      "ad_delivery_stop_time": "2026-07-20T00:00:00+0000",
+      "ad_creative_bodies": ["Never overwater again — our self-watering planter does the thinking."],
+      "ad_creative_link_titles": ["Self-Watering Planter"],
+      "ad_creative_link_captions": ["verdanthome.co"],
+      "ad_snapshot_url": "https://www.facebook.com/ads/library/?id=1029384756",
+      "eu_total_reach": 412000
+    },
+    {
+      "id": "1029384757",
+      "page_id": "55512999",
+      "page_name": "Pot & Sprout",
+      "ad_delivery_start_time": "2026-07-10T00:00:00+0000",
+      "ad_creative_bodies": ["The self-watering planter your plants have been begging for."],
+      "ad_creative_link_titles": ["Shop planters"],
+      "ad_creative_link_captions": ["potandsprout.eu"],
+      "ad_snapshot_url": "https://www.facebook.com/ads/library/?id=1029384757",
+      "eu_total_reach": 31000
+    },
+    {
+      "id": "1029384758",
+      "page_id": "55513111",
+      "page_name": "Generic Dropship Co",
+      "ad_delivery_start_time": "2026-06-01T00:00:00+0000",
+      "ad_creative_bodies": ["Summer sale — everything must go!"],
+      "ad_creative_link_titles": ["Shop now"],
+      "ad_snapshot_url": "https://www.facebook.com/ads/library/?id=1029384758",
+      "eu_total_reach": 900000
+    },
+    {
+      "id": "1029384759",
+      "page_id": "55513222",
+      "page_name": "Empty Creative Co",
+      "ad_delivery_start_time": "2026-06-15T00:00:00+0000",
+      "ad_snapshot_url": "https://www.facebook.com/ads/library/?id=1029384759",
+      "eu_total_reach": 5000
+    }
+  ],
+  "paging": {
+    "cursors": { "after": "QVFIU" }
+  }
+}

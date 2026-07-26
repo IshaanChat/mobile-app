@@ -47,8 +47,11 @@ if (!key) {
 
 const args = process.argv.slice(2).filter((a) => a !== '--');
 const force = args.includes('--force');
-const file = args.find((a) => !a.startsWith('--'));
-if (!file) fail('Usage: npm run growth:images -- <file.json> [--force]');
+const fileArg = args.find((a) => !a.startsWith('--'));
+if (!fileArg) fail('Usage: npm run growth:images -- <file.json> [--force]');
+// Re-bound after the guard: `fail` is typed `never`, but the narrowing
+// doesn't reach the async writer below, so the compiler still sees undefined.
+const file: string = fileArg;
 
 let posts: Post[];
 try {

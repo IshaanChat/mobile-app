@@ -1,0 +1,18 @@
+// Typecheck the tooling.
+//
+// scripts/ has never been typechecked: the build tsconfig includes only src/,
+// which is why 'etsy' being absent from the SourceName union sat there
+// unnoticed while both the adapter and its tests used it. tsx and vitest
+// strip types without checking them, so nothing ever complained.
+//
+// Deliberately a separate file rather than adding scripts/ to tsconfig.json:
+// that config has rootDir/outDir set for the Render build, and widening it
+// would move the compiled output and break the deploy.
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "rootDir": "."
+  },
+  "include": ["scripts", "prisma"]
+}

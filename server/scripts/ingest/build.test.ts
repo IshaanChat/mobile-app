@@ -26,15 +26,15 @@ group('slugify', () => {
 group('describe', () => {
   it('writes from the numbers, and flags a crowded market honestly', () => {
     const crowded = describe(combine([
-      { source: 'aliexpress', unitsSold: 5000, price: 4 },
-      { source: 'ebay', listings: 3000 },
+      { source: 'aliexpress', scope: 'product', unitsSold: 5000, price: 4 },
+      { source: 'etsy', scope: 'category', listings: 3000 },
     ]));
     expect(crowded).toContain('5,000 sold');
     expect(crowded).toContain('crowded');
 
     const open = describe(combine([
-      { source: 'aliexpress', unitsSold: 5000, price: 4 },
-      { source: 'ebay', listings: 30 },
+      { source: 'aliexpress', scope: 'product', unitsSold: 5000, price: 4 },
+      { source: 'etsy', scope: 'category', listings: 30 },
     ]));
     expect(open).toContain('barely anyone selling it yet');
   });
@@ -55,13 +55,14 @@ group('resaleBand', () => {
 group('buildProduct', () => {
   const hit: Signal = {
     source: 'aliexpress',
+    scope: 'product',
     productTitle: '2024 Hot Sale Self-Watering Globe Planter, Free Shipping',
     unitsSold: 2400,
     price: 4.2,
     url: 'https://s.click.aliexpress.com/x',
     imageUrl: 'https://ae01.alicdn.com/x.jpg',
   };
-  const signals = combine([hit, { source: 'ebay', listings: 90 }]);
+  const signals = combine([hit, { source: 'etsy', scope: 'category', listings: 90 }]);
   const p = buildProduct(hit, 'plants-planters', signals);
 
   it('matches the schema the hand-written products use', () => {

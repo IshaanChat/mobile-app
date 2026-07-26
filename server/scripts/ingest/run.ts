@@ -15,18 +15,27 @@
  * Nothing here scrapes. Every source is an official, documented API.
  */
 
+// Adapters read their credentials lazily, but this still has to happen before
+// anything calls configured(). Same one-liner src/index.ts uses.
+try {
+  process.loadEnvFile();
+} catch {
+  /* no .env — the environment may already carry the keys */
+}
+
 import { readdirSync, readFileSync, writeFileSync } from 'fs';
+import { resolve } from 'path';
 import { buildProduct, cleanTitle, slugify } from './build';
 import { combine, saturationOf } from './score';
-import { safeSearch, type Adapter, type Signal } from './types';
+import { safeSearch, type Adapter, type Signal, type SignalScope } from './types';
 import { aliexpress } from './sources/aliexpress';
 import { etsy } from './sources/etsy';
-import { ebay } from './sources/ebay';
-import { reddit } from './sources/reddit';
-import { youtube } from './sources/youtube';
+import { meta } from './sources/meta';
 
-const DIR = 'content';
-const ADAPTERS: Adapter[] = [aliexpress, etsy, ebay, reddit, youtube];
+// Resolved from this file rather than the cwd, which used to mean running
+// ingest from anywhere but server/ silently found no products at all.
+const DIR = resolve(__dirname, '..', '..', 'content');
+const ADAPTERS: Adapter[] = [aliexpress, etsy, meta];
 
 const args = process.argv.slice(2).filter((a) => a !== '--');
 const has = (f: string) => args.includes(f);
@@ -58,10 +67,66 @@ function writeFile(f: string, list: any[]) {
   writeFileSync(`${DIR}/products/${f}`, JSON.stringify(list, null, 2) + '\n');
 }
 
-async function gather(keyword: string, live: Adapter[]): Promise<Signal[]> {
+/** Products the seller buys to resell, versus ones they make themselves. */
+const RESELLS = new Set(['DROPSHIP', 'WHOLESALE']);
+
+/**
+ * The supply term already sits in the authored data: sourcingUrl points at
+ * something like .../wholesale-pottery-glaze.html. Recovering it is better
+ * than guessing, because the curator already decided what this is made from.
+ */
+function supplyTerm(p: any): string {
+  const fromUrl = String(p.sourcingUrl ?? '')
+    .replace(/^.*\/(?:w\/)?(?:wholesale-)?/, '')
+    .replace(/\.html?.*$/, '')
+    .replace(/[-_]+/g, ' ')
+    .trim();
+  return fromUrl || p.imageQuery || p.title;
+}
+
+/**
+ * Which adapter gets which keyword, and — crucially — what its answer is
+ * about. For something the seller makes, AliExpress is being asked about
+ * materials, so its volume is priced but never counted as demand.
+ */
+function planFor(p: any): { adapter: Adapter; keyword: string; scope: SignalScope }[] {
+  const resells = RESELLS.has(p.sourcingType);
+  return [
+    { adapter: aliexpress, keyword: resells ? p.title : supplyTerm(p), scope: resells ? 'product' : 'supply' },
+    // Etsy always measures the market the seller actually sells into.
+    { adapter: etsy, keyword: p.title, scope: 'category' },
+    { adapter: meta, keyword: p.imageQuery || p.title, scope: 'category' },
+  ];
+}
+
+// Meta allows roughly 200 calls an hour and counts pagination against it.
+// Blowing that throttles the token for everything, so the run spends a fixed
+// budget and then stops asking — a nightly cron covers the catalog over a
+// couple of nights instead of failing halfway through one.
+const META_BUDGET = Number(process.env.META_CALLS_PER_RUN) || 150;
+let metaCallsUsed = 0;
+let metaBudgetWarned = false;
+
+async function gather(
+  plan: { adapter: Adapter; keyword: string; scope: SignalScope }[],
+  live: Adapter[]
+): Promise<Signal[]> {
   const out: Signal[] = [];
-  for (const a of live) {
-    out.push(...(await safeSearch(a, keyword)));
+  for (const step of plan) {
+    if (!live.includes(step.adapter)) continue;
+    if (step.adapter.name === 'meta') {
+      if (metaCallsUsed >= META_BUDGET) {
+        if (!metaBudgetWarned) {
+          console.log(
+            `  \x1b[33mMeta budget of ${META_BUDGET} calls spent — skipping it for the rest of this run.\x1b[0m`
+          );
+          metaBudgetWarned = true;
+        }
+        continue;
+      }
+      metaCallsUsed++;
+    }
+    out.push(...(await safeSearch(step.adapter, step.keyword, step.scope)));
     await delay(250); // stay well inside every rate limit
   }
   return out;
@@ -78,14 +143,15 @@ async function refresh(live: Adapter[]) {
     let changed = false;
     for (const p of list) {
       if (ONLY_NICHE && p.nicheSlug !== ONLY_NICHE) continue;
-      const keyword = p.imageQuery || p.title;
-      const signals = combine(await gather(keyword, live));
+      const signals = combine(await gather(planFor(p), live));
       if (!signals.sources.length) {
         console.log(`  \x1b[90m· ${p.title} — nothing reported\x1b[0m`);
         continue;
       }
+      // Only `signals` is written. `hotness` is the curator's number and this
+      // used to overwrite it in place, which lost it for good — and with it
+      // any way to ask whether the machine actually beats the human.
       p.signals = signals;
-      p.hotness = signals.heat;
       changed = true;
       touched++;
       console.log(
@@ -118,7 +184,9 @@ async function discover(live: Adapter[]) {
     const keyword = niche.tags.split(',')[0].trim() || niche.name;
 
     console.log(`\n\x1b[1m${niche.name}\x1b[0m  (${keyword})`);
-    const found = await safeSearch(aliexpress, keyword);
+    // Discovery asks AliExpress for actual listings, so each hit IS the
+    // product — the one place 'product' scope is honest for a raw search.
+    const found = await safeSearch(aliexpress, keyword, 'product');
     const top = found
       .filter((s) => s.productTitle && (s.unitsSold ?? 0) > 0)
       .sort((a, b) => (b.unitsSold ?? 0) - (a.unitsSold ?? 0))
@@ -128,9 +196,13 @@ async function discover(live: Adapter[]) {
       const slug = slugify(cleanTitle(hit.productTitle ?? ''));
       if (!slug || seen.has(slug)) continue;
 
-      // Corroborate this specific product across the other sources.
-      const others = live.filter((a) => a.name !== 'aliexpress');
-      const signals = combine([hit, ...(await gather(cleanTitle(hit.productTitle ?? ''), others))]);
+      // Corroborate this specific product across the other sources. They
+      // describe the market around it, not the listing itself.
+      const title = cleanTitle(hit.productTitle ?? '');
+      const others = live
+        .filter((a) => a.name !== 'aliexpress')
+        .map((adapter) => ({ adapter, keyword: title, scope: 'category' as const }));
+      const signals = combine([hit, ...(await gather(others, live))]);
       const product = buildProduct(hit, niche.slug, signals);
 
       list.push(product);
@@ -158,7 +230,10 @@ async function main() {
   if (!live.length) {
     console.error(
       '\n\x1b[31mNo sources configured, so there is nothing to ingest.\x1b[0m\n' +
-        'Add at least one key to server/.env — eBay, Reddit and YouTube are all instant approvals.'
+        'Add at least one key to server/.env. Etsy is the quickest to get and\n' +
+        'unlocks saturation for the handmade half of the catalog; AliExpress is\n' +
+        'the one that matters, since it is the only source returning real\n' +
+        'products, costs and a sourcing link.'
     );
     process.exit(1);
   }

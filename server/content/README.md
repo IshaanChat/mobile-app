@@ -71,30 +71,51 @@ are skipped, so this works from your first approval:
 | Source | What it gives | Getting a key |
 |---|---|---|
 | `ALIEXPRESS_APP_KEY` + `_APP_SECRET` | units sold, unit cost, image, **commission-paying link** | portals.aliexpress.com — few days |
-| `ETSY_API_KEY` | handmade listing counts + price band | developers.etsy.com — instant |
-| `EBAY_CLIENT_ID` + `_CLIENT_SECRET` | competing listings, price band | developer.ebay.com — instant |
-| `REDDIT_CLIENT_ID` + `_CLIENT_SECRET` | community mentions | reddit.com/prefs/apps — instant |
-| `YOUTUBE_API_KEY` | review-video views | console.cloud.google.com — instant |
+| `ETSY_API_KEY` | handmade listing counts + price band | developers.etsy.com — allow a few days |
+| `META_ACCESS_TOKEN` | ad pressure: how many creatives, how long live | facebook.com/ads/library/api — ID check + app review, **not guaranteed** |
+
+Three sources, down from five. Reddit mentions and YouTube views were dropped:
+both were capped so low by the scorer that they rarely moved a result, and each
+was another OAuth flow to keep alive. eBay went too — its median price is
+used and mass-produced stock, and feeding that into `typicalResale` for a
+hand-thrown mug is worse than showing no number at all. Etsy is the right
+marketplace for a catalog that is four-fifths things you make.
 
 `--discover` needs AliExpress specifically, since it's the only source that
 returns actual products to create entries from.
 
-Scoring weights units sold highest and chatter lowest, and **subtracts** for a
-crowded market. A product evidenced only by chatter is capped well below one
-with real sales — you can suggest from talk, you can't confirm.
+**Scope is the thing to understand.** For anything you make, AliExpress is
+being asked about *materials* — the keyword comes from `sourcingUrl`, so for
+hand-thrown mugs it searches pottery glaze. Glaze volume is not mug demand, so
+supply-scoped signals contribute their price and nothing else. Only a search
+where the keyword *is* the sellable product can report units sold.
+
+Scoring weights units sold highest, then ad pressure, and **subtracts** for a
+crowded market. Ad evidence is capped below sales evidence: Meta's commercial
+data covers EU-reaching ads only, so it is a leading indicator, not a mirror.
+An ad still running after three weeks counts for much more than ten launched
+last week — one is a business paying daily, the other is a test.
 
 ```jsonc
 "signals": {
-  "heat": 78,               // drives ranking; replaces hand-set hotness
-  "unitsSold": 2400, "listings": 90, "views": 1900000, "mentions": 47,
+  "heat": 78,               // machine-measured; never overwrites your hotness
+  "unitsSold": 2400, "listings": 90,
   "priceLow": 4.20, "priceHigh": 6.10,
-  "sources": ["aliexpress","ebay","youtube"],
+  "ads": 3, "adDaysLive": 79, "adReach": 443000, "adCoverage": "EU",
+  "advertiserName": "Verdant Home",
+  "sources": ["aliexpress","etsy","meta"],
   "polledAt": "2026-07-26"
 }
 ```
 
-Discover shows it: a "▲ 2.4k sold" chip on the card and a demand breakdown
-inside. Saturation is derived from listing counts rather than hand-set.
+`hotness` is yours and ingest no longer touches it — it used to overwrite the
+field in place, which lost your judgement for good. Both are kept so the feed
+can prefer measured `heat` where it exists and still fall back to you.
+
+Discover shows it: a "2.4k sold" chip on the card and a demand breakdown
+inside. Saturation is derived from listing counts rather than hand-set. If
+Meta access never comes through, the research bench fills the same ad fields
+by hand and the card renders identically — see the `research` block below.
 
 **Why not TikTok or Shopify data?** Neither offers an API for it. Shopify's
 cross-store sales data is private to each merchant; the tools that show it
