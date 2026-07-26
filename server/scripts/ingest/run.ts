@@ -31,11 +31,12 @@ import { safeSearch, type Adapter, type Signal, type SignalScope } from './types
 import { aliexpress } from './sources/aliexpress';
 import { etsy } from './sources/etsy';
 import { meta } from './sources/meta';
+import { wikipedia } from './sources/wikipedia';
 
 // Resolved from this file rather than the cwd, which used to mean running
 // ingest from anywhere but server/ silently found no products at all.
 const DIR = resolve(__dirname, '..', '..', 'content');
-const ADAPTERS: Adapter[] = [aliexpress, etsy, meta];
+const ADAPTERS: Adapter[] = [aliexpress, etsy, meta, wikipedia];
 
 const args = process.argv.slice(2).filter((a) => a !== '--');
 const has = (f: string) => args.includes(f);
@@ -89,13 +90,19 @@ function supplyTerm(p: any): string {
  * about. For something the seller makes, AliExpress is being asked about
  * materials, so its volume is priced but never counted as demand.
  */
-function planFor(p: any): { adapter: Adapter; keyword: string; scope: SignalScope }[] {
+function planFor(p: any, niche?: any): { adapter: Adapter; keyword: string; scope: SignalScope }[] {
   const resells = RESELLS.has(p.sourcingType);
   return [
     { adapter: aliexpress, keyword: resells ? p.title : supplyTerm(p), scope: resells ? 'product' : 'supply' },
     // Etsy always measures the market the seller actually sells into.
     { adapter: etsy, keyword: p.title, scope: 'category' },
     { adapter: meta, keyword: p.imageQuery || p.title, scope: 'category' },
+    // Readership is a property of the subject, not the listing, so it is
+    // asked once per niche. `wikiTitle` exists because "Ceramics & pottery"
+    // is not an article and "Pottery" is — and a near-miss title returns
+    // plausible-looking single-digit numbers rather than an error, so the
+    // curator names it explicitly.
+    { adapter: wikipedia, keyword: niche?.wikiTitle || niche?.name || '', scope: 'category' },
   ];
 }
 
@@ -143,7 +150,7 @@ async function refresh(live: Adapter[]) {
     let changed = false;
     for (const p of list) {
       if (ONLY_NICHE && p.nicheSlug !== ONLY_NICHE) continue;
-      const signals = combine(await gather(planFor(p), live));
+      const signals = combine(await gather(planFor(p, nicheBySlug[p.nicheSlug]), live));
       if (!signals.sources.length) {
         console.log(`  \x1b[90m· ${p.title} — nothing reported\x1b[0m`);
         continue;

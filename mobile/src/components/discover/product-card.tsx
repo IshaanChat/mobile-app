@@ -120,7 +120,10 @@ export function ProductCard({
             <View style={styles.where}>
               <ThemedText type="small" themeColor="textSecondary">Where to source</ThemedText>
               <ThemedText type="small">
-                {product.sourceName}
+                {/* A named merchant found in a live catalog beats the
+                    authored source, because it's a real listing rather than
+                    a search we hope returns something. */}
+                {product.evidence?.liveMerchant ?? product.sourceName}
                 {product.sourcingType ? ` · ${SOURCING_LABELS[product.sourcingType]}` : ''}
               </ThemedText>
             </View>

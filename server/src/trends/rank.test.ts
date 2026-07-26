@@ -136,3 +136,75 @@ describe('scoreTrending', () => {
       .toBeGreaterThan(scoreTrending(offInterest, tokens('jewelry'), NOW));
   });
 });
+
+describe('readership as a stand-in for the heat delta', () => {
+  // Measured against the real API, 37 of 41 subjects were declining over a
+  // summer window. Judged in absolute terms almost everything would score
+  // zero momentum, so the cohort's median sets the zero point instead.
+  const declining = (id: string, interestTrend: number) =>
+    card({ id, heat: 50, interestTrend });
+
+  const cohort = [
+    declining('a', 0.86),
+    declining('b', 0.9),
+    declining('c', 0.9),
+    declining('d', 0.95),
+    declining('holding', 0.99),
+  ];
+
+  it('surfaces the subject losing ground slowest in a falling cohort', () => {
+    const ranked = rankCards(cohort, new Set(), NOW, scoreTrending);
+    expect(ranked[0].id).toBe('holding');
+  });
+
+  it('gives no credit at all for falling faster than the cohort', () => {
+    // Everything at or below the median clamps to zero momentum rather than
+    // going negative, so steep decliners tie at the bottom instead of being
+    // ranked against each other. Ordering among them falls to demand, which
+    // is the honest answer: we know they're all sinking, not which sinks best.
+    const baseline = 0.9;
+    expect(scoreTrending(declining('steep', 0.7), new Set(), NOW, baseline))
+      .toBe(scoreTrending(declining('mild', 0.86), new Set(), NOW, baseline));
+    expect(scoreTrending(declining('holding', 0.99), new Set(), NOW, baseline))
+      .toBeGreaterThan(scoreTrending(declining('steep', 0.7), new Set(), NOW, baseline));
+  });
+
+  it('gives every product a trending signal on a fresh catalog', () => {
+    // The point of the whole exercise: no product here has heatPrev, so
+    // before this the entire sort collapsed to a tie on hotness.
+    const scores = cohort.map((c) => scoreTrending(c, new Set(), NOW, 0.9));
+    expect(new Set(scores).size).toBeGreaterThan(1);
+  });
+
+  it('stops reading readership once two real polls exist', () => {
+    // Readership is a stand-in, not a rival. Once there's a measured delta
+    // the inferred one must not leak in — otherwise a subject Wikipedia
+    // likes would keep scoring after the pipeline had watched it go cold.
+    const cold = card({ id: 'cold', heat: 50, heatPrev: 50, interestTrend: 2 });
+    const coldNoTrend = card({ id: 'cold2', heat: 50, heatPrev: 50 });
+    expect(scoreTrending(cold, new Set(), NOW, 1))
+      .toBe(scoreTrending(coldNoTrend, new Set(), NOW, 1));
+  });
+
+  it('does not let two hot niches alternate forever', () => {
+    // Readership is measured per subject, so every product in a niche scores
+    // identically. Against only the previous pick, two niches would trade
+    // places A-B-A-B and escape the penalty on every other turn — the feed
+    // showed exactly two shelves interleaved before this was widened.
+    const cards = [
+      ...[1, 2, 3, 4].map((n) => card({ id: `a${n}`, category: 'Art', heat: 60, interestTrend: 1.4 })),
+      ...[1, 2, 3, 4].map((n) => card({ id: `b${n}`, category: 'Beauty', heat: 60, interestTrend: 1.4 })),
+      ...[1, 2].map((n) => card({ id: `c${n}`, category: 'Coffee', heat: 55, interestTrend: 1.2 })),
+    ];
+    const ranked = rankCards(cards, new Set(), NOW, scoreTrending);
+    const firstCoffee = ranked.findIndex((c) => c.category === 'Coffee');
+    expect(firstCoffee).toBeGreaterThanOrEqual(0);
+    expect(firstCoffee).toBeLessThan(6);
+  });
+
+  it('falls back to absolute when the cohort is too small to mean anything', () => {
+    const pair = [card({ id: 'up', heat: 50, interestTrend: 1.5 }), card({ id: 'flat', heat: 50, interestTrend: 1 })];
+    const ranked = rankCards(pair, new Set(), NOW, scoreTrending);
+    expect(ranked[0].id).toBe('up');
+  });
+});

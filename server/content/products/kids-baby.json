@@ -12,7 +12,16 @@
     "hotness": 58,
     "imageQuery": "knitted baby booties soft neutral",
     "imageUrl": "https://images.pexels.com/photos/5360746/pexels-photo-5360746.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Tilsa Tanaka / Pexels"
+    "imageCredit": "Tilsa Tanaka / Pexels",
+    "signals": {
+      "heat": 38,
+      "interest": 214,
+      "interestTrend": 1.08,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "personalised-baby-name-blankets",
@@ -27,7 +36,16 @@
     "hotness": 64,
     "imageQuery": "baby blanket knitted nursery soft",
     "imageUrl": "https://images.pexels.com/photos/4886896/pexels-photo-4886896.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "www.kaboompics.com / Pexels"
+    "imageCredit": "www.kaboompics.com / Pexels",
+    "signals": {
+      "heat": 38,
+      "interest": 214,
+      "interestTrend": 1.08,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "organic-cotton-romper-sets",
@@ -42,7 +60,16 @@
     "hotness": 56,
     "imageQuery": "baby clothes organic cotton folded",
     "imageUrl": "https://images.pexels.com/photos/7282431/pexels-photo-7282431.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Sarah  Chai / Pexels"
+    "imageCredit": "Sarah  Chai / Pexels",
+    "signals": {
+      "heat": 38,
+      "interest": 214,
+      "interestTrend": 1.08,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "milestone-blanket-and-monthly-sets",
@@ -57,7 +84,16 @@
     "hotness": 58,
     "imageQuery": "baby bodysuit milestone photo month",
     "imageUrl": "https://images.pexels.com/photos/37621762/pexels-photo-37621762.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "CAMERA TREASURE / Pexels"
+    "imageCredit": "CAMERA TREASURE / Pexels",
+    "signals": {
+      "heat": 38,
+      "interest": 214,
+      "interestTrend": 1.08,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "crochet-comfort-plushies-jellyfish-frogs",
@@ -72,7 +108,16 @@
     "hotness": 64,
     "imageQuery": "crochet plush animals handmade",
     "imageUrl": "https://images.pexels.com/photos/36186907/pexels-photo-36186907.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Heriberto Jahir Medina / Pexels"
+    "imageCredit": "Heriberto Jahir Medina / Pexels",
+    "signals": {
+      "heat": 40,
+      "interest": 323,
+      "interestTrend": 0.985,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "wooden-montessori-toys",
@@ -87,7 +132,16 @@
     "hotness": 58,
     "imageQuery": "wooden montessori toys natural baby",
     "imageUrl": "https://images.pexels.com/photos/6743164/pexels-photo-6743164.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Polina Tankilevitch / Pexels"
+    "imageCredit": "Polina Tankilevitch / Pexels",
+    "signals": {
+      "heat": 40,
+      "interest": 323,
+      "interestTrend": 0.985,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "amigurumi-patterns-pdf",
@@ -102,7 +156,16 @@
     "hotness": 60,
     "imageQuery": "crochet pattern hook yarn notebook",
     "imageUrl": "https://images.pexels.com/photos/4500752/pexels-photo-4500752.png?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Karina Lopez / Pexels"
+    "imageCredit": "Karina Lopez / Pexels",
+    "signals": {
+      "heat": 40,
+      "interest": 323,
+      "interestTrend": 0.985,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "personalised-plushies-with-names",
@@ -117,7 +180,16 @@
     "hotness": 56,
     "imageQuery": "plush toy teddy personalised nursery",
     "imageUrl": "https://images.pexels.com/photos/4887104/pexels-photo-4887104.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "www.kaboompics.com / Pexels"
+    "imageCredit": "www.kaboompics.com / Pexels",
+    "signals": {
+      "heat": 40,
+      "interest": 323,
+      "interestTrend": 0.985,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "baby-milestone-card-sets",
@@ -132,7 +204,16 @@
     "hotness": 58,
     "imageQuery": "nursery shelf neutral decor",
     "imageUrl": "https://images.pexels.com/photos/9240642/pexels-photo-9240642.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Alberta Studios / Pexels"
+    "imageCredit": "Alberta Studios / Pexels",
+    "signals": {
+      "heat": 26,
+      "interest": 42,
+      "interestTrend": 0.938,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "custom-name-nursery-signs",
@@ -147,7 +228,16 @@
     "hotness": 60,
     "imageQuery": "wooden letters name wall decor",
     "imageUrl": "https://images.pexels.com/photos/29509332/pexels-photo-29509332.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Matheus Bertelli / Pexels"
+    "imageCredit": "Matheus Bertelli / Pexels",
+    "signals": {
+      "heat": 26,
+      "interest": 42,
+      "interestTrend": 0.938,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "printable-nursery-art-bundles",
@@ -162,7 +252,16 @@
     "hotness": 56,
     "imageQuery": "nursery wall art prints baby room",
     "imageUrl": "https://images.pexels.com/photos/2098456/pexels-photo-2098456.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Tyra Xu / Pexels"
+    "imageCredit": "Tyra Xu / Pexels",
+    "signals": {
+      "heat": 26,
+      "interest": 42,
+      "interestTrend": 0.938,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "felt-name-garlands-and-mobiles",
@@ -177,6 +276,15 @@
     "hotness": 52,
     "imageQuery": "felt mobile nursery hanging decor",
     "imageUrl": "https://images.pexels.com/photos/11369154/pexels-photo-11369154.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Anna Shvets / Pexels"
+    "imageCredit": "Anna Shvets / Pexels",
+    "signals": {
+      "heat": 26,
+      "interest": 42,
+      "interestTrend": 0.938,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   }
 ]

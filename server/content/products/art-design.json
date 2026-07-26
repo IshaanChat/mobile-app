@@ -12,7 +12,16 @@
     "hotness": 62,
     "imageQuery": "illustrator drawing tablet studio",
     "imageUrl": "https://images.pexels.com/photos/29940157/pexels-photo-29940157.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Jakub Zerdzicki / Pexels"
+    "imageCredit": "Jakub Zerdzicki / Pexels",
+    "signals": {
+      "heat": 40,
+      "interest": 321,
+      "interestTrend": 1.001,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "custom-house-portrait-illustrations",
@@ -27,7 +36,16 @@
     "hotness": 64,
     "imageQuery": "house illustration drawing watercolour",
     "imageUrl": "https://images.pexels.com/photos/37712111/pexels-photo-37712111.png?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Mayara Caroline  Mombelli / Pexels"
+    "imageCredit": "Mayara Caroline  Mombelli / Pexels",
+    "signals": {
+      "heat": 40,
+      "interest": 321,
+      "interestTrend": 1.001,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "illustrated-recipe-prints",
@@ -42,7 +60,16 @@
     "hotness": 56,
     "imageQuery": "kitchen recipe print framed wall",
     "imageUrl": "https://images.pexels.com/photos/8843986/pexels-photo-8843986.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "AI25.Studio  AI GENERATIVE / Pexels"
+    "imageCredit": "AI25.Studio  AI GENERATIVE / Pexels",
+    "signals": {
+      "heat": 40,
+      "interest": 321,
+      "interestTrend": 1.001,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "procreate-brush-sets",
@@ -57,7 +84,16 @@
     "hotness": 58,
     "imageQuery": "ipad drawing stylus digital art",
     "imageUrl": "https://images.pexels.com/photos/4238489/pexels-photo-4238489.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Ivan S / Pexels"
+    "imageCredit": "Ivan S / Pexels",
+    "signals": {
+      "heat": 40,
+      "interest": 321,
+      "interestTrend": 1.001,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "renaissance-pet-portraits-digital",
@@ -72,7 +108,16 @@
     "hotness": 64,
     "imageQuery": "artist painting dog portrait",
     "imageUrl": "https://images.pexels.com/photos/7858878/pexels-photo-7858878.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Greta Hoffman / Pexels"
+    "imageCredit": "Greta Hoffman / Pexels",
+    "signals": {
+      "heat": 42,
+      "interest": 377,
+      "interestTrend": 1.429,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "family-line-art-portraits",
@@ -87,7 +132,16 @@
     "hotness": 62,
     "imageQuery": "line art portrait minimal drawing",
     "imageUrl": "https://images.pexels.com/photos/15269511/pexels-photo-15269511.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Designecologist / Pexels"
+    "imageCredit": "Designecologist / Pexels",
+    "signals": {
+      "heat": 42,
+      "interest": 377,
+      "interestTrend": 1.429,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "pet-portrait-socks-and-mugs",
@@ -102,7 +156,16 @@
     "hotness": 58,
     "imageQuery": "photo printed mug gift custom",
     "imageUrl": "https://images.pexels.com/photos/3493047/pexels-photo-3493047.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Brett Sayles / Pexels"
+    "imageCredit": "Brett Sayles / Pexels",
+    "signals": {
+      "heat": 42,
+      "interest": 377,
+      "interestTrend": 1.429,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "wedding-venue-illustrations",
@@ -117,7 +180,16 @@
     "hotness": 54,
     "imageQuery": "wedding venue sketch illustration",
     "imageUrl": "https://images.pexels.com/photos/7283181/pexels-photo-7283181.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "www.kaboompics.com / Pexels"
+    "imageCredit": "www.kaboompics.com / Pexels",
+    "signals": {
+      "heat": 42,
+      "interest": 377,
+      "interestTrend": 1.429,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "film-photography-print-drops-limited-runs",
@@ -132,7 +204,16 @@
     "hotness": 56,
     "imageQuery": "photographer holding printed photos",
     "imageUrl": "https://images.pexels.com/photos/7014874/pexels-photo-7014874.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "George Milton / Pexels"
+    "imageCredit": "George Milton / Pexels",
+    "signals": {
+      "heat": 34,
+      "interest": 121,
+      "interestTrend": 0.853,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "stock-photo-bundles-for-small-brands",
@@ -147,7 +228,16 @@
     "hotness": 54,
     "imageQuery": "flatlay product photography setup",
     "imageUrl": "https://images.pexels.com/photos/7610451/pexels-photo-7610451.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Leeloo The First / Pexels"
+    "imageCredit": "Leeloo The First / Pexels",
+    "signals": {
+      "heat": 34,
+      "interest": 121,
+      "interestTrend": 0.853,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "local-landmark-postcard-packs",
@@ -162,7 +252,16 @@
     "hotness": 48,
     "imageQuery": "postcards travel photography stack",
     "imageUrl": "https://images.pexels.com/photos/3234893/pexels-photo-3234893.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Miray Bostancı / Pexels"
+    "imageCredit": "Miray Bostancı / Pexels",
+    "signals": {
+      "heat": 34,
+      "interest": 121,
+      "interestTrend": 0.853,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "lightroom-preset-packs-photography",
@@ -177,7 +276,16 @@
     "hotness": 60,
     "imageQuery": "photo editing laptop lightroom desk",
     "imageUrl": "https://images.pexels.com/photos/7610461/pexels-photo-7610461.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Leeloo The First / Pexels"
+    "imageCredit": "Leeloo The First / Pexels",
+    "signals": {
+      "heat": 34,
+      "interest": 121,
+      "interestTrend": 0.853,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "waterproof-niche-sticker-packs-6-packs",
@@ -192,7 +300,16 @@
     "hotness": 58,
     "imageQuery": "laptop covered vinyl stickers",
     "imageUrl": "https://images.pexels.com/photos/17567386/pexels-photo-17567386.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Arindam Raha / Pexels"
+    "imageCredit": "Arindam Raha / Pexels",
+    "signals": {
+      "heat": 35,
+      "interest": 153,
+      "interestTrend": 0.868,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "sticker-sheets-for-planners",
@@ -207,7 +324,16 @@
     "hotness": 56,
     "imageQuery": "planner stickers sheets colorful",
     "imageUrl": "https://images.pexels.com/photos/30154200/pexels-photo-30154200.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "ansiveg / Pexels"
+    "imageCredit": "ansiveg / Pexels",
+    "signals": {
+      "heat": 35,
+      "interest": 153,
+      "interestTrend": 0.868,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "custom-car-window-decals",
@@ -222,7 +348,16 @@
     "hotness": 52,
     "imageQuery": "vinyl decal car window lettering",
     "imageUrl": "https://images.pexels.com/photos/27703375/pexels-photo-27703375.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Erik Mclean / Pexels"
+    "imageCredit": "Erik Mclean / Pexels",
+    "signals": {
+      "heat": 35,
+      "interest": 153,
+      "interestTrend": 0.868,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "sticker-club-subscriptions",
@@ -237,7 +372,16 @@
     "hotness": 54,
     "imageQuery": "subscription box stickers envelope mail",
     "imageUrl": "https://images.pexels.com/photos/7430701/pexels-photo-7430701.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "alleksana / Pexels"
+    "imageCredit": "alleksana / Pexels",
+    "signals": {
+      "heat": 35,
+      "interest": 153,
+      "interestTrend": 0.868,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "niche-fandom-enamel-pin-runs",
@@ -252,7 +396,16 @@
     "hotness": 58,
     "imageQuery": "enamel pins collection jacket",
     "imageUrl": "https://images.pexels.com/photos/10503602/pexels-photo-10503602.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "RDNE Stock project / Pexels"
+    "imageCredit": "RDNE Stock project / Pexels",
+    "signals": {
+      "heat": 34,
+      "interest": 127,
+      "interestTrend": 0.906,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "acrylic-keychain-charms",
@@ -267,7 +420,16 @@
     "hotness": 56,
     "imageQuery": "acrylic charm keychain cute",
     "imageUrl": "https://images.pexels.com/photos/19102028/pexels-photo-19102028.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Masood Aslami / Pexels"
+    "imageCredit": "Masood Aslami / Pexels",
+    "signals": {
+      "heat": 34,
+      "interest": 127,
+      "interestTrend": 0.906,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "convention-artist-alley-bundles",
@@ -282,7 +444,16 @@
     "hotness": 52,
     "imageQuery": "convention artist table merch display",
     "imageUrl": "https://images.pexels.com/photos/29901198/pexels-photo-29901198.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Mario Spencer / Pexels"
+    "imageCredit": "Mario Spencer / Pexels",
+    "signals": {
+      "heat": 34,
+      "interest": 127,
+      "interestTrend": 0.906,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "pin-display-banners-and-boards",
@@ -297,6 +468,15 @@
     "hotness": 46,
     "imageQuery": "felt banner wall pins display",
     "imageUrl": "https://images.pexels.com/photos/19897071/pexels-photo-19897071.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Michaela St / Pexels"
+    "imageCredit": "Michaela St / Pexels",
+    "signals": {
+      "heat": 34,
+      "interest": 127,
+      "interestTrend": 0.906,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   }
 ]

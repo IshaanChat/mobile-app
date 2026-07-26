@@ -240,6 +240,17 @@ export interface DiscoverEvidence {
   adCount: number | null;
   adDaysLive: number | null;
   adReach: number | null;
+  /** Mean daily readers of the subject. Attention, not purchases. */
+  interest: number | null;
+  /**
+   * Recent month's readership over the previous month's. Below 1 is a
+   * decline — and most subjects decline most of the time, so this is only
+   * meaningful next to what its peers are doing.
+   */
+  interestTrend: number | null;
+  /** A live merchant listing, when one was found, and who sells it. */
+  liveSourcingUrl: string | null;
+  liveMerchant: string | null;
   /** 'meta' (the API) or 'manual' (logged at the research bench). */
   adSource: string | null;
   /** 'EU' when the ad data covers EU-reaching ads only, as Meta's does. */

@@ -30,7 +30,10 @@ export function EvidenceBox({ evidence }: { evidence: DiscoverEvidence | null })
 
   const stale = daysSincePolled(evidence.polledAt);
   const hasMarket =
-    evidence.unitsSold !== null || evidence.listings !== null || evidence.priceLow !== null;
+    evidence.unitsSold !== null ||
+    evidence.listings !== null ||
+    evidence.priceLow !== null ||
+    evidence.interest !== null;
   const hasAds = evidence.adDaysLive !== null || evidence.adCount !== null;
 
   return (
@@ -68,6 +71,17 @@ export function EvidenceBox({ evidence }: { evidence: DiscoverEvidence | null })
                 evidence.priceHigh && evidence.priceHigh !== evidence.priceLow
                   ? `$${evidence.priceLow.toFixed(2)}–${evidence.priceHigh.toFixed(2)}`
                   : `$${evidence.priceLow.toFixed(2)}`
+              }
+            />
+          ) : null}
+          {evidence.interest !== null ? (
+            <Row
+              label="People reading about it"
+              value={
+                `${compact(evidence.interest)}/day` +
+                (evidence.interestTrend !== null
+                  ? `  ${evidence.interestTrend >= 1 ? '+' : ''}${Math.round((evidence.interestTrend - 1) * 100)}%`
+                  : '')
               }
             />
           ) : null}

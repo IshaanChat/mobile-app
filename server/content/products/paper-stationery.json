@@ -12,7 +12,16 @@
     "hotness": 60,
     "imageQuery": "greeting cards display shop",
     "imageUrl": "https://images.pexels.com/photos/28780231/pexels-photo-28780231.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Nikki Villanueva / Pexels"
+    "imageCredit": "Nikki Villanueva / Pexels",
+    "signals": {
+      "heat": 33,
+      "interest": 105,
+      "interestTrend": 0.903,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "pressed-flower-cards",
@@ -27,7 +36,16 @@
     "hotness": 54,
     "imageQuery": "pressed flowers card handmade paper",
     "imageUrl": "https://images.pexels.com/photos/11066932/pexels-photo-11066932.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Merve  Bayar / Pexels"
+    "imageCredit": "Merve  Bayar / Pexels",
+    "signals": {
+      "heat": 33,
+      "interest": 105,
+      "interestTrend": 0.903,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "card-multipacks-and-boxed-sets",
@@ -42,7 +60,16 @@
     "hotness": 52,
     "imageQuery": "boxed stationery card set gift",
     "imageUrl": "https://images.pexels.com/photos/12080066/pexels-photo-12080066.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Melike  B / Pexels"
+    "imageCredit": "Melike  B / Pexels",
+    "signals": {
+      "heat": 33,
+      "interest": 105,
+      "interestTrend": 0.903,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "wholesale-cards-to-gift-shops",
@@ -57,7 +84,16 @@
     "hotness": 50,
     "imageQuery": "stationery boutique shelves interior",
     "imageUrl": "https://images.pexels.com/photos/5490917/pexels-photo-5490917.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Rachel Claire / Pexels"
+    "imageCredit": "Rachel Claire / Pexels",
+    "signals": {
+      "heat": 33,
+      "interest": 105,
+      "interestTrend": 0.903,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "adhd-friendly-daily-planners",
@@ -72,7 +108,16 @@
     "hotness": 62,
     "imageQuery": "open planner desk coffee flatlay",
     "imageUrl": "https://images.pexels.com/photos/2736499/pexels-photo-2736499.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Content Pixie / Pexels"
+    "imageCredit": "Content Pixie / Pexels",
+    "signals": {
+      "heat": 26,
+      "interest": 38,
+      "interestTrend": 0.961,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "guided-journals-for-one-thing",
@@ -87,7 +132,16 @@
     "hotness": 58,
     "imageQuery": "guided journal writing hands desk",
     "imageUrl": "https://images.pexels.com/photos/11435019/pexels-photo-11435019.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Alina Vilchenko / Pexels"
+    "imageCredit": "Alina Vilchenko / Pexels",
+    "signals": {
+      "heat": 26,
+      "interest": 38,
+      "interestTrend": 0.961,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "printable-planner-inserts",
@@ -102,7 +156,16 @@
     "hotness": 56,
     "imageQuery": "printable planner pages binder desk",
     "imageUrl": "https://images.pexels.com/photos/372787/pexels-photo-372787.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Pixabay / Pexels"
+    "imageCredit": "Pixabay / Pexels",
+    "signals": {
+      "heat": 26,
+      "interest": 38,
+      "interestTrend": 0.961,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "custom-notebooks-for-businesses",
@@ -117,7 +180,16 @@
     "hotness": 48,
     "imageQuery": "branded notebooks stack corporate desk",
     "imageUrl": "https://images.pexels.com/photos/8747539/pexels-photo-8747539.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Towfiqu barbhuiya / Pexels"
+    "imageCredit": "Towfiqu barbhuiya / Pexels",
+    "signals": {
+      "heat": 26,
+      "interest": 38,
+      "interestTrend": 0.961,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "editable-invitation-template-suites",
@@ -132,7 +204,16 @@
     "hotness": 60,
     "imageQuery": "wedding invitation suite flatlay",
     "imageUrl": "https://images.pexels.com/photos/11650189/pexels-photo-11650189.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Micheile Henderson / Pexels"
+    "imageCredit": "Micheile Henderson / Pexels",
+    "signals": {
+      "heat": 28,
+      "interest": 54,
+      "interestTrend": 0.67,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "vellum-and-wax-seal-invitations",
@@ -147,7 +228,16 @@
     "hotness": 58,
     "imageQuery": "wax seal invitation envelope elegant",
     "imageUrl": "https://images.pexels.com/photos/17262454/pexels-photo-17262454.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Andrei Ciubotariu / Pexels"
+    "imageCredit": "Andrei Ciubotariu / Pexels",
+    "signals": {
+      "heat": 28,
+      "interest": 54,
+      "interestTrend": 0.67,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "on-the-day-wedding-stationery-sets",
@@ -162,7 +252,16 @@
     "hotness": 56,
     "imageQuery": "wedding table place cards menu setting",
     "imageUrl": "https://images.pexels.com/photos/2463417/pexels-photo-2463417.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Craig Adderley / Pexels"
+    "imageCredit": "Craig Adderley / Pexels",
+    "signals": {
+      "heat": 28,
+      "interest": 54,
+      "interestTrend": 0.67,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "save-the-date-magnets",
@@ -177,7 +276,16 @@
     "hotness": 50,
     "imageQuery": "save the date magnet fridge wedding",
     "imageUrl": "https://images.pexels.com/photos/38666599/pexels-photo-38666599.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Ann H / Pexels"
+    "imageCredit": "Ann H / Pexels",
+    "signals": {
+      "heat": 28,
+      "interest": 54,
+      "interestTrend": 0.67,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "event-signage-place-cards-local",
@@ -192,7 +300,16 @@
     "hotness": 58,
     "imageQuery": "calligraphy pen writing script",
     "imageUrl": "https://images.pexels.com/photos/114107/pexels-photo-114107.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Miguel Á. Padriñán / Pexels"
+    "imageCredit": "Miguel Á. Padriñán / Pexels",
+    "signals": {
+      "heat": 45,
+      "interest": 656,
+      "interestTrend": 1.041,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "live-calligraphy-at-events",
@@ -207,7 +324,16 @@
     "hotness": 54,
     "imageQuery": "calligrapher writing event table",
     "imageUrl": "https://images.pexels.com/photos/8716191/pexels-photo-8716191.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Katya Wolf / Pexels"
+    "imageCredit": "Katya Wolf / Pexels",
+    "signals": {
+      "heat": 45,
+      "interest": 656,
+      "interestTrend": 1.041,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "hand-lettered-digital-fonts",
@@ -222,7 +348,16 @@
     "hotness": 56,
     "imageQuery": "typography lettering design screen",
     "imageUrl": "https://images.pexels.com/photos/31617657/pexels-photo-31617657.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Ivett M / Pexels"
+    "imageCredit": "Ivett M / Pexels",
+    "signals": {
+      "heat": 45,
+      "interest": 656,
+      "interestTrend": 1.041,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "calligraphy-beginner-workshops",
@@ -237,6 +372,15 @@
     "hotness": 52,
     "imageQuery": "calligraphy workshop class practice",
     "imageUrl": "https://images.pexels.com/photos/5104724/pexels-photo-5104724.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "AI25.Studio  Studio / Pexels"
+    "imageCredit": "AI25.Studio  Studio / Pexels",
+    "signals": {
+      "heat": 45,
+      "interest": 656,
+      "interestTrend": 1.041,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   }
 ]

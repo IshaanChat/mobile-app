@@ -7,7 +7,8 @@
     "tags": "pottery, ceramics, clay, stoneware, mug",
     "imageQuery": "potter glazing ceramic bowl",
     "imageUrl": "https://images.pexels.com/photos/9304555/pexels-photo-9304555.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Mikhail Nilov / Pexels"
+    "imageCredit": "Mikhail Nilov / Pexels",
+    "wikiTitle": "Pottery"
   },
   {
     "slug": "candles-fragrance",
@@ -17,7 +18,8 @@
     "tags": "candle, wax, scent, fragrance, soy",
     "imageQuery": "aesthetic candle jars flatlay",
     "imageUrl": "https://images.pexels.com/photos/5782660/pexels-photo-5782660.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Leeloo The First / Pexels"
+    "imageCredit": "Leeloo The First / Pexels",
+    "wikiTitle": "Candle"
   },
   {
     "slug": "wall-art-prints",
@@ -27,7 +29,8 @@
     "tags": "wall art, prints, poster, decor",
     "imageQuery": "gallery wall framed posters room",
     "imageUrl": "https://images.pexels.com/photos/19019600/pexels-photo-19019600.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Harun / Pexels"
+    "imageCredit": "Harun / Pexels",
+    "wikiTitle": "Printmaking"
   },
   {
     "slug": "plants-planters",
@@ -37,7 +40,8 @@
     "tags": "plants, planter, pot, terrarium, succulent",
     "imageQuery": "succulents ceramic planters shelf",
     "imageUrl": "https://images.pexels.com/photos/35979376/pexels-photo-35979376.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Minh Fan / Pexels"
+    "imageCredit": "Minh Fan / Pexels",
+    "wikiTitle": "Houseplant"
   },
   {
     "slug": "kitchen-tableware",
@@ -47,7 +51,8 @@
     "tags": "kitchen, tableware, utensils, serving, coasters",
     "imageQuery": "wooden serving board table setting",
     "imageUrl": "https://images.pexels.com/photos/5638471/pexels-photo-5638471.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Askar Abayev / Pexels"
+    "imageCredit": "Askar Abayev / Pexels",
+    "wikiTitle": "Tableware"
   },
   {
     "slug": "furniture-woodworking",
@@ -57,7 +62,8 @@
     "tags": "wood, woodworking, furniture, shelf, carving",
     "imageQuery": "carpenter sanding wooden furniture",
     "imageUrl": "https://images.pexels.com/photos/5466146/pexels-photo-5466146.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "AI25.Studio  Studio / Pexels"
+    "imageCredit": "AI25.Studio  Studio / Pexels",
+    "wikiTitle": "Woodworking"
   },
   {
     "slug": "handmade-jewelry",
@@ -67,7 +73,8 @@
     "tags": "jewelry, earrings, necklace, rings, beads",
     "imageQuery": "gold earrings jewelry making close",
     "imageUrl": "https://images.pexels.com/photos/14033026/pexels-photo-14033026.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Yassir Abbas / Pexels"
+    "imageCredit": "Yassir Abbas / Pexels",
+    "wikiTitle": "Jewellery"
   },
   {
     "slug": "knitwear-crochet",
@@ -77,7 +84,8 @@
     "tags": "knitting, crochet, yarn, beanie, cardigan",
     "imageQuery": "chunky knit sweater neutral tones",
     "imageUrl": "https://images.pexels.com/photos/6630834/pexels-photo-6630834.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Polina Tankilevitch / Pexels"
+    "imageCredit": "Polina Tankilevitch / Pexels",
+    "wikiTitle": "Crochet"
   },
   {
     "slug": "bags-totes",
@@ -87,7 +95,8 @@
     "tags": "bag, tote, purse, canvas, crossbody",
     "imageQuery": "canvas tote bag street style",
     "imageUrl": "https://images.pexels.com/photos/11673914/pexels-photo-11673914.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Mathias Reding / Pexels"
+    "imageCredit": "Mathias Reding / Pexels",
+    "wikiTitle": "Handbag"
   },
   {
     "slug": "hair-accessories",
@@ -97,7 +106,8 @@
     "tags": "hair clip, claw clip, scrunchie, headband",
     "imageQuery": "claw clips pastel collection",
     "imageUrl": "https://images.pexels.com/photos/8152101/pexels-photo-8152101.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "RDNE Stock project / Pexels"
+    "imageCredit": "RDNE Stock project / Pexels",
+    "wikiTitle": "Fashion accessory"
   },
   {
     "slug": "apparel-pod",
@@ -107,7 +117,8 @@
     "tags": "tshirt, hoodie, apparel, print on demand",
     "imageQuery": "blank tshirt mockup rack",
     "imageUrl": "https://images.pexels.com/photos/8532616/pexels-photo-8532616.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Hanna Pad / Pexels"
+    "imageCredit": "Hanna Pad / Pexels",
+    "wikiTitle": "Print on demand"
   },
   {
     "slug": "upcycled-thrift",
@@ -117,7 +128,8 @@
     "tags": "vintage, thrift, upcycled, reworked, secondhand",
     "imageQuery": "vintage clothing rack thrift store",
     "imageUrl": "https://images.pexels.com/photos/374677/pexels-photo-374677.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Burst / Pexels"
+    "imageCredit": "Burst / Pexels",
+    "wikiTitle": "Upcycling"
   },
   {
     "slug": "soap-bath",
@@ -127,7 +139,8 @@
     "tags": "soap, bath, bath bomb, cold process",
     "imageQuery": "artisan soap bars stacked natural",
     "imageUrl": "https://images.pexels.com/photos/7055166/pexels-photo-7055166.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Pavel Danilyuk / Pexels"
+    "imageCredit": "Pavel Danilyuk / Pexels",
+    "wikiTitle": "Soap"
   },
   {
     "slug": "skincare-serums",
@@ -137,7 +150,8 @@
     "tags": "skincare, serum, face, beauty tools",
     "imageQuery": "skincare serum bottles minimalist",
     "imageUrl": "https://images.pexels.com/photos/8100691/pexels-photo-8100691.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Polina ⠀ / Pexels"
+    "imageCredit": "Polina ⠀ / Pexels",
+    "wikiTitle": "Skin care"
   },
   {
     "slug": "natural-cosmetics",
@@ -147,7 +161,8 @@
     "tags": "lip balm, natural, organic, cosmetics",
     "imageQuery": "natural cosmetics ingredients herbs",
     "imageUrl": "https://images.pexels.com/photos/8450505/pexels-photo-8450505.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "MART  PRODUCTION / Pexels"
+    "imageCredit": "MART  PRODUCTION / Pexels",
+    "wikiTitle": "Cosmetics"
   },
   {
     "slug": "perfume-oils",
@@ -157,7 +172,8 @@
     "tags": "perfume, fragrance, oil, roller",
     "imageQuery": "perfume oil roller bottles amber",
     "imageUrl": "https://images.pexels.com/photos/6693899/pexels-photo-6693899.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Tara Winstead / Pexels"
+    "imageCredit": "Tara Winstead / Pexels",
+    "wikiTitle": "Perfume"
   },
   {
     "slug": "beard-grooming",
@@ -167,7 +183,8 @@
     "tags": "beard, grooming, oil, men",
     "imageQuery": "beard oil bottle barber wood",
     "imageUrl": "https://images.pexels.com/photos/4625624/pexels-photo-4625624.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "AI25.Studio  Studio / Pexels"
+    "imageCredit": "AI25.Studio  Studio / Pexels",
+    "wikiTitle": "Beard"
   },
   {
     "slug": "yarn-fiber",
@@ -177,7 +194,8 @@
     "tags": "yarn, fiber, wool, dyeing, skein",
     "imageQuery": "hand dyed yarn skeins colorful",
     "imageUrl": "https://images.pexels.com/photos/2767655/pexels-photo-2767655.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Surene Palvie / Pexels"
+    "imageCredit": "Surene Palvie / Pexels",
+    "wikiTitle": "Yarn"
   },
   {
     "slug": "embroidery-needlework",
@@ -187,7 +205,8 @@
     "tags": "embroidery, needlework, cross stitch, hoop",
     "imageQuery": "embroidery hoop flowers hands",
     "imageUrl": "https://images.pexels.com/photos/10566042/pexels-photo-10566042.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Mohamed Rizly / Pexels"
+    "imageCredit": "Mohamed Rizly / Pexels",
+    "wikiTitle": "Embroidery"
   },
   {
     "slug": "macrame-weaving",
@@ -197,7 +216,8 @@
     "tags": "macrame, weaving, wall hanging, cotton cord",
     "imageQuery": "macrame wall hanging boho room",
     "imageUrl": "https://images.pexels.com/photos/12956041/pexels-photo-12956041.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Atlantic Ambience / Pexels"
+    "imageCredit": "Atlantic Ambience / Pexels",
+    "wikiTitle": "Macramé"
   },
   {
     "slug": "resin-art",
@@ -207,7 +227,8 @@
     "tags": "resin, epoxy, coaster, tray",
     "imageQuery": "resin coasters gold geode",
     "imageUrl": "https://images.pexels.com/photos/7258198/pexels-photo-7258198.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Thirdman / Pexels"
+    "imageCredit": "Thirdman / Pexels",
+    "wikiTitle": "Epoxy"
   },
   {
     "slug": "polymer-clay",
@@ -217,7 +238,8 @@
     "tags": "polymer clay, clay earrings, trinket",
     "imageQuery": "polymer clay earrings colorful making",
     "imageUrl": "https://images.pexels.com/photos/6757764/pexels-photo-6757764.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "cottonbro studio / Pexels"
+    "imageCredit": "cottonbro studio / Pexels",
+    "wikiTitle": "Polymer clay"
   },
   {
     "slug": "illustration-prints",
@@ -227,7 +249,8 @@
     "tags": "illustration, art print, drawing, artist",
     "imageQuery": "illustrator drawing tablet studio",
     "imageUrl": "https://images.pexels.com/photos/29940157/pexels-photo-29940157.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Jakub Zerdzicki / Pexels"
+    "imageCredit": "Jakub Zerdzicki / Pexels",
+    "wikiTitle": "Illustration"
   },
   {
     "slug": "custom-portraits",
@@ -237,7 +260,8 @@
     "tags": "portrait, pet portrait, custom, commission",
     "imageQuery": "artist painting dog portrait",
     "imageUrl": "https://images.pexels.com/photos/7858878/pexels-photo-7858878.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Greta Hoffman / Pexels"
+    "imageCredit": "Greta Hoffman / Pexels",
+    "wikiTitle": "Portrait"
   },
   {
     "slug": "photography-prints",
@@ -247,7 +271,8 @@
     "tags": "photography, print, landscape, film",
     "imageQuery": "photographer holding printed photos",
     "imageUrl": "https://images.pexels.com/photos/7014874/pexels-photo-7014874.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "George Milton / Pexels"
+    "imageCredit": "George Milton / Pexels",
+    "wikiTitle": "Fine-art photography"
   },
   {
     "slug": "stickers-decals",
@@ -257,7 +282,8 @@
     "tags": "sticker, decal, vinyl, laptop",
     "imageQuery": "laptop covered vinyl stickers",
     "imageUrl": "https://images.pexels.com/photos/17567386/pexels-photo-17567386.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Arindam Raha / Pexels"
+    "imageCredit": "Arindam Raha / Pexels",
+    "wikiTitle": "Sticker"
   },
   {
     "slug": "enamel-pins",
@@ -267,7 +293,8 @@
     "tags": "enamel pin, pin, badge, lapel",
     "imageQuery": "enamel pins collection jacket",
     "imageUrl": "https://images.pexels.com/photos/10503602/pexels-photo-10503602.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "RDNE Stock project / Pexels"
+    "imageCredit": "RDNE Stock project / Pexels",
+    "wikiTitle": "Lapel pin"
   },
   {
     "slug": "greeting-cards",
@@ -277,7 +304,8 @@
     "tags": "greeting card, card, occasion, funny",
     "imageQuery": "greeting cards display shop",
     "imageUrl": "https://images.pexels.com/photos/28780231/pexels-photo-28780231.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Nikki Villanueva / Pexels"
+    "imageCredit": "Nikki Villanueva / Pexels",
+    "wikiTitle": "Greeting card"
   },
   {
     "slug": "planners-journals",
@@ -287,7 +315,8 @@
     "tags": "planner, journal, notebook, organization",
     "imageQuery": "open planner desk coffee flatlay",
     "imageUrl": "https://images.pexels.com/photos/2736499/pexels-photo-2736499.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Content Pixie / Pexels"
+    "imageCredit": "Content Pixie / Pexels",
+    "wikiTitle": "Personal organizer"
   },
   {
     "slug": "wedding-stationery",
@@ -297,7 +326,8 @@
     "tags": "wedding, invitation, stationery, event",
     "imageQuery": "wedding invitation suite flatlay",
     "imageUrl": "https://images.pexels.com/photos/11650189/pexels-photo-11650189.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Micheile Henderson / Pexels"
+    "imageCredit": "Micheile Henderson / Pexels",
+    "wikiTitle": "Wedding invitation"
   },
   {
     "slug": "calligraphy-lettering",
@@ -307,7 +337,8 @@
     "tags": "calligraphy, lettering, handwritten, signage",
     "imageQuery": "calligraphy pen writing script",
     "imageUrl": "https://images.pexels.com/photos/114107/pexels-photo-114107.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Miguel Á. Padriñán / Pexels"
+    "imageCredit": "Miguel Á. Padriñán / Pexels",
+    "wikiTitle": "Calligraphy"
   },
   {
     "slug": "baked-goods",
@@ -317,7 +348,8 @@
     "tags": "baking, cake, cookies, dessert",
     "imageQuery": "decorated sugar cookies royal icing",
     "imageUrl": "https://images.pexels.com/photos/6608131/pexels-photo-6608131.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Jill Wellington / Pexels"
+    "imageCredit": "Jill Wellington / Pexels",
+    "wikiTitle": "Baking"
   },
   {
     "slug": "chocolate-confectionery",
@@ -327,7 +359,8 @@
     "tags": "chocolate, candy, confectionery, truffle",
     "imageQuery": "artisan chocolate bonbons glossy",
     "imageUrl": "https://images.pexels.com/photos/7407278/pexels-photo-7407278.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Тимур Слугин / Pexels"
+    "imageCredit": "Тимур Слугин / Pexels",
+    "wikiTitle": "Confectionery"
   },
   {
     "slug": "hot-sauce",
@@ -337,7 +370,8 @@
     "tags": "hot sauce, condiment, spicy, fermented",
     "imageQuery": "hot sauce bottles chili peppers",
     "imageUrl": "https://images.pexels.com/photos/5737237/pexels-photo-5737237.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "RDNE Stock project / Pexels"
+    "imageCredit": "RDNE Stock project / Pexels",
+    "wikiTitle": "Hot sauce"
   },
   {
     "slug": "coffee-tea",
@@ -347,7 +381,8 @@
     "tags": "coffee, tea, blend, loose leaf",
     "imageQuery": "loose leaf tea tins scoop",
     "imageUrl": "https://images.pexels.com/photos/7074106/pexels-photo-7074106.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Styves Exantus / Pexels"
+    "imageCredit": "Styves Exantus / Pexels",
+    "wikiTitle": "Coffee"
   },
   {
     "slug": "jam-honey",
@@ -357,7 +392,8 @@
     "tags": "jam, honey, preserves, jarred",
     "imageQuery": "honey jars farmers market",
     "imageUrl": "https://images.pexels.com/photos/34944360/pexels-photo-34944360.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Vladi  Nikolov / Pexels"
+    "imageCredit": "Vladi  Nikolov / Pexels",
+    "wikiTitle": "Fruit preserves"
   },
   {
     "slug": "pet-accessories",
@@ -367,7 +403,8 @@
     "tags": "pet, collar, leash, dog, cat",
     "imageQuery": "dog wearing bandana collar cute",
     "imageUrl": "https://images.pexels.com/photos/7588709/pexels-photo-7588709.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Frank Barning / Pexels"
+    "imageCredit": "Frank Barning / Pexels",
+    "wikiTitle": "Pet"
   },
   {
     "slug": "pet-treats",
@@ -377,7 +414,8 @@
     "tags": "pet treats, dog treats, pet bakery",
     "imageQuery": "dog biscuits homemade bone shaped",
     "imageUrl": "https://images.pexels.com/photos/8434641/pexels-photo-8434641.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "MART  PRODUCTION / Pexels"
+    "imageCredit": "MART  PRODUCTION / Pexels",
+    "wikiTitle": "Pet food"
   },
   {
     "slug": "pet-apparel",
@@ -387,7 +425,8 @@
     "tags": "pet apparel, dog clothes, pet costume",
     "imageQuery": "small dog wearing knit sweater",
     "imageUrl": "https://images.pexels.com/photos/6471471/pexels-photo-6471471.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Erik Izsóf / Pexels"
+    "imageCredit": "Erik Izsóf / Pexels",
+    "wikiTitle": "Dog clothing"
   },
   {
     "slug": "baby-clothes",
@@ -397,7 +436,8 @@
     "tags": "baby, knits, romper, newborn",
     "imageQuery": "knitted baby booties soft neutral",
     "imageUrl": "https://images.pexels.com/photos/5360746/pexels-photo-5360746.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Tilsa Tanaka / Pexels"
+    "imageCredit": "Tilsa Tanaka / Pexels",
+    "wikiTitle": "Children's clothing"
   },
   {
     "slug": "toys-plushies",
@@ -407,7 +447,8 @@
     "tags": "toys, plush, plushie, amigurumi",
     "imageQuery": "crochet plush animals handmade",
     "imageUrl": "https://images.pexels.com/photos/36186907/pexels-photo-36186907.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Heriberto Jahir Medina / Pexels"
+    "imageCredit": "Heriberto Jahir Medina / Pexels",
+    "wikiTitle": "Stuffed toy"
   },
   {
     "slug": "nursery-decor",
@@ -417,7 +458,8 @@
     "tags": "nursery, decor, printable, milestone",
     "imageQuery": "nursery shelf neutral decor",
     "imageUrl": "https://images.pexels.com/photos/9240642/pexels-photo-9240642.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Alberta Studios / Pexels"
+    "imageCredit": "Alberta Studios / Pexels",
+    "wikiTitle": "Nursery (room)"
   },
   {
     "slug": "digital-planners",
@@ -427,7 +469,8 @@
     "tags": "digital planner, template, goodnotes, ipad",
     "imageQuery": "ipad digital planner stylus desk",
     "imageUrl": "https://images.pexels.com/photos/5946157/pexels-photo-5946157.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Sajith R / Pexels"
+    "imageCredit": "Sajith R / Pexels",
+    "wikiTitle": "Time management"
   },
   {
     "slug": "design-assets",
@@ -437,7 +480,8 @@
     "tags": "presets, fonts, design assets, lightroom",
     "imageQuery": "designer color palette screen",
     "imageUrl": "https://images.pexels.com/photos/8117406/pexels-photo-8117406.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Ivan S / Pexels"
+    "imageCredit": "Ivan S / Pexels",
+    "wikiTitle": "Graphic design"
   },
   {
     "slug": "notion-templates",
@@ -447,7 +491,8 @@
     "tags": "notion, template, productivity, dashboard",
     "imageQuery": "laptop productivity dashboard workspace",
     "imageUrl": "https://images.pexels.com/photos/577210/pexels-photo-577210.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Lukas Blazek / Pexels"
+    "imageCredit": "Lukas Blazek / Pexels",
+    "wikiTitle": "Notion (productivity software)"
   },
   {
     "slug": "coaching-consulting",
@@ -457,7 +502,8 @@
     "tags": "coach, coaching, consulting, sessions",
     "imageQuery": "video call coaching session laptop",
     "imageUrl": "https://images.pexels.com/photos/8055488/pexels-photo-8055488.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Annushka  Ahuja / Pexels"
+    "imageCredit": "Annushka  Ahuja / Pexels",
+    "wikiTitle": "Coaching"
   },
   {
     "slug": "online-courses",
@@ -467,6 +513,7 @@
     "tags": "course, teaching, workshop, online class",
     "imageQuery": "person filming tutorial ring light",
     "imageUrl": "https://images.pexels.com/photos/7676472/pexels-photo-7676472.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Ivan S / Pexels"
+    "imageCredit": "Ivan S / Pexels",
+    "wikiTitle": "Online learning"
   }
 ]

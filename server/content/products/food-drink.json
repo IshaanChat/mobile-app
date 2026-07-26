@@ -12,7 +12,16 @@
     "hotness": 62,
     "imageQuery": "decorated sugar cookies royal icing",
     "imageUrl": "https://images.pexels.com/photos/6608131/pexels-photo-6608131.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Jill Wellington / Pexels"
+    "imageCredit": "Jill Wellington / Pexels",
+    "signals": {
+      "heat": 40,
+      "interest": 302,
+      "interestTrend": 0.913,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "cookie-decorating-kits",
@@ -27,7 +36,16 @@
     "hotness": 60,
     "imageQuery": "cookie decorating kit icing children",
     "imageUrl": "https://images.pexels.com/photos/3171354/pexels-photo-3171354.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "cottonbro studio / Pexels"
+    "imageCredit": "cottonbro studio / Pexels",
+    "signals": {
+      "heat": 40,
+      "interest": 302,
+      "interestTrend": 0.913,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "brownie-and-cookie-postal-boxes",
@@ -42,7 +60,16 @@
     "hotness": 64,
     "imageQuery": "brownies box packaging bakery",
     "imageUrl": "https://images.pexels.com/photos/2241838/pexels-photo-2241838.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Elle Hughes / Pexels"
+    "imageCredit": "Elle Hughes / Pexels",
+    "signals": {
+      "heat": 40,
+      "interest": 302,
+      "interestTrend": 0.913,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "dessert-grazing-tables",
@@ -57,7 +84,16 @@
     "hotness": 58,
     "imageQuery": "dessert grazing table party spread",
     "imageUrl": "https://images.pexels.com/photos/10584770/pexels-photo-10584770.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Abdelmoughit  LAHBABI / Pexels"
+    "imageCredit": "Abdelmoughit  LAHBABI / Pexels",
+    "signals": {
+      "heat": 40,
+      "interest": 302,
+      "interestTrend": 0.913,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "painted-bonbons-jewel-box-chocolate",
@@ -72,7 +108,16 @@
     "hotness": 62,
     "imageQuery": "artisan chocolate bonbons glossy",
     "imageUrl": "https://images.pexels.com/photos/7407278/pexels-photo-7407278.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Тимур Слугин / Pexels"
+    "imageCredit": "Тимур Слугин / Pexels",
+    "signals": {
+      "heat": 45,
+      "interest": 605,
+      "interestTrend": 0.929,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "hot-chocolate-bombs",
@@ -87,7 +132,16 @@
     "hotness": 60,
     "imageQuery": "hot chocolate bomb cocoa mug",
     "imageUrl": "https://images.pexels.com/photos/1839882/pexels-photo-1839882.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Isaiah Quindo / Pexels"
+    "imageCredit": "Isaiah Quindo / Pexels",
+    "signals": {
+      "heat": 45,
+      "interest": 605,
+      "interestTrend": 0.929,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "chocolate-bark-slabs",
@@ -102,7 +156,16 @@
     "hotness": 54,
     "imageQuery": "chocolate bark slab toppings nuts",
     "imageUrl": "https://images.pexels.com/photos/17498811/pexels-photo-17498811.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Efnan Yılmaz / Pexels"
+    "imageCredit": "Efnan Yılmaz / Pexels",
+    "signals": {
+      "heat": 45,
+      "interest": 605,
+      "interestTrend": 0.929,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "corporate-chocolate-gifting",
@@ -117,7 +180,16 @@
     "hotness": 52,
     "imageQuery": "chocolate gift box branded elegant",
     "imageUrl": "https://images.pexels.com/photos/11544457/pexels-photo-11544457.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Erik Mclean / Pexels"
+    "imageCredit": "Erik Mclean / Pexels",
+    "signals": {
+      "heat": 45,
+      "interest": 605,
+      "interestTrend": 0.929,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "small-batch-fermented-hot-sauce",
@@ -132,7 +204,16 @@
     "hotness": 60,
     "imageQuery": "hot sauce bottles chili peppers",
     "imageUrl": "https://images.pexels.com/photos/5737237/pexels-photo-5737237.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "RDNE Stock project / Pexels"
+    "imageCredit": "RDNE Stock project / Pexels",
+    "signals": {
+      "heat": 39,
+      "interest": 249,
+      "interestTrend": 0.955,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "hot-sauce-advent-and-sampler-sets",
@@ -147,7 +228,16 @@
     "hotness": 58,
     "imageQuery": "hot sauce sampler bottles set",
     "imageUrl": "https://images.pexels.com/photos/31703675/pexels-photo-31703675.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Dominik Gryzbon / Pexels"
+    "imageCredit": "Dominik Gryzbon / Pexels",
+    "signals": {
+      "heat": 39,
+      "interest": 249,
+      "interestTrend": 0.955,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "chilli-oils-and-crisp",
@@ -162,7 +252,16 @@
     "hotness": 66,
     "imageQuery": "chilli oil jar spicy condiment",
     "imageUrl": "https://images.pexels.com/photos/5496350/pexels-photo-5496350.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "monicore / Pexels"
+    "imageCredit": "monicore / Pexels",
+    "signals": {
+      "heat": 39,
+      "interest": 249,
+      "interestTrend": 0.955,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "spice-rub-and-seasoning-blends",
@@ -177,7 +276,16 @@
     "hotness": 56,
     "imageQuery": "spice blend jars seasoning rub",
     "imageUrl": "https://images.pexels.com/photos/12627158/pexels-photo-12627158.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Norma Gabriela Galván / Pexels"
+    "imageCredit": "Norma Gabriela Galván / Pexels",
+    "signals": {
+      "heat": 39,
+      "interest": 249,
+      "interestTrend": 0.955,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "mood-themed-loose-leaf-tea-blends",
@@ -192,7 +300,16 @@
     "hotness": 58,
     "imageQuery": "loose leaf tea tins scoop",
     "imageUrl": "https://images.pexels.com/photos/7074106/pexels-photo-7074106.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Styves Exantus / Pexels"
+    "imageCredit": "Styves Exantus / Pexels",
+    "signals": {
+      "heat": 55,
+      "interest": 2757,
+      "interestTrend": 0.907,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "coffee-subscription-boxes",
@@ -207,7 +324,16 @@
     "hotness": 62,
     "imageQuery": "coffee bag subscription beans packaging",
     "imageUrl": "https://images.pexels.com/photos/4829069/pexels-photo-4829069.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "cottonbro studio / Pexels"
+    "imageCredit": "cottonbro studio / Pexels",
+    "signals": {
+      "heat": 55,
+      "interest": 2757,
+      "interestTrend": 0.907,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "matcha-and-ceremonial-kits",
@@ -222,7 +348,16 @@
     "hotness": 64,
     "imageQuery": "matcha whisk bowl ceremonial green tea",
     "imageUrl": "https://images.pexels.com/photos/7144906/pexels-photo-7144906.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Monstera Production / Pexels"
+    "imageCredit": "Monstera Production / Pexels",
+    "signals": {
+      "heat": 55,
+      "interest": 2757,
+      "interestTrend": 0.907,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "syrups-for-home-baristas",
@@ -237,7 +372,16 @@
     "hotness": 54,
     "imageQuery": "coffee syrup bottles cafe counter",
     "imageUrl": "https://images.pexels.com/photos/31353708/pexels-photo-31353708.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "🇻🇳🇻🇳Nguyễn Tiến Thịnh 🇻🇳🇻🇳 / Pexels"
+    "imageCredit": "🇻🇳🇻🇳Nguyễn Tiến Thịnh 🇻🇳🇻🇳 / Pexels",
+    "signals": {
+      "heat": 55,
+      "interest": 2757,
+      "interestTrend": 0.907,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "hot-honey-chili-infused",
@@ -252,7 +396,16 @@
     "hotness": 64,
     "imageQuery": "honey jars farmers market",
     "imageUrl": "https://images.pexels.com/photos/34944360/pexels-photo-34944360.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Vladi  Nikolov / Pexels"
+    "imageCredit": "Vladi  Nikolov / Pexels",
+    "signals": {
+      "heat": 40,
+      "interest": 294,
+      "interestTrend": 0.9,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "small-batch-jam-flavour-flights",
@@ -267,7 +420,16 @@
     "hotness": 56,
     "imageQuery": "jam jars preserves fruit homemade",
     "imageUrl": "https://images.pexels.com/photos/6588431/pexels-photo-6588431.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "ROMAN ODINTSOV / Pexels"
+    "imageCredit": "ROMAN ODINTSOV / Pexels",
+    "signals": {
+      "heat": 40,
+      "interest": 294,
+      "interestTrend": 0.9,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "wedding-favour-preserves",
@@ -282,7 +444,16 @@
     "hotness": 52,
     "imageQuery": "wedding favour jars honey tags",
     "imageUrl": "https://images.pexels.com/photos/17206141/pexels-photo-17206141.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Matheus Bertelli / Pexels"
+    "imageCredit": "Matheus Bertelli / Pexels",
+    "signals": {
+      "heat": 40,
+      "interest": 294,
+      "interestTrend": 0.9,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "infused-honey-and-tasting-sets",
@@ -297,6 +468,15 @@
     "hotness": 50,
     "imageQuery": "honey tasting set cheese board",
     "imageUrl": "https://images.pexels.com/photos/8738016/pexels-photo-8738016.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Farhad Ibrahimzade / Pexels"
+    "imageCredit": "Farhad Ibrahimzade / Pexels",
+    "signals": {
+      "heat": 40,
+      "interest": 294,
+      "interestTrend": 0.9,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   }
 ]

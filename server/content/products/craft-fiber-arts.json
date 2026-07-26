@@ -12,7 +12,16 @@
     "hotness": 62,
     "imageQuery": "hand dyed yarn skeins colorful",
     "imageUrl": "https://images.pexels.com/photos/2767655/pexels-photo-2767655.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Surene Palvie / Pexels"
+    "imageCredit": "Surene Palvie / Pexels",
+    "signals": {
+      "heat": 39,
+      "interest": 269,
+      "interestTrend": 0.961,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "yarn-advent-calendars",
@@ -27,7 +36,16 @@
     "hotness": 64,
     "imageQuery": "yarn mini skeins gift box",
     "imageUrl": "https://images.pexels.com/photos/30776043/pexels-photo-30776043.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Deane Bayas / Pexels"
+    "imageCredit": "Deane Bayas / Pexels",
+    "signals": {
+      "heat": 39,
+      "interest": 269,
+      "interestTrend": 0.961,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "project-bags-with-notions",
@@ -42,7 +60,16 @@
     "hotness": 54,
     "imageQuery": "knitting notions stitch markers tools",
     "imageUrl": "https://images.pexels.com/photos/37504446/pexels-photo-37504446.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Eleonora Vokueva / Pexels"
+    "imageCredit": "Eleonora Vokueva / Pexels",
+    "signals": {
+      "heat": 39,
+      "interest": 269,
+      "interestTrend": 0.961,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "spinning-fibre-braids",
@@ -57,7 +84,16 @@
     "hotness": 46,
     "imageQuery": "wool roving fiber dyed braids",
     "imageUrl": "https://images.pexels.com/photos/13499740/pexels-photo-13499740.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Karen Laårk Boshoff / Pexels"
+    "imageCredit": "Karen Laårk Boshoff / Pexels",
+    "signals": {
+      "heat": 39,
+      "interest": 269,
+      "interestTrend": 0.961,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "beginner-embroidery-kits-your-designs",
@@ -72,7 +108,16 @@
     "hotness": 60,
     "imageQuery": "embroidery hoop flowers hands",
     "imageUrl": "https://images.pexels.com/photos/10566042/pexels-photo-10566042.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Mohamed Rizly / Pexels"
+    "imageCredit": "Mohamed Rizly / Pexels",
+    "signals": {
+      "heat": 43,
+      "interest": 499,
+      "interestTrend": 0.794,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "embroidered-denim-jacket-commissions",
@@ -87,7 +132,16 @@
     "hotness": 58,
     "imageQuery": "embroidered denim jacket back art",
     "imageUrl": "https://images.pexels.com/photos/5560191/pexels-photo-5560191.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Tima Miroshnichenko / Pexels"
+    "imageCredit": "Tima Miroshnichenko / Pexels",
+    "signals": {
+      "heat": 43,
+      "interest": 499,
+      "interestTrend": 0.794,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "pdf-embroidery-patterns",
@@ -102,7 +156,16 @@
     "hotness": 56,
     "imageQuery": "embroidery pattern paper design desk",
     "imageUrl": "https://images.pexels.com/photos/30548824/pexels-photo-30548824.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Sedanur Kunuk / Pexels"
+    "imageCredit": "Sedanur Kunuk / Pexels",
+    "signals": {
+      "heat": 43,
+      "interest": 499,
+      "interestTrend": 0.794,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "punch-needle-wall-hangings",
@@ -117,7 +180,16 @@
     "hotness": 54,
     "imageQuery": "punch needle rug wall hanging",
     "imageUrl": "https://images.pexels.com/photos/9305415/pexels-photo-9305415.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Ahmed akacha / Pexels"
+    "imageCredit": "Ahmed akacha / Pexels",
+    "signals": {
+      "heat": 43,
+      "interest": 499,
+      "interestTrend": 0.794,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "macram-plant-hangers-boho-staple",
@@ -132,7 +204,16 @@
     "hotness": 58,
     "imageQuery": "macrame wall hanging boho room",
     "imageUrl": "https://images.pexels.com/photos/12956041/pexels-photo-12956041.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Atlantic Ambience / Pexels"
+    "imageCredit": "Atlantic Ambience / Pexels",
+    "signals": {
+      "heat": 37,
+      "interest": 199,
+      "interestTrend": 0.953,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "woven-wall-tapestries",
@@ -147,7 +228,16 @@
     "hotness": 52,
     "imageQuery": "woven wall hanging tapestry fiber",
     "imageUrl": "https://images.pexels.com/photos/4792064/pexels-photo-4792064.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Anete Lusina / Pexels"
+    "imageCredit": "Anete Lusina / Pexels",
+    "signals": {
+      "heat": 37,
+      "interest": 199,
+      "interestTrend": 0.953,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "macrame-workshop-kits",
@@ -162,7 +252,16 @@
     "hotness": 50,
     "imageQuery": "macrame cord dowel craft supplies",
     "imageUrl": "https://images.pexels.com/photos/3650426/pexels-photo-3650426.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Castorly Stock / Pexels"
+    "imageCredit": "Castorly Stock / Pexels",
+    "signals": {
+      "heat": 37,
+      "interest": 199,
+      "interestTrend": 0.953,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "knotted-key-chains-and-charms",
@@ -177,7 +276,16 @@
     "hotness": 48,
     "imageQuery": "macrame keychain tassel handmade",
     "imageUrl": "https://images.pexels.com/photos/37838556/pexels-photo-37838556.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Nurul Sakinah Ridwan / Pexels"
+    "imageCredit": "Nurul Sakinah Ridwan / Pexels",
+    "signals": {
+      "heat": 37,
+      "interest": 199,
+      "interestTrend": 0.953,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "geode-style-coaster-sets",
@@ -192,7 +300,16 @@
     "hotness": 60,
     "imageQuery": "resin coasters gold geode",
     "imageUrl": "https://images.pexels.com/photos/7258198/pexels-photo-7258198.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Thirdman / Pexels"
+    "imageCredit": "Thirdman / Pexels",
+    "signals": {
+      "heat": 45,
+      "interest": 662,
+      "interestTrend": 0.987,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "pressed-flower-resin-trays",
@@ -207,7 +324,16 @@
     "hotness": 62,
     "imageQuery": "pressed flowers resin art tray",
     "imageUrl": "https://images.pexels.com/photos/6858596/pexels-photo-6858596.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Jill Burrow / Pexels"
+    "imageCredit": "Jill Burrow / Pexels",
+    "signals": {
+      "heat": 45,
+      "interest": 662,
+      "interestTrend": 0.987,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "resin-bookmarks-and-keepsakes",
@@ -222,7 +348,16 @@
     "hotness": 54,
     "imageQuery": "resin bookmark flowers handmade",
     "imageUrl": "https://images.pexels.com/photos/34423688/pexels-photo-34423688.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "betül nur akyürek / Pexels"
+    "imageCredit": "betül nur akyürek / Pexels",
+    "signals": {
+      "heat": 45,
+      "interest": 662,
+      "interestTrend": 0.987,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "custom-resin-pet-memorials",
@@ -237,7 +372,16 @@
     "hotness": 56,
     "imageQuery": "resin keepsake pendant memorial",
     "imageUrl": "https://images.pexels.com/photos/6275807/pexels-photo-6275807.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "cottonbro studio / Pexels"
+    "imageCredit": "cottonbro studio / Pexels",
+    "signals": {
+      "heat": 45,
+      "interest": 662,
+      "interestTrend": 0.987,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "statement-clay-earrings-arch-terrazzo",
@@ -252,7 +396,16 @@
     "hotness": 62,
     "imageQuery": "polymer clay earrings colorful making",
     "imageUrl": "https://images.pexels.com/photos/6757764/pexels-photo-6757764.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "cottonbro studio / Pexels"
+    "imageCredit": "cottonbro studio / Pexels",
+    "signals": {
+      "heat": 32,
+      "interest": 98,
+      "interestTrend": 0.921,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "clay-trinket-trays-and-catchalls",
@@ -267,7 +420,16 @@
     "hotness": 56,
     "imageQuery": "clay trinket dish marbled pastel",
     "imageUrl": "https://images.pexels.com/photos/6739219/pexels-photo-6739219.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "cottonbro studio / Pexels"
+    "imageCredit": "cottonbro studio / Pexels",
+    "signals": {
+      "heat": 32,
+      "interest": 98,
+      "interestTrend": 0.921,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "clay-cutter-shape-sets",
@@ -282,7 +444,16 @@
     "hotness": 52,
     "imageQuery": "clay cutters tools polymer craft",
     "imageUrl": "https://images.pexels.com/photos/6757751/pexels-photo-6757751.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "cottonbro studio / Pexels"
+    "imageCredit": "cottonbro studio / Pexels",
+    "signals": {
+      "heat": 32,
+      "interest": 98,
+      "interestTrend": 0.921,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "clay-flower-hair-claws",
@@ -297,6 +468,15 @@
     "hotness": 60,
     "imageQuery": "floral hair clip clay flowers",
     "imageUrl": "https://images.pexels.com/photos/36422242/pexels-photo-36422242.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Dominik Gryzbon / Pexels"
+    "imageCredit": "Dominik Gryzbon / Pexels",
+    "signals": {
+      "heat": 32,
+      "interest": 98,
+      "interestTrend": 0.921,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   }
 ]

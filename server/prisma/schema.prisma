@@ -334,6 +334,21 @@ model TrendProduct {
   // Stored and shown, deliberately not scored.
   adReach    Int?
 
+  // Mean daily readers of the subject. Attention, not purchases — and the
+  // only measured signal that needs no credential of any kind to obtain.
+  interest      Int?
+  // Recent month over the one before, as a ratio: 1.35 is a third more
+  // attention. Already a derivative, which is what lets the trending sort
+  // work on a fresh database where nothing has two heat readings yet.
+  interestTrend Float?
+
+  // A live listing found in a merchant catalog. Kept apart from the curator's
+  // `sourcingUrl` for the same reason `heat` is kept apart from `hotness`:
+  // ingest must never overwrite authored work. The card prefers this when it
+  // exists and falls back to the authored link.
+  liveSourcingUrl String?
+  liveMerchant    String?
+
   // --- provenance ---------------------------------------------------------
   // "aliexpress,etsy,meta" — which adapters actually reported.
   signalSources   String?
@@ -363,6 +378,7 @@ model TrendProduct {
   @@index([status])
   @@index([nicheId])
   @@index([status, heat])
+  @@index([status, interestTrend])
 }
 
 // Curated content for the Growth feed: a community/place where a business

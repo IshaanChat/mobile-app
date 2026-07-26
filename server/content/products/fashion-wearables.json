@@ -12,7 +12,16 @@
     "hotness": 68,
     "imageQuery": "gold earrings jewelry making close",
     "imageUrl": "https://images.pexels.com/photos/14033026/pexels-photo-14033026.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Yassir Abbas / Pexels"
+    "imageCredit": "Yassir Abbas / Pexels",
+    "signals": {
+      "heat": 45,
+      "interest": 608,
+      "interestTrend": 0.88,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "permanent-jewelry-welded-chains",
@@ -27,7 +36,16 @@
     "hotness": 72,
     "imageQuery": "delicate gold chain bracelet wrist",
     "imageUrl": "https://images.pexels.com/photos/8183945/pexels-photo-8183945.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "RDNE Stock project / Pexels"
+    "imageCredit": "RDNE Stock project / Pexels",
+    "signals": {
+      "heat": 45,
+      "interest": 608,
+      "interestTrend": 0.88,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "birthstone-name-necklaces",
@@ -42,7 +60,16 @@
     "hotness": 66,
     "imageQuery": "personalized name necklace gold delicate",
     "imageUrl": "https://images.pexels.com/photos/10831401/pexels-photo-10831401.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Matheus Oliveira / Pexels"
+    "imageCredit": "Matheus Oliveira / Pexels",
+    "signals": {
+      "heat": 45,
+      "interest": 608,
+      "interestTrend": 0.88,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "beaded-phone-charms-straps",
@@ -57,7 +84,16 @@
     "hotness": 62,
     "imageQuery": "beaded phone charm colorful",
     "imageUrl": "https://images.pexels.com/photos/18609428/pexels-photo-18609428.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Lisett Kruusimäe / Pexels"
+    "imageCredit": "Lisett Kruusimäe / Pexels",
+    "signals": {
+      "heat": 45,
+      "interest": 608,
+      "interestTrend": 0.88,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "chunky-ribbed-beanies-fisherman-style",
@@ -72,7 +108,16 @@
     "hotness": 64,
     "imageQuery": "chunky knit sweater neutral tones",
     "imageUrl": "https://images.pexels.com/photos/6630834/pexels-photo-6630834.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Polina Tankilevitch / Pexels"
+    "imageCredit": "Polina Tankilevitch / Pexels",
+    "signals": {
+      "heat": 43,
+      "interest": 502,
+      "interestTrend": 0.849,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "granny-square-cardigans",
@@ -87,7 +132,16 @@
     "hotness": 66,
     "imageQuery": "colorful crochet cardigan granny square",
     "imageUrl": "https://images.pexels.com/photos/30036957/pexels-photo-30036957.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Bingqian Li / Pexels"
+    "imageCredit": "Bingqian Li / Pexels",
+    "signals": {
+      "heat": 43,
+      "interest": 502,
+      "interestTrend": 0.849,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "crochet-bucket-hats",
@@ -102,7 +156,16 @@
     "hotness": 58,
     "imageQuery": "crochet bucket hat summer",
     "imageUrl": "https://images.pexels.com/photos/38261062/pexels-photo-38261062.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "atelierbyvineeth . . . / Pexels"
+    "imageCredit": "atelierbyvineeth . . . / Pexels",
+    "signals": {
+      "heat": 43,
+      "interest": 502,
+      "interestTrend": 0.849,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "knitting-patterns-as-pdfs",
@@ -117,7 +180,16 @@
     "hotness": 63,
     "imageQuery": "knitting pattern notebook yarn needles",
     "imageUrl": "https://images.pexels.com/photos/4601228/pexels-photo-4601228.png?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Karina Lopez / Pexels"
+    "imageCredit": "Karina Lopez / Pexels",
+    "signals": {
+      "heat": 43,
+      "interest": 502,
+      "interestTrend": 0.849,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "quilted-puffer-totes",
@@ -132,7 +204,16 @@
     "hotness": 60,
     "imageQuery": "canvas tote bag street style",
     "imageUrl": "https://images.pexels.com/photos/11673914/pexels-photo-11673914.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Mathias Reding / Pexels"
+    "imageCredit": "Mathias Reding / Pexels",
+    "signals": {
+      "heat": 37,
+      "interest": 190,
+      "interestTrend": 0.949,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "printed-canvas-book-totes",
@@ -147,7 +228,16 @@
     "hotness": 58,
     "imageQuery": "canvas tote bag books printed",
     "imageUrl": "https://images.pexels.com/photos/34800392/pexels-photo-34800392.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "betül nur akyürek / Pexels"
+    "imageCredit": "betül nur akyürek / Pexels",
+    "signals": {
+      "heat": 37,
+      "interest": 190,
+      "interestTrend": 0.949,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "crescent-crossbody-bags",
@@ -162,7 +252,16 @@
     "hotness": 62,
     "imageQuery": "crossbody shoulder bag fashion neutral",
     "imageUrl": "https://images.pexels.com/photos/8801132/pexels-photo-8801132.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "MART  PRODUCTION / Pexels"
+    "imageCredit": "MART  PRODUCTION / Pexels",
+    "signals": {
+      "heat": 37,
+      "interest": 190,
+      "interestTrend": 0.949,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "hand-sewn-quilted-project-bags",
@@ -177,7 +276,16 @@
     "hotness": 52,
     "imageQuery": "quilted fabric zip pouch handmade",
     "imageUrl": "https://images.pexels.com/photos/9582659/pexels-photo-9582659.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Erik Mclean / Pexels"
+    "imageCredit": "Erik Mclean / Pexels",
+    "signals": {
+      "heat": 37,
+      "interest": 190,
+      "interestTrend": 0.949,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "oversized-matte-claw-clips-neutral-sets",
@@ -192,7 +300,16 @@
     "hotness": 60,
     "imageQuery": "claw clips pastel collection",
     "imageUrl": "https://images.pexels.com/photos/8152101/pexels-photo-8152101.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "RDNE Stock project / Pexels"
+    "imageCredit": "RDNE Stock project / Pexels",
+    "signals": {
+      "heat": 37,
+      "interest": 187,
+      "interestTrend": 0.933,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "silk-satin-scrunchie-sets",
@@ -207,7 +324,16 @@
     "hotness": 56,
     "imageQuery": "silk scrunchies pastel flatlay",
     "imageUrl": "https://images.pexels.com/photos/6044139/pexels-photo-6044139.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Skylar Kang / Pexels"
+    "imageCredit": "Skylar Kang / Pexels",
+    "signals": {
+      "heat": 37,
+      "interest": 187,
+      "interestTrend": 0.933,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "pearl-embellished-hair-pins",
@@ -222,7 +348,16 @@
     "hotness": 54,
     "imageQuery": "pearl hair pins bridal accessories",
     "imageUrl": "https://images.pexels.com/photos/3065096/pexels-photo-3065096.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Engin Akyurt / Pexels"
+    "imageCredit": "Engin Akyurt / Pexels",
+    "signals": {
+      "heat": 37,
+      "interest": 187,
+      "interestTrend": 0.933,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "heatless-curling-sets",
@@ -237,7 +372,16 @@
     "hotness": 64,
     "imageQuery": "hair curling ribbon heatless beauty",
     "imageUrl": "https://images.pexels.com/photos/38543643/pexels-photo-38543643.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Zeynep Öngel / Pexels"
+    "imageCredit": "Zeynep Öngel / Pexels",
+    "signals": {
+      "heat": 37,
+      "interest": 187,
+      "interestTrend": 0.933,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "niche-humor-embroidered-sweatshirts",
@@ -252,7 +396,16 @@
     "hotness": 64,
     "imageQuery": "blank tshirt mockup rack",
     "imageUrl": "https://images.pexels.com/photos/8532616/pexels-photo-8532616.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Hanna Pad / Pexels"
+    "imageCredit": "Hanna Pad / Pexels",
+    "signals": {
+      "heat": 34,
+      "interest": 126,
+      "interestTrend": 0.993,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "hometown-varsity-tees",
@@ -267,7 +420,16 @@
     "hotness": 58,
     "imageQuery": "varsity tshirt college style folded",
     "imageUrl": "https://images.pexels.com/photos/32483244/pexels-photo-32483244.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Allan González / Pexels"
+    "imageCredit": "Allan González / Pexels",
+    "signals": {
+      "heat": 34,
+      "interest": 126,
+      "interestTrend": 0.993,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "custom-pet-face-hoodies",
@@ -282,7 +444,16 @@
     "hotness": 66,
     "imageQuery": "hoodie printed graphic folded",
     "imageUrl": "https://images.pexels.com/photos/19968498/pexels-photo-19968498.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "KILJOY MAGAZINE / Pexels"
+    "imageCredit": "KILJOY MAGAZINE / Pexels",
+    "signals": {
+      "heat": 34,
+      "interest": 126,
+      "interestTrend": 0.993,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "gym-slogan-crop-tops",
@@ -297,7 +468,16 @@
     "hotness": 56,
     "imageQuery": "gym crop top activewear flatlay",
     "imageUrl": "https://images.pexels.com/photos/3927388/pexels-photo-3927388.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "cottonbro studio / Pexels"
+    "imageCredit": "cottonbro studio / Pexels",
+    "signals": {
+      "heat": 34,
+      "interest": 126,
+      "interestTrend": 0.993,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "reworked-vintage-sweatshirt-crops",
@@ -312,7 +492,16 @@
     "hotness": 62,
     "imageQuery": "vintage clothing rack thrift store",
     "imageUrl": "https://images.pexels.com/photos/374677/pexels-photo-374677.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Burst / Pexels"
+    "imageCredit": "Burst / Pexels",
+    "signals": {
+      "heat": 36,
+      "interest": 180,
+      "interestTrend": 0.874,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "patchwork-denim-jackets",
@@ -327,7 +516,16 @@
     "hotness": 60,
     "imageQuery": "patchwork denim jacket vintage",
     "imageUrl": "https://images.pexels.com/photos/12126453/pexels-photo-12126453.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Vladimir  Gladkov / Pexels"
+    "imageCredit": "Vladimir  Gladkov / Pexels",
+    "signals": {
+      "heat": 36,
+      "interest": 180,
+      "interestTrend": 0.874,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "curated-vintage-tee-drops",
@@ -342,7 +540,16 @@
     "hotness": 64,
     "imageQuery": "vintage t-shirts folded stack retro",
     "imageUrl": "https://images.pexels.com/photos/581339/pexels-photo-581339.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Aden Ardenrich / Pexels"
+    "imageCredit": "Aden Ardenrich / Pexels",
+    "signals": {
+      "heat": 36,
+      "interest": 180,
+      "interestTrend": 0.874,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "visible-mending-repair-service",
@@ -357,6 +564,15 @@
     "hotness": 54,
     "imageQuery": "visible mending sashiko stitching denim",
     "imageUrl": "https://images.pexels.com/photos/35166547/pexels-photo-35166547.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Marek Ruczaj / Pexels"
+    "imageCredit": "Marek Ruczaj / Pexels",
+    "signals": {
+      "heat": 36,
+      "interest": 180,
+      "interestTrend": 0.874,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   }
 ]

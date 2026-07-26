@@ -12,7 +12,16 @@
     "hotness": 62,
     "imageQuery": "ipad digital planner stylus desk",
     "imageUrl": "https://images.pexels.com/photos/5946157/pexels-photo-5946157.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Sajith R / Pexels"
+    "imageCredit": "Sajith R / Pexels",
+    "signals": {
+      "heat": 46,
+      "interest": 770,
+      "interestTrend": 0.921,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "digital-sticker-packs-for-planners",
@@ -27,7 +36,16 @@
     "hotness": 56,
     "imageQuery": "digital stickers tablet planner screen",
     "imageUrl": "https://images.pexels.com/photos/768472/pexels-photo-768472.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Jess Bailey Designs / Pexels"
+    "imageCredit": "Jess Bailey Designs / Pexels",
+    "signals": {
+      "heat": 46,
+      "interest": 770,
+      "interestTrend": 0.921,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "budget-and-debt-payoff-trackers",
@@ -42,7 +60,16 @@
     "hotness": 60,
     "imageQuery": "budget spreadsheet laptop finance planning",
     "imageUrl": "https://images.pexels.com/photos/9260568/pexels-photo-9260568.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Atlantic Ambience / Pexels"
+    "imageCredit": "Atlantic Ambience / Pexels",
+    "signals": {
+      "heat": 46,
+      "interest": 770,
+      "interestTrend": 0.921,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "wedding-and-event-planning-templates",
@@ -57,7 +84,16 @@
     "hotness": 54,
     "imageQuery": "wedding planning checklist notebook desk",
     "imageUrl": "https://images.pexels.com/photos/811572/pexels-photo-811572.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Natasha Fernandez / Pexels"
+    "imageCredit": "Natasha Fernandez / Pexels",
+    "signals": {
+      "heat": 46,
+      "interest": 770,
+      "interestTrend": 0.921,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "lightroom-preset-packs-one-aesthetic",
@@ -72,7 +108,16 @@
     "hotness": 58,
     "imageQuery": "designer color palette screen",
     "imageUrl": "https://images.pexels.com/photos/8117406/pexels-photo-8117406.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Ivan S / Pexels"
+    "imageCredit": "Ivan S / Pexels",
+    "signals": {
+      "heat": 47,
+      "interest": 834,
+      "interestTrend": 1.117,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "canva-template-bundles-for-small-brands",
@@ -87,7 +132,16 @@
     "hotness": 62,
     "imageQuery": "social media templates design laptop",
     "imageUrl": "https://images.pexels.com/photos/9558778/pexels-photo-9558778.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "MART  PRODUCTION / Pexels"
+    "imageCredit": "MART  PRODUCTION / Pexels",
+    "signals": {
+      "heat": 47,
+      "interest": 834,
+      "interestTrend": 1.117,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "brand-kits-and-logo-suites",
@@ -102,7 +156,16 @@
     "hotness": 56,
     "imageQuery": "brand identity design mockup desk",
     "imageUrl": "https://images.pexels.com/photos/7318941/pexels-photo-7318941.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Angela Roma / Pexels"
+    "imageCredit": "Angela Roma / Pexels",
+    "signals": {
+      "heat": 47,
+      "interest": 834,
+      "interestTrend": 1.117,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "digital-paper-and-clipart-packs",
@@ -117,7 +180,16 @@
     "hotness": 50,
     "imageQuery": "patterns colorful digital design paper",
     "imageUrl": "https://images.pexels.com/photos/33950003/pexels-photo-33950003.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Landiva  Weber / Pexels"
+    "imageCredit": "Landiva  Weber / Pexels",
+    "signals": {
+      "heat": 47,
+      "interest": 834,
+      "interestTrend": 1.117,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "niche-business-dashboards-freelancers-etsy-selle",
@@ -132,7 +204,16 @@
     "hotness": 58,
     "imageQuery": "laptop productivity dashboard workspace",
     "imageUrl": "https://images.pexels.com/photos/577210/pexels-photo-577210.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Lukas Blazek / Pexels"
+    "imageCredit": "Lukas Blazek / Pexels",
+    "signals": {
+      "heat": 46,
+      "interest": 762,
+      "interestTrend": 0.954,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "content-calendar-systems",
@@ -147,7 +228,16 @@
     "hotness": 56,
     "imageQuery": "content calendar planning desk laptop",
     "imageUrl": "https://images.pexels.com/photos/8250989/pexels-photo-8250989.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "PNW Production / Pexels"
+    "imageCredit": "PNW Production / Pexels",
+    "signals": {
+      "heat": 46,
+      "interest": 762,
+      "interestTrend": 0.954,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "template-setup-as-a-service",
@@ -162,7 +252,16 @@
     "hotness": 52,
     "imageQuery": "consultant screen sharing laptop work",
     "imageUrl": "https://images.pexels.com/photos/6476266/pexels-photo-6476266.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Mikael Blomkvist / Pexels"
+    "imageCredit": "Mikael Blomkvist / Pexels",
+    "signals": {
+      "heat": 46,
+      "interest": 762,
+      "interestTrend": 0.954,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "second-brain-knowledge-systems",
@@ -177,7 +276,16 @@
     "hotness": 48,
     "imageQuery": "notes organization study desk laptop",
     "imageUrl": "https://images.pexels.com/photos/5185082/pexels-photo-5185082.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "cottonbro studio / Pexels"
+    "imageCredit": "cottonbro studio / Pexels",
+    "signals": {
+      "heat": 46,
+      "interest": 762,
+      "interestTrend": 0.954,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "productized-audit-packages",
@@ -192,7 +300,16 @@
     "hotness": 58,
     "imageQuery": "video call coaching session laptop",
     "imageUrl": "https://images.pexels.com/photos/8055488/pexels-photo-8055488.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Annushka  Ahuja / Pexels"
+    "imageCredit": "Annushka  Ahuja / Pexels",
+    "signals": {
+      "heat": 40,
+      "interest": 294,
+      "interestTrend": 0.838,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "group-coaching-cohorts",
@@ -207,7 +324,16 @@
     "hotness": 56,
     "imageQuery": "group video call online meeting laptop",
     "imageUrl": "https://images.pexels.com/photos/6937870/pexels-photo-6937870.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Diva Plavalaguna / Pexels"
+    "imageCredit": "Diva Plavalaguna / Pexels",
+    "signals": {
+      "heat": 40,
+      "interest": 294,
+      "interestTrend": 0.838,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "done-for-you-service-packages",
@@ -222,7 +348,16 @@
     "hotness": 54,
     "imageQuery": "freelancer working laptop desk focused",
     "imageUrl": "https://images.pexels.com/photos/13068699/pexels-photo-13068699.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Andrés  Góngora / Pexels"
+    "imageCredit": "Andrés  Góngora / Pexels",
+    "signals": {
+      "heat": 40,
+      "interest": 294,
+      "interestTrend": 0.838,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "paid-discovery-calls-and-power-hours",
@@ -237,7 +372,16 @@
     "hotness": 60,
     "imageQuery": "consultation meeting notes conversation",
     "imageUrl": "https://images.pexels.com/photos/6255879/pexels-photo-6255879.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "www.kaboompics.com / Pexels"
+    "imageCredit": "www.kaboompics.com / Pexels",
+    "signals": {
+      "heat": 40,
+      "interest": 294,
+      "interestTrend": 0.838,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "mini-courses-for-your-craft-29-79",
@@ -252,7 +396,16 @@
     "hotness": 60,
     "imageQuery": "person filming tutorial ring light",
     "imageUrl": "https://images.pexels.com/photos/7676472/pexels-photo-7676472.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Ivan S / Pexels"
+    "imageCredit": "Ivan S / Pexels",
+    "signals": {
+      "heat": 28,
+      "interest": 53,
+      "interestTrend": 0.937,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "live-online-workshops",
@@ -267,7 +420,16 @@
     "hotness": 58,
     "imageQuery": "online workshop webinar teaching screen",
     "imageUrl": "https://images.pexels.com/photos/7013900/pexels-photo-7013900.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "cottonbro studio / Pexels"
+    "imageCredit": "cottonbro studio / Pexels",
+    "signals": {
+      "heat": 28,
+      "interest": 53,
+      "interestTrend": 0.937,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "skill-based-membership-communities",
@@ -282,7 +444,16 @@
     "hotness": 54,
     "imageQuery": "online community learning laptop group",
     "imageUrl": "https://images.pexels.com/photos/6140673/pexels-photo-6140673.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "William  Fortunato / Pexels"
+    "imageCredit": "William  Fortunato / Pexels",
+    "signals": {
+      "heat": 28,
+      "interest": 53,
+      "interestTrend": 0.937,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "downloadable-ebooks-and-guides",
@@ -297,6 +468,15 @@
     "hotness": 56,
     "imageQuery": "ebook reading tablet guide desk",
     "imageUrl": "https://images.pexels.com/photos/8546475/pexels-photo-8546475.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "@felipepelaquim - / Pexels"
+    "imageCredit": "@felipepelaquim - / Pexels",
+    "signals": {
+      "heat": 28,
+      "interest": 53,
+      "interestTrend": 0.937,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   }
 ]

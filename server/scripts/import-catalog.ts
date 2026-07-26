@@ -54,6 +54,10 @@ interface NicheInput {
 
 interface SignalsInput {
   heat?: number;
+  interest?: number;
+  interestTrend?: number;
+  liveSourcingUrl?: string;
+  liveMerchant?: string;
   unitsSold?: number;
   listings?: number;
   priceLow?: number;
@@ -245,6 +249,10 @@ function signalColumns(s: SignalsInput, currentHeat: number | null) {
     adDaysLive: s.adDaysLive ?? null,
     adReach: s.adReach ?? null,
     adCoverage: s.adCoverage ?? null,
+    interest: s.interest ?? null,
+    interestTrend: s.interestTrend ?? null,
+    liveSourcingUrl: s.liveSourcingUrl ?? null,
+    liveMerchant: s.liveMerchant ?? null,
     ...(s.advertiserName ? { adAdvertiser: s.advertiserName, adSource: 'meta' } : {}),
     signalSources: (s.sources ?? []).join(','),
     signalsPolledAt: s.polledAt ? new Date(s.polledAt) : new Date(),

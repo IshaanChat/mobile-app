@@ -12,7 +12,16 @@
     "hotness": 62,
     "imageQuery": "artisan soap bars stacked natural",
     "imageUrl": "https://images.pexels.com/photos/7055166/pexels-photo-7055166.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Pavel Danilyuk / Pexels"
+    "imageCredit": "Pavel Danilyuk / Pexels",
+    "signals": {
+      "heat": 47,
+      "interest": 865,
+      "interestTrend": 0.845,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "shower-steamers",
@@ -27,7 +36,16 @@
     "hotness": 64,
     "imageQuery": "shower steamer eucalyptus bathroom",
     "imageUrl": "https://images.pexels.com/photos/5241048/pexels-photo-5241048.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "www.kaboompics.com / Pexels"
+    "imageCredit": "www.kaboompics.com / Pexels",
+    "signals": {
+      "heat": 47,
+      "interest": 865,
+      "interestTrend": 0.845,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "whipped-body-butter",
@@ -42,7 +60,16 @@
     "hotness": 60,
     "imageQuery": "whipped body butter jar cream",
     "imageUrl": "https://images.pexels.com/photos/9774872/pexels-photo-9774872.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "SHVETS production / Pexels"
+    "imageCredit": "SHVETS production / Pexels",
+    "signals": {
+      "heat": 47,
+      "interest": 865,
+      "interestTrend": 0.845,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "soap-making-starter-kits",
@@ -57,7 +84,16 @@
     "hotness": 56,
     "imageQuery": "soap making supplies kit flatlay",
     "imageUrl": "https://images.pexels.com/photos/10573237/pexels-photo-10573237.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Ron Lach / Pexels"
+    "imageCredit": "Ron Lach / Pexels",
+    "signals": {
+      "heat": 47,
+      "interest": 865,
+      "interestTrend": 0.845,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "ice-rollers-gua-sha-tools",
@@ -72,7 +108,16 @@
     "hotness": 62,
     "imageQuery": "skincare serum bottles minimalist",
     "imageUrl": "https://images.pexels.com/photos/8100691/pexels-photo-8100691.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Polina ⠀ / Pexels"
+    "imageCredit": "Polina ⠀ / Pexels",
+    "signals": {
+      "heat": 41,
+      "interest": 371,
+      "interestTrend": 0.942,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "led-light-therapy-masks",
@@ -87,7 +132,16 @@
     "hotness": 66,
     "imageQuery": "led face mask skincare device",
     "imageUrl": "https://images.pexels.com/photos/7216285/pexels-photo-7216285.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Dinç Tapa / Pexels"
+    "imageCredit": "Dinç Tapa / Pexels",
+    "signals": {
+      "heat": 41,
+      "interest": 371,
+      "interestTrend": 0.942,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "silk-sleep-masks-pillowcases",
@@ -102,7 +156,16 @@
     "hotness": 58,
     "imageQuery": "silk sleep mask pillowcase bedroom",
     "imageUrl": "https://images.pexels.com/photos/6541109/pexels-photo-6541109.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Polina ⠀ / Pexels"
+    "imageCredit": "Polina ⠀ / Pexels",
+    "signals": {
+      "heat": 41,
+      "interest": 371,
+      "interestTrend": 0.942,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "acne-patch-multipacks",
@@ -117,7 +180,16 @@
     "hotness": 60,
     "imageQuery": "acne patches skincare flatlay",
     "imageUrl": "https://images.pexels.com/photos/4812645/pexels-photo-4812645.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "cottonbro studio / Pexels"
+    "imageCredit": "cottonbro studio / Pexels",
+    "signals": {
+      "heat": 41,
+      "interest": 371,
+      "interestTrend": 0.942,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "beef-tallow-lip-balms",
@@ -132,7 +204,16 @@
     "hotness": 64,
     "imageQuery": "natural cosmetics ingredients herbs",
     "imageUrl": "https://images.pexels.com/photos/8450505/pexels-photo-8450505.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "MART  PRODUCTION / Pexels"
+    "imageCredit": "MART  PRODUCTION / Pexels",
+    "signals": {
+      "heat": 45,
+      "interest": 632,
+      "interestTrend": 0.982,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "tinted-lip-oils",
@@ -147,7 +228,16 @@
     "hotness": 66,
     "imageQuery": "lip oil gloss tube pink",
     "imageUrl": "https://images.pexels.com/photos/10816496/pexels-photo-10816496.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Jonas Wilson / Pexels"
+    "imageCredit": "Jonas Wilson / Pexels",
+    "signals": {
+      "heat": 45,
+      "interest": 632,
+      "interestTrend": 0.982,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "cream-blush-sticks",
@@ -162,7 +252,16 @@
     "hotness": 58,
     "imageQuery": "cream blush stick makeup",
     "imageUrl": "https://images.pexels.com/photos/12955707/pexels-photo-12955707.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Atlantic Ambience / Pexels"
+    "imageCredit": "Atlantic Ambience / Pexels",
+    "signals": {
+      "heat": 45,
+      "interest": 632,
+      "interestTrend": 0.982,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "herbal-face-steam-blends",
@@ -177,7 +276,16 @@
     "hotness": 50,
     "imageQuery": "dried herbs flowers bowl steam",
     "imageUrl": "https://images.pexels.com/photos/5480241/pexels-photo-5480241.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Yan Krukau / Pexels"
+    "imageCredit": "Yan Krukau / Pexels",
+    "signals": {
+      "heat": 45,
+      "interest": 632,
+      "interestTrend": 0.982,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "solid-perfume-travel-tins",
@@ -192,7 +300,16 @@
     "hotness": 58,
     "imageQuery": "perfume oil roller bottles amber",
     "imageUrl": "https://images.pexels.com/photos/6693899/pexels-photo-6693899.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Tara Winstead / Pexels"
+    "imageCredit": "Tara Winstead / Pexels",
+    "signals": {
+      "heat": 47,
+      "interest": 884,
+      "interestTrend": 0.884,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "fragrance-discovery-sample-sets",
@@ -207,7 +324,16 @@
     "hotness": 56,
     "imageQuery": "perfume sample vials small bottles",
     "imageUrl": "https://images.pexels.com/photos/15300329/pexels-photo-15300329.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "찬희 윤 / Pexels"
+    "imageCredit": "찬희 윤 / Pexels",
+    "signals": {
+      "heat": 47,
+      "interest": 884,
+      "interestTrend": 0.884,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "hair-and-body-mists",
@@ -222,7 +348,16 @@
     "hotness": 60,
     "imageQuery": "body mist spray bottle beauty",
     "imageUrl": "https://images.pexels.com/photos/7321279/pexels-photo-7321279.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "www.kaboompics.com / Pexels"
+    "imageCredit": "www.kaboompics.com / Pexels",
+    "signals": {
+      "heat": 47,
+      "interest": 884,
+      "interestTrend": 0.884,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "wax-melts-in-scent-collections",
@@ -237,7 +372,16 @@
     "hotness": 62,
     "imageQuery": "wax melts scented cubes",
     "imageUrl": "https://images.pexels.com/photos/7234657/pexels-photo-7234657.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Yan Krukau / Pexels"
+    "imageCredit": "Yan Krukau / Pexels",
+    "signals": {
+      "heat": 47,
+      "interest": 884,
+      "interestTrend": 0.884,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "beard-oil-balm-gift-kits",
@@ -252,7 +396,16 @@
     "hotness": 58,
     "imageQuery": "beard oil bottle barber wood",
     "imageUrl": "https://images.pexels.com/photos/4625624/pexels-photo-4625624.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "AI25.Studio  Studio / Pexels"
+    "imageCredit": "AI25.Studio  Studio / Pexels",
+    "signals": {
+      "heat": 42,
+      "interest": 426,
+      "interestTrend": 0.866,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "safety-razor-shave-sets",
@@ -267,7 +420,16 @@
     "hotness": 54,
     "imageQuery": "safety razor shaving brush set",
     "imageUrl": "https://images.pexels.com/photos/9201296/pexels-photo-9201296.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Tony Flood / Pexels"
+    "imageCredit": "Tony Flood / Pexels",
+    "signals": {
+      "heat": 42,
+      "interest": 426,
+      "interestTrend": 0.866,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "solid-cologne-pucks",
@@ -282,7 +444,16 @@
     "hotness": 50,
     "imageQuery": "solid cologne tin mens grooming",
     "imageUrl": "https://images.pexels.com/photos/3944746/pexels-photo-3944746.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Castorly Stock / Pexels"
+    "imageCredit": "Castorly Stock / Pexels",
+    "signals": {
+      "heat": 42,
+      "interest": 426,
+      "interestTrend": 0.866,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "engraved-wooden-beard-combs",
@@ -297,6 +468,15 @@
     "hotness": 52,
     "imageQuery": "wooden comb engraved mens grooming",
     "imageUrl": "https://images.pexels.com/photos/4061483/pexels-photo-4061483.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Erik Mclean / Pexels"
+    "imageCredit": "Erik Mclean / Pexels",
+    "signals": {
+      "heat": 42,
+      "interest": 426,
+      "interestTrend": 0.866,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   }
 ]

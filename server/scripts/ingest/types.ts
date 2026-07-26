@@ -2,7 +2,7 @@
 // things — units sold, competing listings, live ad creatives — so each adapter
 // normalises into this and the scorer reconciles them.
 
-export type SourceName = 'aliexpress' | 'etsy' | 'meta';
+export type SourceName = 'aliexpress' | 'etsy' | 'meta' | 'wikipedia' | 'cj';
 
 /**
  * What a number is ABOUT, which matters more than what it is.
@@ -49,6 +49,19 @@ export interface Signal {
   advertiserName?: string;
   /** The landing domain, the closest thing to a product identity an ad has. */
   advertiserDomain?: string;
+
+  /** Mean daily readers of the subject. Attention, not purchases. */
+  interest?: number;
+  /**
+   * Recent month over the one before it, as a ratio: 1.35 is a third more
+   * attention. The only signal here that arrives already differentiated, so
+   * it's what lets "trending" mean something on the very first poll.
+   */
+  interestTrend?: number;
+
+  /** A live listing found in a merchant catalog, and who sells it. */
+  liveSourcingUrl?: string;
+  liveMerchant?: string;
 }
 
 export interface Signals {
@@ -62,6 +75,10 @@ export interface Signals {
   adReach?: number;
   adCoverage?: string;
   advertiserName?: string;
+  interest?: number;
+  interestTrend?: number;
+  liveSourcingUrl?: string;
+  liveMerchant?: string;
   sources: SourceName[];
   polledAt: string;
 }

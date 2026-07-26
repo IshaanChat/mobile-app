@@ -12,7 +12,16 @@
     "hotness": 70,
     "imageQuery": "potter glazing ceramic bowl",
     "imageUrl": "https://images.pexels.com/photos/9304555/pexels-photo-9304555.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Mikhail Nilov / Pexels"
+    "imageCredit": "Mikhail Nilov / Pexels",
+    "signals": {
+      "heat": 46,
+      "interest": 729,
+      "interestTrend": 0.861,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "ceramic-incense-holders",
@@ -27,7 +36,16 @@
     "hotness": 58,
     "imageQuery": "ceramic incense holder minimal",
     "imageUrl": "https://images.pexels.com/photos/6954559/pexels-photo-6954559.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Olha Ruskykh / Pexels"
+    "imageCredit": "Olha Ruskykh / Pexels",
+    "signals": {
+      "heat": 46,
+      "interest": 729,
+      "interestTrend": 0.861,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "speckled-dinner-plate-sets",
@@ -42,7 +60,16 @@
     "hotness": 62,
     "imageQuery": "speckled ceramic dinner plates",
     "imageUrl": "https://images.pexels.com/photos/35479258/pexels-photo-35479258.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Burak Eroglu 🇹🇷 / Pexels"
+    "imageCredit": "Burak Eroglu 🇹🇷 / Pexels",
+    "signals": {
+      "heat": 46,
+      "interest": 729,
+      "interestTrend": 0.861,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "mushroom-trinket-dishes",
@@ -57,7 +84,16 @@
     "hotness": 64,
     "imageQuery": "small ceramic trinket dish jewelry",
     "imageUrl": "https://images.pexels.com/photos/5566964/pexels-photo-5566964.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Anastasia  Shuraeva / Pexels"
+    "imageCredit": "Anastasia  Shuraeva / Pexels",
+    "signals": {
+      "heat": 46,
+      "interest": 729,
+      "interestTrend": 0.861,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "dessert-candles-whipped-cream-jars",
@@ -72,7 +108,16 @@
     "hotness": 72,
     "imageQuery": "aesthetic candle jars flatlay",
     "imageUrl": "https://images.pexels.com/photos/5782660/pexels-photo-5782660.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Leeloo The First / Pexels"
+    "imageCredit": "Leeloo The First / Pexels",
+    "signals": {
+      "heat": 42,
+      "interest": 404,
+      "interestTrend": 0.9,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "wooden-wick-soy-candles",
@@ -87,7 +132,16 @@
     "hotness": 66,
     "imageQuery": "wooden wick candle burning cozy",
     "imageUrl": "https://images.pexels.com/photos/3654619/pexels-photo-3654619.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Castorly Stock / Pexels"
+    "imageCredit": "Castorly Stock / Pexels",
+    "signals": {
+      "heat": 42,
+      "interest": 404,
+      "interestTrend": 0.9,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "car-hanging-diffusers",
@@ -102,7 +156,16 @@
     "hotness": 60,
     "imageQuery": "car air freshener hanging aesthetic",
     "imageUrl": "https://images.pexels.com/photos/5158247/pexels-photo-5158247.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Erik Mclean / Pexels"
+    "imageCredit": "Erik Mclean / Pexels",
+    "signals": {
+      "heat": 42,
+      "interest": 404,
+      "interestTrend": 0.9,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "reed-diffuser-sets",
@@ -117,7 +180,16 @@
     "hotness": 54,
     "imageQuery": "reed diffuser bottle interior",
     "imageUrl": "https://images.pexels.com/photos/20379600/pexels-photo-20379600.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "C'Pho Ngondo R.Rouge / Pexels"
+    "imageCredit": "C'Pho Ngondo R.Rouge / Pexels",
+    "signals": {
+      "heat": 42,
+      "interest": 404,
+      "interestTrend": 0.9,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "vintage-botanical-print-sets-3-pack",
@@ -132,7 +204,16 @@
     "hotness": 66,
     "imageQuery": "gallery wall framed posters room",
     "imageUrl": "https://images.pexels.com/photos/19019600/pexels-photo-19019600.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Harun / Pexels"
+    "imageCredit": "Harun / Pexels",
+    "signals": {
+      "heat": 39,
+      "interest": 277,
+      "interestTrend": 0.907,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "custom-star-map-prints",
@@ -147,7 +228,16 @@
     "hotness": 68,
     "imageQuery": "star map poster night sky print",
     "imageUrl": "https://images.pexels.com/photos/20460119/pexels-photo-20460119.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Roy Yang / Pexels"
+    "imageCredit": "Roy Yang / Pexels",
+    "signals": {
+      "heat": 39,
+      "interest": 277,
+      "interestTrend": 0.907,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "retro-travel-posters",
@@ -162,7 +252,16 @@
     "hotness": 58,
     "imageQuery": "retro travel poster wall vintage",
     "imageUrl": "https://images.pexels.com/photos/8312013/pexels-photo-8312013.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Denys Gromov / Pexels"
+    "imageCredit": "Denys Gromov / Pexels",
+    "signals": {
+      "heat": 39,
+      "interest": 277,
+      "interestTrend": 0.907,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "digital-download-wall-art",
@@ -177,7 +276,16 @@
     "hotness": 63,
     "imageQuery": "printable art digital download desk",
     "imageUrl": "https://images.pexels.com/photos/38544/imac-apple-mockup-app-38544.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Pixabay / Pexels"
+    "imageCredit": "Pixabay / Pexels",
+    "signals": {
+      "heat": 39,
+      "interest": 277,
+      "interestTrend": 0.907,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "self-watering-globe-planters",
@@ -192,7 +300,16 @@
     "hotness": 60,
     "imageQuery": "succulents ceramic planters shelf",
     "imageUrl": "https://images.pexels.com/photos/35979376/pexels-photo-35979376.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Minh Fan / Pexels"
+    "imageCredit": "Minh Fan / Pexels",
+    "signals": {
+      "heat": 35,
+      "interest": 155,
+      "interestTrend": 1.018,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "face-planters",
@@ -207,7 +324,16 @@
     "hotness": 62,
     "imageQuery": "face planter ceramic plant head",
     "imageUrl": "https://images.pexels.com/photos/7222201/pexels-photo-7222201.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Alena Darmel / Pexels"
+    "imageCredit": "Alena Darmel / Pexels",
+    "signals": {
+      "heat": 35,
+      "interest": 155,
+      "interestTrend": 1.018,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "propagation-station-wall-mounts",
@@ -222,7 +348,16 @@
     "hotness": 56,
     "imageQuery": "plant propagation station glass tubes",
     "imageUrl": "https://images.pexels.com/photos/8851079/pexels-photo-8851079.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Mikhail Nilov / Pexels"
+    "imageCredit": "Mikhail Nilov / Pexels",
+    "signals": {
+      "heat": 35,
+      "interest": 155,
+      "interestTrend": 1.018,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "hand-poured-concrete-planters",
@@ -237,7 +372,16 @@
     "hotness": 55,
     "imageQuery": "concrete planter minimal grey",
     "imageUrl": "https://images.pexels.com/photos/1371635/pexels-photo-1371635.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Andreea Ch / Pexels"
+    "imageCredit": "Andreea Ch / Pexels",
+    "signals": {
+      "heat": 35,
+      "interest": 155,
+      "interestTrend": 1.018,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "irregular-edge-acacia-serving-boards",
@@ -252,7 +396,16 @@
     "hotness": 58,
     "imageQuery": "wooden serving board table setting",
     "imageUrl": "https://images.pexels.com/photos/5638471/pexels-photo-5638471.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Askar Abayev / Pexels"
+    "imageCredit": "Askar Abayev / Pexels",
+    "signals": {
+      "heat": 36,
+      "interest": 166,
+      "interestTrend": 0.94,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "engraved-personalised-cutting-boards",
@@ -267,7 +420,16 @@
     "hotness": 64,
     "imageQuery": "engraved wooden cutting board gift",
     "imageUrl": "https://images.pexels.com/photos/29734025/pexels-photo-29734025.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Marta Branco / Pexels"
+    "imageCredit": "Marta Branco / Pexels",
+    "signals": {
+      "heat": 36,
+      "interest": 166,
+      "interestTrend": 0.94,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "stonewashed-linen-napkin-sets",
@@ -282,7 +444,16 @@
     "hotness": 54,
     "imageQuery": "linen napkins table neutral",
     "imageUrl": "https://images.pexels.com/photos/7651664/pexels-photo-7651664.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Maria Tyutina / Pexels"
+    "imageCredit": "Maria Tyutina / Pexels",
+    "signals": {
+      "heat": 36,
+      "interest": 166,
+      "interestTrend": 0.94,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "ceramic-spoon-rests",
@@ -297,7 +468,16 @@
     "hotness": 50,
     "imageQuery": "ceramic spoon rest kitchen counter",
     "imageUrl": "https://images.pexels.com/photos/7303727/pexels-photo-7303727.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Cup of  Couple / Pexels"
+    "imageCredit": "Cup of  Couple / Pexels",
+    "signals": {
+      "heat": 36,
+      "interest": 166,
+      "interestTrend": 0.94,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "floating-nightstands-small-space-furniture",
@@ -312,7 +492,16 @@
     "hotness": 62,
     "imageQuery": "carpenter sanding wooden furniture",
     "imageUrl": "https://images.pexels.com/photos/5466146/pexels-photo-5466146.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "AI25.Studio  Studio / Pexels"
+    "imageCredit": "AI25.Studio  Studio / Pexels",
+    "signals": {
+      "heat": 38,
+      "interest": 220,
+      "interestTrend": 0.911,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "live-edge-phone-docks",
@@ -327,7 +516,16 @@
     "hotness": 52,
     "imageQuery": "wooden phone stand desk handmade",
     "imageUrl": "https://images.pexels.com/photos/16017164/pexels-photo-16017164.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "COPPERTIST WU / Pexels"
+    "imageCredit": "COPPERTIST WU / Pexels",
+    "signals": {
+      "heat": 38,
+      "interest": 220,
+      "interestTrend": 0.911,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "wall-mounted-key-organisers",
@@ -342,7 +540,16 @@
     "hotness": 50,
     "imageQuery": "wooden key holder wall entryway",
     "imageUrl": "https://images.pexels.com/photos/12422459/pexels-photo-12422459.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Alexey Demidov / Pexels"
+    "imageCredit": "Alexey Demidov / Pexels",
+    "signals": {
+      "heat": 38,
+      "interest": 220,
+      "interestTrend": 0.911,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "modular-shoe-racks",
@@ -357,6 +564,15 @@
     "hotness": 48,
     "imageQuery": "wooden shoe rack entryway minimal",
     "imageUrl": "https://images.pexels.com/photos/19866472/pexels-photo-19866472.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Lisa Anna / Pexels"
+    "imageCredit": "Lisa Anna / Pexels",
+    "signals": {
+      "heat": 38,
+      "interest": 220,
+      "interestTrend": 0.911,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   }
 ]

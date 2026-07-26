@@ -33,6 +33,13 @@ export interface DiscoverEvidence {
   adCount: number | null;
   adDaysLive: number | null;
   adReach: number | null;
+  /** Mean daily readers of the subject. Attention, not purchases. */
+  interest: number | null;
+  /** Recent month over the previous one, as a ratio. 1.35 is a third more. */
+  interestTrend: number | null;
+  /** A live listing found in a merchant catalog, and who sells it. */
+  liveSourcingUrl: string | null;
+  liveMerchant: string | null;
   /** 'meta' | 'manual' — where the ad evidence came from. */
   adSource: string | null;
   /** 'EU' when the ad data only covers EU-reaching ads, which Meta's does. */
@@ -50,7 +57,8 @@ export interface DiscoverEvidence {
  * editorial `hotness` up as data.
  */
 export function toDiscoverProduct(p: TrendProductWithNiche, saved: boolean) {
-  const measured = p.heat !== null || p.adDaysLive !== null || p.listings !== null;
+  const measured =
+    p.heat !== null || p.adDaysLive !== null || p.listings !== null || p.interest !== null;
 
   return {
     id: p.id,
@@ -68,7 +76,8 @@ export function toDiscoverProduct(p: TrendProductWithNiche, saved: boolean) {
       : null,
     sourcingType: p.sourcingType,
     sourceName: p.sourceName,
-    sourcingUrl: p.sourcingUrl ?? p.sourceUrl,
+    // A live merchant listing beats an authored search link when we have one.
+    sourcingUrl: p.liveSourcingUrl ?? p.sourcingUrl ?? p.sourceUrl,
     sourceCost: p.sourceCost,
     typicalResale: p.typicalResale,
     priceRange: p.priceRange,
@@ -87,6 +96,10 @@ export function toDiscoverProduct(p: TrendProductWithNiche, saved: boolean) {
           adCount: p.adCount,
           adDaysLive: p.adDaysLive,
           adReach: p.adReach,
+          interest: p.interest,
+          interestTrend: p.interestTrend,
+          liveSourcingUrl: p.liveSourcingUrl,
+          liveMerchant: p.liveMerchant,
           adSource: p.adSource,
           adCoverage: p.adCoverage,
           adEvidenceUrl: p.adEvidenceUrl,

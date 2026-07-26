@@ -50,6 +50,13 @@ export function evidenceChips(e: DiscoverEvidence | null): { icon: 'flame' | 'sp
   if (e.adDaysLive && e.adDaysLive >= 7) {
     chips.push({ icon: 'flame', text: `${e.adDaysLive} days live` });
   }
+  // Only shown when readership is actually growing in absolute terms. The
+  // ranker compares each subject against its peers, because nearly
+  // everything drifts down together — but a chip claiming "rising" on a
+  // subject that lost 8% would be a lie, however well it did relatively.
+  if (e.interestTrend !== null && e.interestTrend > 1.05) {
+    chips.push({ icon: 'spark', text: `+${Math.round((e.interestTrend - 1) * 100)}% interest` });
+  }
   if (e.saturation === 'low' && e.listings !== null) {
     chips.push({ icon: 'spark', text: 'low competition' });
   }

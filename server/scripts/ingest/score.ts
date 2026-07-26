@@ -16,7 +16,7 @@ import type { Signal, Signals, SourceName } from './types';
 import { todayISO } from './types';
 
 /** Reference points where a metric counts as "strong" (scores ~0.8). */
-const REF = { unitsSold: 3000, adDaysLive: 45, ads: 8 };
+const REF = { unitsSold: 3000, adDaysLive: 45, ads: 8, interest: 4000 };
 
 /**
  * Crowding, 0–1, on a linear ramp between the same thresholds `saturationOf`
@@ -77,6 +77,8 @@ export function combine(signals: Signal[]): Signals {
   const adDaysLive = maxOf(signals.map((s) => s.adDaysLive));
   const adReach = maxOf(signals.map((s) => s.adReach));
   const pressure = adPressure(adDaysLive, ads);
+  const interest = maxOf(signals.map((s) => s.interest));
+  const interestTrend = maxOf(signals.map((s) => s.interestTrend));
 
   const prices = signals
     .map((s) => s.price)
@@ -96,6 +98,9 @@ export function combine(signals: Signal[]): Signals {
   const parts: [number, number][] = [];
   if (unitsSold !== undefined) parts.push([sold, 0.6]);
   if (pressure !== undefined) parts.push([pressure, 0.4]);
+  // Attention counts, but below both of the above: a lot of people reading
+  // about macramé is real, and still weaker than one person buying some.
+  if (interest !== undefined) parts.push([squash(interest, REF.interest), 0.25]);
   if (listings !== undefined) parts.push([MARKET_EXISTS, 0.2]);
 
   const weightTotal = parts.reduce((a, [, w]) => a + w, 0);
@@ -117,6 +122,7 @@ export function combine(signals: Signal[]): Signals {
     unitsSold !== undefined ? 1
     : (adDaysLive ?? 0) >= 21 ? 0.85
     : pressure !== undefined ? 0.6
+    : interest !== undefined ? 0.58
     : listings !== undefined ? 0.55
     : 0.4;
 
@@ -126,6 +132,7 @@ export function combine(signals: Signal[]): Signals {
   const sources = [...new Set(signals.map((s) => s.source))].sort() as SourceName[];
   const withAdvertiser = signals.find((s) => s.advertiserName);
   const coverage = signals.find((s) => s.adCoverage)?.adCoverage;
+  const live = signals.find((s) => s.liveSourcingUrl);
 
   return {
     heat,
@@ -137,6 +144,13 @@ export function combine(signals: Signal[]): Signals {
     ...(adReach !== undefined ? { adReach } : {}),
     ...(coverage ? { adCoverage: coverage } : {}),
     ...(withAdvertiser?.advertiserName ? { advertiserName: withAdvertiser.advertiserName } : {}),
+    ...(interest !== undefined ? { interest } : {}),
+    // Carried through but deliberately NOT folded into heat. It's a
+    // derivative — it says which way this is moving, not how big it is, and
+    // conflating the two is how a fading giant outranks a rising nobody.
+    ...(interestTrend !== undefined ? { interestTrend } : {}),
+    ...(live?.liveSourcingUrl ? { liveSourcingUrl: live.liveSourcingUrl } : {}),
+    ...(live?.liveMerchant ? { liveMerchant: live.liveMerchant } : {}),
     sources,
     polledAt: todayISO(),
   };

@@ -12,7 +12,16 @@
     "hotness": 64,
     "imageQuery": "dog wearing bandana collar cute",
     "imageUrl": "https://images.pexels.com/photos/7588709/pexels-photo-7588709.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Frank Barning / Pexels"
+    "imageCredit": "Frank Barning / Pexels",
+    "signals": {
+      "heat": 46,
+      "interest": 680,
+      "interestTrend": 0.922,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "embroidered-name-collars",
@@ -27,7 +36,16 @@
     "hotness": 62,
     "imageQuery": "dog collar embroidered name webbing",
     "imageUrl": "https://images.pexels.com/photos/37127680/pexels-photo-37127680.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Cara Denison / Pexels"
+    "imageCredit": "Cara Denison / Pexels",
+    "signals": {
+      "heat": 46,
+      "interest": 680,
+      "interestTrend": 0.922,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "pet-bandanas-seasonal-sets",
@@ -42,7 +60,16 @@
     "hotness": 58,
     "imageQuery": "dog bandana pet accessory fabric",
     "imageUrl": "https://images.pexels.com/photos/16652403/pexels-photo-16652403.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Matheus Bertelli / Pexels"
+    "imageCredit": "Matheus Bertelli / Pexels",
+    "signals": {
+      "heat": 46,
+      "interest": 680,
+      "interestTrend": 0.922,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "custom-pet-portrait-blankets",
@@ -57,7 +84,16 @@
     "hotness": 60,
     "imageQuery": "dog blanket cozy pet home",
     "imageUrl": "https://images.pexels.com/photos/12032623/pexels-photo-12032623.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Alfo Medeiros / Pexels"
+    "imageCredit": "Alfo Medeiros / Pexels",
+    "signals": {
+      "heat": 46,
+      "interest": 680,
+      "interestTrend": 0.922,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "dog-birthday-cake-kits",
@@ -72,7 +108,16 @@
     "hotness": 60,
     "imageQuery": "dog biscuits homemade bone shaped",
     "imageUrl": "https://images.pexels.com/photos/8434641/pexels-photo-8434641.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "MART  PRODUCTION / Pexels"
+    "imageCredit": "MART  PRODUCTION / Pexels",
+    "signals": {
+      "heat": 33,
+      "interest": 106,
+      "interestTrend": 0.961,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "single-ingredient-dehydrated-treats",
@@ -87,7 +132,16 @@
     "hotness": 62,
     "imageQuery": "dehydrated dog treats natural bag",
     "imageUrl": "https://images.pexels.com/photos/37235627/pexels-photo-37235627.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Natalia Sevruk / Pexels"
+    "imageCredit": "Natalia Sevruk / Pexels",
+    "signals": {
+      "heat": 33,
+      "interest": 106,
+      "interestTrend": 0.961,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "pupcake-and-treat-boxes",
@@ -102,7 +156,16 @@
     "hotness": 56,
     "imageQuery": "dog treat gift box birthday",
     "imageUrl": "https://images.pexels.com/photos/5731905/pexels-photo-5731905.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Sam Lion / Pexels"
+    "imageCredit": "Sam Lion / Pexels",
+    "signals": {
+      "heat": 33,
+      "interest": 106,
+      "interestTrend": 0.961,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "treat-subscription-for-dogs",
@@ -117,7 +180,16 @@
     "hotness": 58,
     "imageQuery": "pet subscription box treats delivery",
     "imageUrl": "https://images.pexels.com/photos/6017739/pexels-photo-6017739.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "ArtHouse Studio / Pexels"
+    "imageCredit": "ArtHouse Studio / Pexels",
+    "signals": {
+      "heat": 33,
+      "interest": 106,
+      "interestTrend": 0.961,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "matching-owner-and-dog-hoodie-sets",
@@ -132,7 +204,15 @@
     "hotness": 60,
     "imageQuery": "small dog wearing knit sweater",
     "imageUrl": "https://images.pexels.com/photos/6471471/pexels-photo-6471471.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Erik Izsóf / Pexels"
+    "imageCredit": "Erik Izsóf / Pexels",
+    "signals": {
+      "heat": 8,
+      "interest": 2,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "hand-knit-dog-jumpers",
@@ -147,7 +227,15 @@
     "hotness": 54,
     "imageQuery": "dog wearing wool jumper winter",
     "imageUrl": "https://images.pexels.com/photos/6530742/pexels-photo-6530742.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Mikhail Nilov / Pexels"
+    "imageCredit": "Mikhail Nilov / Pexels",
+    "signals": {
+      "heat": 8,
+      "interest": 2,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "dog-raincoats-and-cooling-vests",
@@ -162,7 +250,15 @@
     "hotness": 52,
     "imageQuery": "dog raincoat walking outdoors",
     "imageUrl": "https://images.pexels.com/photos/8499916/pexels-photo-8499916.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Yaroslav Shuraev / Pexels"
+    "imageCredit": "Yaroslav Shuraev / Pexels",
+    "signals": {
+      "heat": 8,
+      "interest": 2,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   },
   {
     "slug": "pet-costume-sets-for-holidays",
@@ -177,6 +273,14 @@
     "hotness": 56,
     "imageQuery": "dog costume halloween pet festive",
     "imageUrl": "https://images.pexels.com/photos/29124314/pexels-photo-29124314.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
-    "imageCredit": "Mike Kutz / Pexels"
+    "imageCredit": "Mike Kutz / Pexels",
+    "signals": {
+      "heat": 8,
+      "interest": 2,
+      "sources": [
+        "wikipedia"
+      ],
+      "polledAt": "2026-07-26"
+    }
   }
 ]
