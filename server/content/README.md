@@ -71,6 +71,7 @@ are skipped, so this works from your first approval:
 | Source | What it gives | Getting a key |
 |---|---|---|
 | *(none)* | **readership + its trend, for every product** | **nothing to get — Wikimedia needs no key** |
+| *(none)* | **real base cost per unit on print-on-demand rows** | **nothing to get — Printful's v1 catalog is open** |
 | `ALIEXPRESS_APP_KEY` + `_APP_SECRET` | units sold, unit cost, image, **commission-paying link** | portals.aliexpress.com — few days |
 | `CJ_ACCESS_TOKEN` + `_COMPANY_ID` | real prices and live merchant listings across 15k+ advertisers | cj.com/publisher — free, and product search covers advertisers you haven't joined |
 | `ETSY_API_KEY` | handmade listing counts + price band | developers.etsy.com — allow a few days |
@@ -82,6 +83,39 @@ an `interest` figure and a trend before you have signed up for anything.
 Each niche carries a `wikiTitle` because no niche name is an article — and a
 near-miss title is worse than a missing one, since it returns plausible
 single-digit numbers rather than an error.
+
+### Printful — what the blank costs
+
+The second source needing no credential, and the one that answers the question
+print-on-demand rows turn on: what does this cost me per unit? Printful's v1
+catalog (`/products`) is open — no key, no OAuth, no signup — and publishes a
+real price for every variant of 517 blanks.
+
+It runs on `PRINT_ON_DEMAND` rows only, and reports a **price and nothing
+else**. Printful is the supplier, not the market: it knows what a Bella+Canvas
+3001 costs to make and nothing whatsoever about whether anyone wants yours. It
+never sets `unitsSold` or `listings`, so it cannot move `heat` on its own.
+
+Matching a row to a blank is the fiddly part, because rows are named for their
+*design* and the catalog is named for the *garment* — "Hometown varsity tees"
+has to find a Bella 3001. Two rules do the work, both learned by running it
+against the real catalog rather than reasoning about it:
+
+- **A shared product noun is required.** Without it, one shared adjective
+  scored a perfect match on the wrong item: "Film-photography print **drops**"
+  matched a Men's *Drop* Arm Tank Top, "**Pet**-portrait blankets" matched a
+  Knitted Pet Sweater. Confident, entirely wrong costs.
+- **Upgrades the row didn't ask for are penalised.** An upsell line carries
+  every size the plain one does, so catalog depth picked it — a star-map print
+  matched the *framed* poster at $20.35 when the sheet is $5.39. Rows that do
+  ask for embroidery still get it.
+
+19 of the 20 POD rows price cleanly. The one that doesn't — "Monthly milestone
+outfit sets" — names no blank at all, and gets no number rather than a guess.
+
+Note v2 (`/v2/catalog-*`) is **not** open despite what several guides claim; it
+answers `This endpoint requires Oauth authentication!`. Don't "upgrade" the
+adapter without a token in hand.
 
 Three sources, down from five. Reddit mentions and YouTube views were dropped:
 both were capped so low by the scorer that they rarely moved a result, and each

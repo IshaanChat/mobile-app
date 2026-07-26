@@ -33,11 +33,12 @@ import { etsy } from './sources/etsy';
 import { meta } from './sources/meta';
 import { wikipedia } from './sources/wikipedia';
 import { cj } from './sources/cj';
+import { printful } from './sources/printful';
 
 // Resolved from this file rather than the cwd, which used to mean running
 // ingest from anywhere but server/ silently found no products at all.
 const DIR = resolve(__dirname, '..', '..', 'content');
-const ADAPTERS: Adapter[] = [aliexpress, etsy, cj, meta, wikipedia];
+const ADAPTERS: Adapter[] = [aliexpress, etsy, cj, meta, wikipedia, printful];
 
 const args = process.argv.slice(2).filter((a) => a !== '--');
 const has = (f: string) => args.includes(f);
@@ -73,6 +74,14 @@ function writeFile(f: string, list: any[]) {
 const RESELLS = new Set(['DROPSHIP', 'WHOLESALE']);
 
 /**
+ * Print-on-demand sits in neither camp: the seller neither buys stock nor
+ * makes the item, they upload art onto a blank somebody else fulfils. That
+ * makes the supplier's catalog price the single most useful fact about the
+ * row, and it is the one number these products had only as a hand-estimate.
+ */
+const POD = 'PRINT_ON_DEMAND';
+
+/**
  * The supply term already sits in the authored data: sourcingUrl points at
  * something like .../wholesale-pottery-glaze.html. Recovering it is better
  * than guessing, because the curator already decided what this is made from.
@@ -94,6 +103,11 @@ function supplyTerm(p: any): string {
 function planFor(p: any, niche?: any): { adapter: Adapter; keyword: string; scope: SignalScope }[] {
   const resells = RESELLS.has(p.sourcingType);
   return [
+    // Only POD rows. The match floor would reject a potter's mug anyway, but
+    // asking at all would spend a call per product to be told no 188 times.
+    ...(p.sourcingType === POD
+      ? [{ adapter: printful, keyword: p.title, scope: 'supply' as SignalScope }]
+      : []),
     { adapter: aliexpress, keyword: resells ? p.title : supplyTerm(p), scope: resells ? 'product' : 'supply' },
     // Etsy always measures the market the seller actually sells into.
     { adapter: etsy, keyword: p.title, scope: 'category' },
