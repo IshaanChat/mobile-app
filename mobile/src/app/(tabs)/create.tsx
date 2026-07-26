@@ -51,7 +51,11 @@ export default function CreateScreen() {
               onPress={() => onPress(a.title)}
               style={[
                 styles.card,
-                { backgroundColor: theme.backgroundElement, opacity: locked ? 0.55 : 1 },
+                {
+                  backgroundColor: theme.backgroundElement,
+                  borderColor: theme.border,
+                  opacity: locked ? 0.55 : 1,
+                },
               ]}>
               <ThemedText style={styles.emoji}>{a.emoji}</ThemedText>
               <View style={styles.cardText}>
@@ -82,6 +86,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: Spacing.three,
     borderRadius: Spacing.three,
+    borderWidth: 1,
     padding: Spacing.three,
   },
   emoji: { fontSize: 28, lineHeight: 34 },

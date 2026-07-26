@@ -118,7 +118,7 @@ export default function GrowthScreen() {
     const isOpen = expanded.has(item.id);
 
     return (
-      <View style={[styles.card, { backgroundColor: theme.backgroundElement }]}>
+      <View style={[styles.card, { backgroundColor: theme.backgroundElement, borderColor: theme.border }]}>
         <Pressable accessibilityRole="button" onPress={() => toggle(item.id)}>
           {/* Hero: real image if we have one, else the platform-color block. */}
           {item.imageUrl ? (
@@ -229,7 +229,7 @@ export default function GrowthScreen() {
                 <ThemedText type="small" themeColor="textSecondary">
                   Where {activeBusiness?.name ?? 'your business'} finds its next customers.
                 </ThemedText>
-                <View style={[styles.banner, { backgroundColor: theme.backgroundElement }]}>
+                <View style={[styles.banner, { backgroundColor: theme.accentSoft, borderColor: theme.border }]}>
                   <ThemedText type="small" themeColor="textSecondary">
                     🔓 $5/month at launch — free while you’re an early tester.
                   </ThemedText>
@@ -277,11 +277,13 @@ const styles = StyleSheet.create({
   banner: {
     marginTop: Spacing.two,
     borderRadius: Spacing.two,
+    borderWidth: 1,
     paddingHorizontal: Spacing.three,
     paddingVertical: Spacing.two,
   },
   card: {
     borderRadius: Spacing.three,
+    borderWidth: 1,
     overflow: 'hidden',
     marginBottom: Spacing.three,
   },

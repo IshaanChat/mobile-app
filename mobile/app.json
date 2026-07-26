@@ -8,7 +8,8 @@
     "scheme": "salesmechanic",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "icon": "./assets/expo.icon",
+      "bundleIdentifier": "com.ishaanchaturvedi.salesmechanic"
     },
     "android": {
       "adaptiveIcon": {
@@ -28,7 +29,7 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#208AEF",
+          "backgroundColor": "#C2647E",
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 76
         }
@@ -43,6 +44,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "f6b82d70-e1b3-4779-801d-7b170cb456fd"
+      }
     }
   }
 }
