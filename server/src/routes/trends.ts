@@ -1,16 +1,23 @@
-// The Discover feed: curated trend cards, ranked per user.
+// The Discover feed: the curated product catalog, ranked per user.
 //
-// Cards are global read-only content (loaded via `npm run trends:import`);
+// Products are global read-only content (loaded via `npm run catalog:import`);
 // the only writes here are the caller's own reactions. Personalization
 // input is either a businessId (owners — ranked by the business's niche and
 // keywords) or an `interests` list (explorers who have no business yet).
+//
+// Two layouts come out of one ranked list. `sort=niche` groups into domain
+// sections the way the shelves of a shop do; `sort=trending` is a flat feed
+// of what's climbing fastest. Sections index into the same `products` array
+// rather than carrying their own copies, so a client can switch layout
+// without refetching and the two can never disagree about a card.
 
 import { Router } from 'express';
 import { ah } from '../core/http';
 import { prisma } from '../prisma';
 import { emitEvent } from '../core/events';
 import { assertOwnsBusiness, HttpError } from '../core/auth';
-import { rankCards, tokenize } from '../trends/rank';
+import { rankCards, scoreCards, scoreCard, scoreTrending, tokenize } from '../trends/rank';
+import { toDiscoverProduct } from '../trends/serialize';
 
 export const trendsRouter = Router();
 
@@ -25,7 +32,8 @@ const TYPE_TOKENS: Record<string, string[]> = {
 };
 
 trendsRouter.get('/', ah(async (req, res) => {
-  const { businessId, interests } = req.query;
+  const { businessId, interests, sort, audience, nicheSlug } = req.query;
+  const trending = sort === 'trending';
 
   const tokens = new Set<string>();
   if (typeof businessId === 'string' && businessId) {
@@ -43,31 +51,59 @@ trendsRouter.get('/', ah(async (req, res) => {
     for (const t of tokenize(interests)) tokens.add(t);
   }
 
-  const [cards, reactions] = await Promise.all([
-    prisma.trendCard.findMany({ where: { status: 'ACTIVE' } }),
+  const [rows, reactions] = await Promise.all([
+    prisma.trendProduct.findMany({
+      where: {
+        status: 'ACTIVE',
+        // Catalog rows only. Pre-rename cards have no niche and can't render
+        // as Discover cards; they stay readable on the saved shelf.
+        nicheId: { not: null },
+        ...(typeof nicheSlug === 'string' && nicheSlug ? { niche: { slug: nicheSlug } } : {}),
+        ...(typeof audience === 'string' && audience ? { niche: { audience } } : {}),
+      },
+      include: { niche: true },
+    }),
     prisma.savedTrend.findMany({ where: { userId: req.userId } }),
   ]);
 
   const dismissed = new Set(reactions.filter((r) => r.state === 'DISMISSED').map((r) => r.trendCardId));
   const saved = new Set(reactions.filter((r) => r.state === 'SAVED').map((r) => r.trendCardId));
+  const live = rows.filter((c) => !dismissed.has(c.id));
 
-  const ranked = rankCards(cards.filter((c) => !dismissed.has(c.id)), tokens)
-    .slice(0, FEED_LIMIT);
+  const now = new Date();
+  let ordered: typeof live;
+  let sections: { key: string; title: string; productIds: string[] }[] = [];
+
+  if (trending) {
+    // Diversity pass on: one runaway domain shouldn't wallpaper a flat feed.
+    ordered = rankCards(live, tokens, now, scoreTrending).slice(0, FEED_LIMIT);
+  } else {
+    // Grouped. The diversity penalty is deliberately skipped — every product
+    // in a section shares a category, so it would fire on every pick and
+    // cancel out. Section order comes from each domain's best product, so the
+    // shelf that matches you is the one you land on.
+    const scored = scoreCards(live, tokens, now, scoreCard)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, FEED_LIMIT);
+    ordered = scored.map((s) => s.card);
+
+    const best = new Map<string, number>();
+    const grouped = new Map<string, { key: string; title: string; productIds: string[] }>();
+    for (const { card, score } of scored) {
+      const domain = card.niche?.domain ?? card.category;
+      const key = domain.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      if (!grouped.has(key)) grouped.set(key, { key, title: domain, productIds: [] });
+      grouped.get(key)!.productIds.push(card.id);
+      best.set(key, Math.max(best.get(key) ?? -Infinity, score));
+    }
+    sections = [...grouped.values()].sort((a, b) => (best.get(b.key) ?? 0) - (best.get(a.key) ?? 0));
+  }
 
   res.json({
-    generatedAt: new Date().toISOString(),
-    cards: ranked.map((c) => ({
-      id: c.id,
-      title: c.title,
-      blurb: c.blurb,
-      category: c.category,
-      imageUrl: c.imageUrl,
-      sourceName: c.sourceName,
-      sourceUrl: c.sourceUrl,
-      priceRange: c.priceRange,
-      hotness: c.hotness,
-      saved: saved.has(c.id),
-    })),
+    generatedAt: now.toISOString(),
+    sort: trending ? 'trending' : 'niche',
+    sections,
+    products: ordered.map((c) => toDiscoverProduct(c, saved.has(c.id))),
   });
 }));
 
@@ -77,19 +113,12 @@ trendsRouter.get('/saved', ah(async (req, res) => {
   const rows = await prisma.savedTrend.findMany({
     where: { userId: req.userId, state: 'SAVED' },
     orderBy: { createdAt: 'desc' },
-    include: { trendCard: true },
+    include: { trendCard: { include: { niche: true } } },
   });
+  // Same serializer as the feed, so the shelf and the feed can't drift apart
+  // the way the two hand-written copies here previously had.
   res.json(rows.map((r) => ({
-    id: r.trendCard.id,
-    title: r.trendCard.title,
-    blurb: r.trendCard.blurb,
-    category: r.trendCard.category,
-    imageUrl: r.trendCard.imageUrl,
-    sourceName: r.trendCard.sourceName,
-    sourceUrl: r.trendCard.sourceUrl,
-    priceRange: r.trendCard.priceRange,
-    hotness: r.trendCard.hotness,
-    saved: true,
+    ...toDiscoverProduct(r.trendCard, true),
     savedAt: r.createdAt,
   })));
 }));
@@ -97,7 +126,7 @@ trendsRouter.get('/saved', ah(async (req, res) => {
 async function requireActiveCard(id: string) {
   const cardId = typeof id === 'string' && id ? id : null;
   if (!cardId) throw new HttpError(400, 'card id is required');
-  const found = await prisma.trendCard.findFirst({ where: { id: cardId, status: 'ACTIVE' }, select: { id: true, slug: true } });
+  const found = await prisma.trendProduct.findFirst({ where: { id: cardId, status: 'ACTIVE' }, select: { id: true, slug: true } });
   if (!found) throw new HttpError(404, 'Trend not found');
   return found;
 }

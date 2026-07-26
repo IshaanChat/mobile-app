@@ -11,7 +11,6 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "seed": "tsx prisma/seed.ts",
-    "trends:import": "tsx scripts/import-trends.ts",
     "growth:import": "tsx scripts/import-communities.ts",
     "growth:images": "tsx scripts/enrich-images.ts",
     "growth:preview": "tsx scripts/preview-communities.ts",
@@ -21,7 +20,8 @@
     "ingest": "tsx scripts/ingest/run.ts",
     "test": "vitest run",
     "test:watch": "vitest",
-    "smoke": "node scripts/smoke.mjs"
+    "smoke": "node scripts/smoke.mjs",
+    "catalog:import": "tsx scripts/import-catalog.ts"
   },
   "dependencies": {
     "@clerk/backend": "^3.12.0",

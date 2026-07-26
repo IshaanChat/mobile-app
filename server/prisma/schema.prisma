@@ -16,7 +16,7 @@ datasource db {
   // Use Neon's DIRECT (non-pooled) connection string. Prisma keeps its own
   // connection pool, and Prisma Migrate cannot run through Neon's pooler,
   // so a single direct URL is both sufficient and simpler at this scale.
-  url = env("DATABASE_URL")
+  url      = env("DATABASE_URL")
 }
 
 // An account. `externalId` is the id from the auth provider (Clerk); in
@@ -27,31 +27,31 @@ model User {
   email      String?
   createdAt  DateTime @default(now())
 
-  businesses Business[]
-  profile    UserProfile?
-  settings   AppSetting[]
+  businesses     Business[]
+  profile        UserProfile?
+  settings       AppSetting[]
   trendReactions SavedTrend[]
 }
 
 model Business {
-  id          String   @id @default(cuid())
-  name        String
-  niche       String
-  description String
+  id               String   @id @default(cuid())
+  name             String
+  niche            String
+  description      String
   // Discover targeting: who they're looking for, in their own words.
-  idealCustomer String?
+  idealCustomer    String?
   // Comma-separated interest/niche keywords used for recommendations.
   audienceKeywords String?
   // Comma-separated sales avenues: ETSY, SHOPIFY, DEPOP, AMAZON, EBAY,
   // INSTAGRAM_SHOP, OWN_WEBSITE, IN_PERSON, OTHER
-  salesAvenues String?
+  salesAvenues     String?
   // One of: PRODUCT_SALES, SERVICE, KNOWLEDGE, OTHER. Tunes scoring and
   // Discover for how this kind of business actually sells.
-  businessType String?
+  businessType     String?
   // The business's public page — shop, website, linktree, booking page.
-  pageUrl String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  pageUrl          String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -66,13 +66,13 @@ model Business {
 }
 
 model Channel {
-  id String @id @default(cuid())
+  id        String   @id @default(cuid())
   // One of: ETSY, INSTAGRAM, REDDIT, REFERRAL, OTHER
-  type String
+  type      String
   // Display label — required for OTHER (e.g. "Craft Fair"), optional override otherwise.
-  label String?
+  label     String?
   // First URL this channel was detected from (e.g. the Etsy shop link).
-  url String?
+  url       String?
   createdAt DateTime @default(now())
 
   businessId String
@@ -82,13 +82,13 @@ model Channel {
 }
 
 model Contact {
-  id     String  @id @default(cuid())
-  name   String
-  notes  String?
+  id        String  @id @default(cuid())
+  name      String
+  notes     String?
   // The profile/shop/post URL where this person was found, if any.
   sourceUrl String?
   // One of: PROSPECT, ENGAGED, CUSTOMER
-  status String @default("PROSPECT")
+  status    String  @default("PROSPECT")
 
   // Derived scores, recalculated whenever an interaction is logged.
   // Both range 0-100.
@@ -123,13 +123,13 @@ model AppSetting {
 
 // The person running the businesses — one profile per account.
 model UserProfile {
-  id    String @id @default(cuid())
+  id              String   @id @default(cuid())
   // Required at onboarding
-  name  String
-  email String
-  age   Int
+  name            String
+  email           String
+  age             Int
   // One of: WOMAN, MAN, NON_BINARY, OTHER, PREFER_NOT_TO_SAY
-  gender String
+  gender          String
   // Optional — addable later from My Business
   location        String?
   phone           String?
@@ -137,8 +137,8 @@ model UserProfile {
   // One of: FIRST_TIME, SOME_EXPERIENCE, EXPERIENCED
   experienceLevel String?
   goals           String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -188,16 +188,16 @@ model AppEvent {
 // A product or offering the business sells. stock = null means "not
 // tracked" (services, digital goods, made-to-order).
 model Product {
-  id          String  @id @default(cuid())
+  id          String   @id @default(cuid())
   name        String
   description String?
   price       Float?
   stock       Int?
   sku         String?
   // Link to the live listing (Etsy page, Shopify product, booking page…)
-  url String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  url         String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   businessId String
   business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
@@ -224,34 +224,136 @@ model Payment {
   product   Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
 }
 
-// Curated content for the Discover feed: a product source / trend worth a
-// look. GLOBAL content, not user-owned — the only such table. Rows are
-// loaded by the curator via `npm run trends:import` (see content/README.md);
-// users can only read and react. Never accept card writes from the API.
-model TrendCard {
+// A niche from content/niches.json — 47 of them. GLOBAL curator content,
+// loaded by `npm run catalog:import`. `domain` is the section header the
+// Discover feed groups by; `audience` drives the maker/reseller chip and
+// the feed's filter.
+model Niche {
   id   String @id @default(cuid())
   // Curator-chosen stable identity so re-importing updates in place.
   slug String @unique
 
-  title String
-  // Why this could take off, in the curator's words — the card's body text.
-  blurb String
-  // Shelf label ("Jewelry", "Home & decor"…). Drives feed diversity.
-  category String
+  name     String
+  // "Home & Living", "Pets"… ten of them, and the Discover section header.
+  domain   String
+  // One of: maker, reseller, both
+  audience String
   // Comma-separated match keywords (same convention as Business fields).
-  tags String
+  tags     String
 
-  imageUrl   String?
-  // Where the trend was spotted, e.g. "TikTok" + a link worth opening.
-  sourceName String?
-  sourceUrl  String?
-  // Free text, e.g. "$15–40"
-  priceRange String?
-  // Curator-set 0–100: how hot this is right now.
+  imageQuery  String?
+  imageUrl    String?
+  imageCredit String?
+
+  // One of: ACTIVE, ARCHIVED. Archived rather than deleted because
+  // TrendProduct.nicheId is SetNull — a delete would silently orphan
+  // every product in the niche.
+  status String @default("ACTIVE")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  products TrendProduct[]
+
+  @@index([domain])
+}
+
+// The Discover catalog: a product worth selling, and where to source it.
+// GLOBAL content, not user-owned. Rows are loaded by the curator via
+// `npm run catalog:import` (see content/README.md); users can only read and
+// react. Never accept writes from the API.
+//
+// This was TrendCard, renamed in place so existing rows and every SavedTrend
+// survived. Columns fall into three groups with three different owners, and
+// keeping them apart is what lets the feed stay honest:
+//
+//   editorial  — the curator, via content/products/*.json. Import overwrites.
+//   machine    — the ingest pipeline. The importer NEVER touches these.
+//   provenance — where each claim came from, so a card can show its working.
+model TrendProduct {
+  id   String @id @default(cuid())
+  // Curator-chosen stable identity so re-importing updates in place.
+  slug String @unique
+
+  // --- editorial ----------------------------------------------------------
+  title    String
+  // Why this could take off, in the curator's words — the card's body text.
+  blurb    String
+  // Shelf label. For catalog rows the importer writes niche.domain here, so
+  // one domain can't wallpaper the feed — this is the ranker's diversity key.
+  category String
+  // Comma-separated match keywords. Derived from the niche by the importer.
+  tags     String
+
+  nicheId String?
+  niche   Niche?  @relation(fields: [nicheId], references: [id], onDelete: SetNull)
+
+  // One of: DROPSHIP, WHOLESALE, PRINT_ON_DEMAND, MATERIALS, MAKE_YOUR_OWN
+  sourcingType  String?
+  // Where the trend was spotted / where to buy, e.g. "AliExpress (glazes)".
+  sourceName    String?
+  sourceUrl     String?
+  // Where to actually buy it — the "Source it" link.
+  sourcingUrl   String?
+  // Free text as authored, e.g. "$2–8/mug in materials" and "$28–45". Kept
+  // as strings because the honest answer is often a range with a unit.
+  sourceCost    String?
+  typicalResale String?
+  // Legacy TrendCard field, superseded by sourceCost/typicalResale.
+  priceRange    String?
+
+  imageQuery  String?
+  imageUrl    String?
+  imageCredit String?
+
+  // Curator-set 0–100: how hot this is right now. INGEST MUST NEVER WRITE
+  // THIS. It is the editorial judgement the machine gets measured against.
   hotness Int @default(50)
+
+  // --- machine ------------------------------------------------------------
+  // 0–100 from real signals. Null until a source reports on this product,
+  // which on day one is all of them.
+  heat     Int?
+  // The previous poll's heat. heat - heatPrev IS the trending axis; without
+  // a stored previous reading "trending" could only ever mean "hot".
+  heatPrev Int?
+
+  // Only ever set when the searched term IS the sellable product — see the
+  // scope gate in scripts/ingest/score.ts.
+  unitsSold Int?
+  // Competing sellers. Saturation, not popularity.
+  listings  Int?
+  priceLow  Float?
+  priceHigh Float?
+
+  // Ad pressure. adDaysLive is the winning-product heuristic: a creative
+  // still running after weeks is one somebody pays for daily and hasn't
+  // switched off.
+  adCount    Int?
+  adDaysLive Int?
+  // Stored and shown, deliberately not scored.
+  adReach    Int?
+
+  // --- provenance ---------------------------------------------------------
+  // "aliexpress,etsy,meta" — which adapters actually reported.
+  signalSources   String?
+  signalsPolledAt DateTime?
+  // "meta" | "manual". An ad run logged at the research bench fills the same
+  // columns Meta would, which is what makes the Meta API optional.
+  adSource        String?
+  // The ad snapshot and advertiser, as links the user opens and judges.
+  adEvidenceUrl   String?
+  adAdvertiser    String?
+  // "EU" when the ad evidence is EU-reach only, which all non-political Meta
+  // data is. The card says so rather than implying global coverage.
+  adCoverage      String?
+
   // One of: ACTIVE, ARCHIVED. Archived cards leave the feed but existing
   // saves keep working, so nobody's idea shelf silently loses entries.
   status String @default("ACTIVE")
+  // CATALOG (content/*.json) | INGEST (--discover) | LEGACY (pre-rename
+  // TrendCards, which have no niche and stay out of the catalog feed).
+  origin String @default("CATALOG")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -259,6 +361,8 @@ model TrendCard {
   reactions SavedTrend[]
 
   @@index([status])
+  @@index([nicheId])
+  @@index([status, heat])
 }
 
 // Curated content for the Growth feed: a community/place where a business
@@ -272,31 +376,31 @@ model CommunityPost {
   // Curator-chosen stable identity so re-importing updates in place.
   slug String @unique
 
-  title String
+  title    String
   // Where it lives: Reddit, Instagram, TikTok, X, YouTube, Etsy, Pinterest,
   // Facebook, Forum… Drives feed diversity and card styling.
   platform String
   // One of: community, hashtag, marketplace, search, event
-  kind String
-  url  String
+  kind     String
+  url      String
 
   // Card text (one line) and the blog-post depth behind the tap.
   // The post reads as a PROFILE of the community — descriptive, editorial —
   // with the how-to-approach guidance as a side element at the end.
-  tagline  String
+  tagline     String
   // Who a business will actually find there — buyers, peers, lurkers.
-  audience String
+  audience    String
   // What this place is. Paragraphs separated by blank lines.
-  overview String
+  overview    String
   // What people talk about and discuss. One item per line.
   discussions String
   // Buyer behavior: what wins them over / what turns them off. One per line.
-  loves    String
-  dislikes String
+  loves       String
+  dislikes    String
   // Community rules and platform norms that limit how you can show up.
-  rules String
+  rules       String
   // The side element at the end: how to actually approach this place.
-  approach String
+  approach    String
 
   // Comma-separated match keywords (same convention as Business fields).
   tags String
@@ -305,9 +409,9 @@ model CommunityPost {
   // Filled by the enricher where an official API provides it.
   memberCount Int?
   // Curator-set 0–100 editorial priority.
-  hotness Int @default(50)
+  hotness     Int     @default(50)
   // One of: ACTIVE, ARCHIVED
-  status String @default("ACTIVE")
+  status      String  @default("ACTIVE")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -319,7 +423,7 @@ model CommunityPost {
 // DISMISSED (never show again). Doubles as the engagement log the ranking
 // algorithm will learn from later.
 model SavedTrend {
-  id String @id @default(cuid())
+  id        String   @id @default(cuid())
   // One of: SAVED, DISMISSED
   state     String
   createdAt DateTime @default(now())
@@ -327,20 +431,23 @@ model SavedTrend {
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  // Column keeps its name through the TrendCard -> TrendProduct rename: it
+  // appears in emitted `trend.saved` payloads and the analytics stream, and
+  // renaming it would break those for nothing.
   trendCardId String
-  trendCard   TrendCard @relation(fields: [trendCardId], references: [id], onDelete: Cascade)
+  trendCard   TrendProduct @relation(fields: [trendCardId], references: [id], onDelete: Cascade)
 
   @@unique([userId, trendCardId])
   @@index([userId, state])
 }
 
 model Interaction {
-  id String @id @default(cuid())
+  id     String  @id @default(cuid())
   // One of: MESSAGE, MEETING, PURCHASE, REVIEW, OTHER
-  type String
-  note String?
+  type   String
+  note   String?
   // Subjective impact/value of this interaction, 1 (light touch) - 5 (major, e.g. a sale).
-  weight Int @default(1)
+  weight Int     @default(1)
 
   occurredAt DateTime @default(now())
   createdAt  DateTime @default(now())

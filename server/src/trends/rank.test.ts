@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { rankCards, tokenize, type RankableCard } from './rank';
+import { rankCards, scoreTrending, tokenize, type RankableCard } from './rank';
 
 const NOW = new Date('2026-07-22T12:00:00Z');
 
@@ -77,5 +77,62 @@ describe('rankCards', () => {
     ];
     const ranked = rankCards(cards, new Set(), NOW);
     expect(ranked.map((c) => c.id)).toEqual(['j1', 'j2', 'weak']);
+  });
+
+  it('lets measured heat override the curator’s hotness', () => {
+    // The curator guessed high on 'guess' and low on 'measured'; ingest then
+    // measured the opposite. Evidence should win.
+    const cards = [
+      card({ id: 'guess', hotness: 90 }),
+      card({ id: 'measured', hotness: 10, heat: 95 }),
+    ];
+    const ranked = rankCards(cards, new Set(), NOW);
+    expect(ranked[0].id).toBe('measured');
+  });
+
+  it('leaves cards with no heat ranked on hotness, as before', () => {
+    // The Growth feed maps CommunityPosts through rankCards and they never
+    // carry heat — this is the case that must not have moved.
+    const cards = [
+      card({ id: 'cool', hotness: 10 }),
+      card({ id: 'hot', hotness: 90 }),
+      card({ id: 'warm', hotness: 50 }),
+    ];
+    const ranked = rankCards(cards, new Set(), NOW);
+    expect(ranked.map((c) => c.id)).toEqual(['hot', 'warm', 'cool']);
+  });
+});
+
+describe('scoreTrending', () => {
+  const climbing = card({ id: 'climbing', hotness: 50, heat: 60, heatPrev: 35 });
+  const hotButFlat = card({ id: 'flat', hotness: 50, heat: 85, heatPrev: 85 });
+
+  it('puts a fast climber above something hotter but flat', () => {
+    expect(scoreTrending(climbing, new Set(), NOW))
+      .toBeGreaterThan(scoreTrending(hotButFlat, new Set(), NOW));
+  });
+
+  it('treats a first measurement as hot, not trending', () => {
+    // No heatPrev means no derivative. It should score exactly as if the
+    // climb hadn't happened, rather than being credited for arriving hot.
+    const firstPoll = card({ id: 'first', hotness: 50, heat: 60 });
+    const noClimb = card({ id: 'none', hotness: 50, heat: 60, heatPrev: 60 });
+    expect(scoreTrending(firstPoll, new Set(), NOW))
+      .toBeCloseTo(scoreTrending(noClimb, new Set(), NOW));
+  });
+
+  it('sinks unmeasured cards below measured ones without hiding them', () => {
+    const unmeasured = card({ id: 'unmeasured', hotness: 80 });
+    const measured = card({ id: 'measured', hotness: 80, heat: 80, heatPrev: 80 });
+    const unmeasuredScore = scoreTrending(unmeasured, new Set(), NOW);
+    expect(unmeasuredScore).toBeLessThan(scoreTrending(measured, new Set(), NOW));
+    expect(unmeasuredScore).toBeGreaterThan(0);
+  });
+
+  it('still lets interests tilt the trending feed', () => {
+    const offInterest = card({ id: 'off', tags: 'candles', heat: 60, heatPrev: 50 });
+    const onInterest = card({ id: 'on', tags: 'jewelry', heat: 60, heatPrev: 50 });
+    expect(scoreTrending(onInterest, tokens('jewelry'), NOW))
+      .toBeGreaterThan(scoreTrending(offInterest, tokens('jewelry'), NOW));
   });
 });
