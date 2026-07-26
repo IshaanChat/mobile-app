@@ -1,4 +1,4 @@
-import type { Business, Channel, Contact, ContactDetail, ContactStatus, ChannelType, GraphPayload, InteractionType, FeedInteraction, DetectedChannel, NoLinkKind, DiscoverResult, DiscoverStatus, AppSettings, LlmTestResult, UserProfile, Gender, ExperienceLevel, MissionsPayload, SocialLink, SocialPlatform, Payment, PaymentsPayload, Product, ProductsPayload, TrendCard, TrendsPayload, GrowthPayload, GrowthPostDetail } from '../types';
+import type { Business, Channel, Contact, ContactDetail, ContactStatus, ChannelType, GraphPayload, InteractionType, FeedInteraction, DetectedChannel, NoLinkKind, DiscoverResult, DiscoverStatus, AppSettings, LlmTestResult, UserProfile, Gender, ExperienceLevel, MissionsPayload, SocialLink, SocialPlatform, Payment, PaymentsPayload, Product, ProductsPayload, DiscoverProduct, TrendsPayload, GrowthPayload, GrowthPostDetail } from '../types';
 
 // The native app always talks to a full API origin (there is no dev proxy like
 // the web client's Vite server). Set EXPO_PUBLIC_API_URL in .env — no trailing
@@ -131,15 +131,25 @@ export const api = {
 
   // Personalize by businessId (owners) or interests (explorers, no business
   // yet). Neither = hotness-ranked feed for a brand-new account.
-  getTrends: (params: { businessId?: string; interests?: string[] }) => {
-    const q = params.businessId
-      ? `businessId=${params.businessId}`
-      : params.interests?.length
-        ? `interests=${encodeURIComponent(params.interests.join(','))}`
-        : '';
-    return request<TrendsPayload>(`/trends${q ? `?${q}` : ''}`);
+  getTrends: (params: {
+    businessId?: string;
+    interests?: string[];
+    sort?: 'niche' | 'trending';
+    audience?: string;
+    nicheSlug?: string;
+  }) => {
+    const q = new URLSearchParams();
+    // businessId and interests are alternatives, never both — the server
+    // reads whichever it finds and a business always wins.
+    if (params.businessId) q.set('businessId', params.businessId);
+    else if (params.interests?.length) q.set('interests', params.interests.join(','));
+    if (params.sort) q.set('sort', params.sort);
+    if (params.audience) q.set('audience', params.audience);
+    if (params.nicheSlug) q.set('nicheSlug', params.nicheSlug);
+    const s = q.toString();
+    return request<TrendsPayload>(`/trends${s ? `?${s}` : ''}`);
   },
-  getSavedTrends: () => request<TrendCard[]>('/trends/saved'),
+  getSavedTrends: () => request<DiscoverProduct[]>('/trends/saved'),
 
   getGrowth: (businessId: string) => request<GrowthPayload>(`/growth?businessId=${businessId}`),
   getGrowthPost: (id: string) => request<GrowthPostDetail>(`/growth/${id}`),

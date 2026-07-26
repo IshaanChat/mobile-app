@@ -213,24 +213,78 @@ export interface GraphPayload {
 }
 
 // A curated Discover-feed card: a product source / trend worth a look.
-export interface TrendCard {
+export type SourcingType =
+  | 'DROPSHIP'
+  | 'WHOLESALE'
+  | 'PRINT_ON_DEMAND'
+  | 'MATERIALS'
+  | 'MAKE_YOUR_OWN';
+
+export type Audience = 'maker' | 'reseller' | 'both';
+
+/**
+ * What the ingest pipeline actually measured. Null on the product when
+ * nothing has been — which is every product until an API key exists — and
+ * the card shows no evidence at all rather than dressing up the curator's
+ * editorial `hotness` as data.
+ */
+export interface DiscoverEvidence {
+  heat: number | null;
+  /** Change since the previous poll. Null until there are two readings. */
+  heatDelta: number | null;
+  unitsSold: number | null;
+  listings: number | null;
+  saturation: 'low' | 'medium' | 'high' | null;
+  priceLow: number | null;
+  priceHigh: number | null;
+  adCount: number | null;
+  adDaysLive: number | null;
+  adReach: number | null;
+  /** 'meta' (the API) or 'manual' (logged at the research bench). */
+  adSource: string | null;
+  /** 'EU' when the ad data covers EU-reaching ads only, as Meta's does. */
+  adCoverage: string | null;
+  adEvidenceUrl: string | null;
+  adAdvertiser: string | null;
+  sources: string[];
+  polledAt: string | null;
+}
+
+export interface DiscoverProduct {
   id: string;
+  slug: string;
   title: string;
   blurb: string;
   category: string;
-  imageUrl: string | null;
+  niche: { slug: string; name: string; domain: string; audience: Audience } | null;
+  sourcingType: SourcingType | null;
   sourceName: string | null;
-  sourceUrl: string | null;
+  sourcingUrl: string | null;
+  sourceCost: string | null;
+  typicalResale: string | null;
   priceRange: string | null;
+  imageUrl: string | null;
+  imageCredit: string | null;
   hotness: number;
+  evidence: DiscoverEvidence | null;
   saved: boolean;
   // Present on the saved shelf only.
   savedAt?: string;
 }
 
+/** A domain shelf. `productIds` index into `products` rather than copying. */
+export interface DiscoverSection {
+  key: string;
+  title: string;
+  productIds: string[];
+}
+
 export interface TrendsPayload {
   generatedAt: string;
-  cards: TrendCard[];
+  sort: 'niche' | 'trending';
+  /** Empty when sort is 'trending' — the feed is flat there. */
+  sections: DiscoverSection[];
+  products: DiscoverProduct[];
 }
 
 // A Growth-feed post: a community where this business finds customers,

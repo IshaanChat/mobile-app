@@ -42,6 +42,8 @@ export type IconProps = {
   strokeWidth?: number;
   /** Only `heart` fills, and only to show something is saved to the shelf. */
   filled?: boolean;
+  /** Degrees. `chev` uses it to point down when a card is open. */
+  rotate?: number;
 };
 
 /** The three steps the web set uses, rather than a smooth ratio. */
@@ -51,7 +53,7 @@ function weightFor(size: number) {
   return 1.7;
 }
 
-export function Icon({ name, size = 22, color, strokeWidth, filled }: IconProps) {
+export function Icon({ name, size = 22, color, strokeWidth, filled, rotate }: IconProps) {
   return (
     <Svg
       width={size}
@@ -61,7 +63,8 @@ export function Icon({ name, size = 22, color, strokeWidth, filled }: IconProps)
       stroke={color}
       strokeWidth={strokeWidth ?? weightFor(size)}
       strokeLinecap="round"
-      strokeLinejoin="round">
+      strokeLinejoin="round"
+      style={rotate ? { transform: [{ rotate: `${rotate}deg` }] } : undefined}>
       {shapes(name, filled ? color : 'none')}
     </Svg>
   );
