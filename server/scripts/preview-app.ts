@@ -46,11 +46,76 @@ const attr = (s: any) => esc(s).replace(/"/g, '&quot;');
 const lines = (s: any) => String(s ?? '').split('\n').map((l) => l.trim()).filter(Boolean);
 const pColor = (p: string) => PLATFORM_COLORS[String(p).toLowerCase()] ?? '#5A67D8';
 
+// Ad-intelligence helpers. A product's research record is what turns the feed
+// from "ideas someone had" into "things provably selling right now".
+const DAY = 86400000;
+function daysRunning(r: any): number | null {
+  if (!r?.firstSeen) return null;
+  const end = r.lastSeen ? new Date(r.lastSeen) : new Date();
+  const d = Math.round((end.getTime() - new Date(r.firstSeen).getTime()) / DAY);
+  return Number.isFinite(d) && d >= 0 ? d : null;
+}
+function daysSinceChecked(r: any): number | null {
+  if (!r?.checkedAt) return null;
+  return Math.round((Date.now() - new Date(r.checkedAt).getTime()) / DAY);
+}
+const TREND_MARK: Record<string, string> = { rising: '▲', steady: '→', fading: '▼' };
+
+function evidenceStrip(r: any) {
+  if (!r) return '';
+  const chips: string[] = [];
+  const run = daysRunning(r);
+  // A long-running ad is the strongest signal there is — someone is paying
+  // for it every day and hasn't stopped.
+  if (run !== null && run >= 7) {
+    chips.push(`<span class="ev-chip rising">${TREND_MARK[r.trend] ?? '▲'} ${run} days live</span>`);
+  }
+  if (r.saturation === 'low') chips.push('<span class="ev-chip fresh">low competition</span>');
+  return chips.length ? `<div class="ev-strip">${chips.join('')}</div>` : '';
+}
+
+function evidenceBox(r: any) {
+  if (!r) return '';
+  const run = daysRunning(r);
+  const stale = daysSinceChecked(r);
+  const bits: string[] = [];
+  if (r.advertiser) bits.push(`Seen on <strong>${esc(r.advertiser)}</strong>`);
+  if (r.engagement) bits.push(esc(r.engagement));
+  if (r.adCount) bits.push(`${r.adCount} creatives running`);
+  const meta: string[] = [];
+  if (r.adUrl) meta.push(`<a href="${attr(r.adUrl)}" target="_blank" rel="noreferrer">See the ad ↗</a>`);
+  if (r.storeUrl) meta.push(`<a href="${attr(r.storeUrl)}" target="_blank" rel="noreferrer">Their store ↗</a>`);
+  if (stale !== null) {
+    meta.push(`<span class="${stale > 21 ? 'ev-stale' : ''}">checked ${stale === 0 ? 'today' : stale + 'd ago'}</span>`);
+  }
+  const head = run !== null
+    ? `Running for ${run} days on ${esc(r.adPlatform ?? 'ads')}`
+    : `Spotted on ${esc(r.adPlatform ?? 'ads')}`;
+  return `<div class="ev-box">
+    <div class="ev-k">Why this one</div>
+    <div class="ev-t">${esc(head)}${bits.length ? ' · ' + bits.join(' · ') : ''}${r.notes ? '<br>' + esc(r.notes) : ''}</div>
+    ${meta.length ? `<div class="ev-m">${meta.join('')}</div>` : ''}
+  </div>`;
+}
+
+function supplierRows(r: any) {
+  const list = r?.sourceCandidates ?? [];
+  if (!list.length) return '';
+  return `<div class="mini"><div class="mini-t">Where to actually buy it</div>${
+    list.map((s: any) => `<div class="lrow" style="border-bottom:none;padding:6px 0">
+      <div class="lrow-main">${esc(s.supplier)}${s.unitCost ? ` · <strong>${esc(s.unitCost)}</strong>` : ''}
+        <div class="lrow-sub">${[s.moq ? 'MOQ ' + esc(String(s.moq)) : '', s.shipDays ? esc(s.shipDays) + ' days' : ''].filter(Boolean).join(' · ')}</div></div>
+      ${s.url ? `<a class="hcard-a" href="${attr(s.url)}" target="_blank" rel="noreferrer">Open ↗</a>` : ''}
+    </div>`).join('')
+  }</div>`;
+}
+
 // Discover is a feed of PRODUCTS — the niche is a label on the card, not the
 // unit you scroll. Each product carries its niche so filtering, matching and
 // "choose this" still work at the niche level.
 function productCard(p: any) {
   const n = p.niche ?? {};
+  const r = p.research;
   const aud = AUDIENCE_COLORS[n.audience] ?? '#60646c';
   const searchText = [p.title, p.blurb, n.name, n.domain, n.tags].filter(Boolean).join(' ').toLowerCase();
   return `<div class="card product" data-slug="${attr(p.slug)}" data-niche="${attr(p.nicheSlug)}" data-aud="${attr(n.audience)}" data-text="${attr(searchText)}">
@@ -58,12 +123,15 @@ function productCard(p: any) {
       <div class="hero" style="background-image:url('${attr(p.imageUrl)}')">
         <div class="chips"><span class="chip" style="background:${aud}">${esc(AUDIENCE_LABELS[n.audience] ?? n.audience ?? '')}</span><span class="chip chip-dark">${esc(SOURCING_LABELS[p.sourcingType] ?? '')}</span></div>
         <span class="match-badge">&#9733; your kind of thing</span>
+        ${evidenceStrip(r)}
       </div>
       <button class="savebtn" title="Save to your shelf" onclick="event.stopPropagation(); toggleSave('${attr(p.slug)}', this)"><svg><use href="#i-heart"/></svg></button>
       <div class="body"><div class="titlerow"><div><div class="kicker">${esc(n.name ?? '')}</div><div class="title">${esc(p.title)}</div><div class="econ-inline"><span class="cost">${esc(p.sourceCost)}</span><span class="arrow">&rarr;</span><span class="resale">${esc(p.typicalResale)}</span></div></div><div class="chev">&#9660;</div></div></div>
     </div>
     <div class="expand">
       <p class="para">${esc(p.blurb)}</p>
+      ${evidenceBox(r)}
+      ${supplierRows(r)}
       <div class="mini"><div class="mini-t">Where to source</div><div class="src-b">${esc(p.sourceName)} &middot; ${esc(SOURCING_LABELS[p.sourcingType] ?? '')}</div></div>
       <a class="btn ghost" href="${attr(p.sourcingUrl)}" target="_blank" rel="noreferrer" onclick="fire('view-source')">Source it &#8599;</a>
       <button class="btn primary" data-slug="${attr(p.nicheSlug)}" data-name="${attr(n.name ?? '')}" data-tags="${attr(n.tags ?? '')}" onclick="chooseNiche(this)">Build a business around this</button>
@@ -229,6 +297,19 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   .title { font-size:18px; font-weight:600; margin-top:2px; }
   .tagline { color:var(--text-dim); font-size:14px; margin-top:3px; line-height:1.4; }
   .econ-inline { font-size:14px; font-variant:tabular-nums; margin-top:5px; }
+
+  /* Evidence that a product is actually working — the thing that separates
+     a researched feed from a list of ideas. */
+  .ev-strip { position:absolute; left:14px; top:14px; display:flex; gap:6px; }
+  .ev-chip { display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:700; padding:4px 9px; border-radius:999px; background:rgba(255,255,255,.92); color:#7a4a2a; }
+  .ev-chip.rising { color:#8a3a1a; }
+  .ev-chip.fresh { color:#3d6b52; }
+  .ev-box { border:1px solid var(--panel-border); border-left:3px solid var(--engaged); border-radius:0 12px 12px 0; padding:11px 13px; margin-top:12px; background:var(--input-bg); }
+  .ev-k { font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--engaged); }
+  .ev-t { font-size:13px; line-height:1.5; margin-top:4px; }
+  .ev-m { font-size:12px; color:var(--text-dim); margin-top:6px; display:flex; flex-wrap:wrap; gap:10px; }
+  .ev-m a { color:var(--accent); text-decoration:none; font-weight:600; }
+  .ev-stale { color:var(--danger); }
   .dom-h { font-size:12px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--text-dim); margin:22px 0 10px; }
   .chev { color:var(--text-dim); font-size:12px; padding-top:4px; transition:transform .15s; }
   .card.open .chev { transform:rotate(180deg); }

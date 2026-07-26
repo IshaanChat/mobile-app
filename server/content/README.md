@@ -52,6 +52,50 @@ The sample file is placeholder content so the feed renders during
 development. Replace it with your own curation and import with
 `--archive-missing` to retire the samples.
 
+## Product research (`npm run research`)
+
+The bench at <http://localhost:4400> is for finding products that are
+*provably* selling, rather than ones that sound good.
+
+The method: an ad still running after weeks is one somebody is paying for
+daily and hasn't switched off. That's harder evidence than view counts,
+which spike by accident.
+
+1. Browse [TikTok Creative Center → Top Ads](https://ads.tiktok.com/business/creativecenter/inspiration/topads/pc/en)
+   or the [Meta Ad Library](https://www.facebook.com/ads/library/), filtered
+   to your categories. Note the advertiser and when the ad first appeared.
+2. Find the same product on AliExpress (image search works well) and take
+   the unit cost.
+3. Log both in the bench. It writes a product entry with a `research`
+   record into the right `products/` file.
+
+```jsonc
+"research": {
+  "adPlatform": "TikTok",
+  "adUrl": "https://…",          // the ad itself
+  "advertiser": "shop name",
+  "storeUrl": "https://…",       // who's running it
+  "firstSeen": "2026-06-01",     // days-running is computed from these
+  "lastSeen": "2026-07-25",
+  "adCount": 9,                  // several creatives = real budget
+  "engagement": "3.2M views",
+  "saturation": "low|medium|high",
+  "trend": "rising|steady|fading",
+  "sourceCandidates": [ { "supplier": "AliExpress", "url": "…",
+                          "unitCost": "$4.20", "moq": 1, "shipDays": "12–20" } ],
+  "checkedAt": "2026-07-26",     // set automatically; cards flag stale ones
+  "notes": ""
+}
+```
+
+Products with a research record show it in Discover — a "▲ 54 days live"
+chip on the card, and the full case when it expands.
+
+**Nothing is scraped.** Those platforms' terms forbid automated collection
+and their anti-bot would break it anyway. The bench assumes you looked
+yourself; it just makes recording it fast. Write your own description too —
+never paste theirs.
+
 ## Growth posts (`communities/*.json`)
 
 The Growth feed uses the same workflow with `npm run growth:import`, one
