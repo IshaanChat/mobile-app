@@ -27,6 +27,7 @@ import { readdirSync, readFileSync, writeFileSync } from 'fs';
 import { resolve } from 'path';
 import { buildProduct, cleanTitle, slugify } from './build';
 import { combine, saturationOf } from './score';
+import { shortlist } from './criteria';
 import { safeSearch, type Adapter, type Signal, type SignalScope } from './types';
 import { aliexpress } from './sources/aliexpress';
 import { etsy } from './sources/etsy';
@@ -220,12 +221,20 @@ async function discover(live: Adapter[]) {
     // Discovery asks AliExpress for actual listings, so each hit IS the
     // product — the one place 'product' scope is honest for a raw search.
     const found = await safeSearch(aliexpress, keyword, 'product');
-    const top = found
-      .filter((s) => s.productTitle && (s.unitsSold ?? 0) > 0)
-      .sort((a, b) => (b.unitsSold ?? 0) - (a.unitsSold ?? 0))
-      .slice(0, PER_NICHE);
 
-    for (const hit of top) {
+    // Ranked on the criteria, not on volume. Sorting by unitsSold descending
+    // — which is what this did — put the single most contested listing on the
+    // page in first place every time, because "most sold" and "most competed
+    // for" are the same fact stated twice. Position in the results is passed
+    // through as the crowding proxy; it is just the array index, and the
+    // supplier already sorted the page by volume for us.
+    const ranked = shortlist(
+      found
+        .filter((s) => s.productTitle)
+        .map((s, rank) => ({ ...s, cost: s.price, rank }))
+    );
+
+    for (const { candidate: hit, assessment } of ranked.slice(0, PER_NICHE)) {
       const slug = slugify(cleanTitle(hit.productTitle ?? ''));
       if (!slug || seen.has(slug)) continue;
 
@@ -242,9 +251,14 @@ async function discover(live: Adapter[]) {
       seen.add(slug);
       added++;
       console.log(
-        `  \x1b[32m+\x1b[0m ${product.title} — heat ${signals.heat}` +
+        `  \x1b[32m+\x1b[0m ${product.title} — fit ${assessment.score}` +
+          (assessment.verdict === 'borderline' ? ' \x1b[33m(borderline)\x1b[0m' : '') +
+          ` · heat ${signals.heat}` +
           (signals.unitsSold ? ` · ${signals.unitsSold.toLocaleString('en-US')} sold` : '')
       );
+      // The reason it was picked, so a run can be argued with rather than
+      // just trusted — the whole point of scoring against stated criteria.
+      for (const r of assessment.reasons) console.log(`      \x1b[90m${r}\x1b[0m`);
     }
     writeFile(file, list);
   }
