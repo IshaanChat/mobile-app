@@ -61,17 +61,46 @@ function daysSinceChecked(r: any): number | null {
 }
 const TREND_MARK: Record<string, string> = { rising: '▲', steady: '→', fading: '▼' };
 
-function evidenceStrip(r: any) {
-  if (!r) return '';
+const compact = (n: number) =>
+  n >= 1_000_000 ? (n / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M'
+  : n >= 1_000 ? (n / 1_000).toFixed(1).replace(/\.0$/, '') + 'k'
+  : String(n);
+
+// Saturation read off real listing counts rather than hand-set.
+function saturationOf(s: any): 'low' | 'medium' | 'high' {
+  if (!s || s.listings === undefined) return 'medium';
+  return s.listings < 120 ? 'low' : s.listings < 600 ? 'medium' : 'high';
+}
+
+function evidenceStrip(r: any, s?: any) {
   const chips: string[] = [];
-  const run = daysRunning(r);
-  // A long-running ad is the strongest signal there is — someone is paying
-  // for it every day and hasn't stopped.
-  if (run !== null && run >= 7) {
-    chips.push(`<span class="ev-chip rising">${TREND_MARK[r.trend] ?? '▲'} ${run} days live</span>`);
+  // Machine signals first — units sold is the hardest evidence available.
+  if (s?.unitsSold) chips.push(`<span class="ev-chip rising">▲ ${compact(s.unitsSold)} sold</span>`);
+  if (s && saturationOf(s) === 'low' && s.listings !== undefined) {
+    chips.push('<span class="ev-chip fresh">low competition</span>');
   }
-  if (r.saturation === 'low') chips.push('<span class="ev-chip fresh">low competition</span>');
-  return chips.length ? `<div class="ev-strip">${chips.join('')}</div>` : '';
+  // Then anything logged by hand at the research bench.
+  const run = daysRunning(r);
+  if (run !== null && run >= 7) {
+    chips.push(`<span class="ev-chip rising">${TREND_MARK[r?.trend] ?? '▲'} ${run} days live</span>`);
+  }
+  if (!s && r?.saturation === 'low') chips.push('<span class="ev-chip fresh">low competition</span>');
+  return chips.length ? `<div class="ev-strip">${chips.slice(0, 2).join('')}</div>` : '';
+}
+
+function signalsBox(s: any) {
+  if (!s || !s.sources?.length) return '';
+  const bits: string[] = [];
+  if (s.unitsSold) bits.push(`<strong>${compact(s.unitsSold)}</strong> sold recently`);
+  if (s.listings !== undefined) bits.push(`${compact(s.listings)} competing sellers`);
+  if (s.views) bits.push(`${compact(s.views)} views on reviews`);
+  if (s.mentions) bits.push(`${s.mentions} mentions`);
+  const price = s.priceLow ? `sourcing from $${Number(s.priceLow).toFixed(2)}` : '';
+  return `<div class="ev-box">
+    <div class="ev-k">Demand right now · heat ${s.heat}</div>
+    <div class="ev-t">${bits.join(' · ')}${price ? '<br>' + price : ''}</div>
+    <div class="ev-m"><span>${esc(s.sources.join(', '))}</span><span>polled ${esc(s.polledAt ?? '')}</span></div>
+  </div>`;
 }
 
 function evidenceBox(r: any) {
@@ -116,6 +145,7 @@ function supplierRows(r: any) {
 function productCard(p: any) {
   const n = p.niche ?? {};
   const r = p.research;
+  const sig = p.signals;
   const aud = AUDIENCE_COLORS[n.audience] ?? '#60646c';
   const searchText = [p.title, p.blurb, n.name, n.domain, n.tags].filter(Boolean).join(' ').toLowerCase();
   return `<div class="card product" data-slug="${attr(p.slug)}" data-niche="${attr(p.nicheSlug)}" data-aud="${attr(n.audience)}" data-text="${attr(searchText)}">
@@ -123,13 +153,14 @@ function productCard(p: any) {
       <div class="hero" style="background-image:url('${attr(p.imageUrl)}')">
         <div class="chips"><span class="chip" style="background:${aud}">${esc(AUDIENCE_LABELS[n.audience] ?? n.audience ?? '')}</span><span class="chip chip-dark">${esc(SOURCING_LABELS[p.sourcingType] ?? '')}</span></div>
         <span class="match-badge">&#9733; your kind of thing</span>
-        ${evidenceStrip(r)}
+        ${evidenceStrip(r, sig)}
       </div>
       <button class="savebtn" title="Save to your shelf" onclick="event.stopPropagation(); toggleSave('${attr(p.slug)}', this)"><svg><use href="#i-heart"/></svg></button>
       <div class="body"><div class="titlerow"><div><div class="kicker">${esc(n.name ?? '')}</div><div class="title">${esc(p.title)}</div><div class="econ-inline"><span class="cost">${esc(p.sourceCost)}</span><span class="arrow">&rarr;</span><span class="resale">${esc(p.typicalResale)}</span></div></div><div class="chev">&#9660;</div></div></div>
     </div>
     <div class="expand">
       <p class="para">${esc(p.blurb)}</p>
+      ${signalsBox(sig)}
       ${evidenceBox(r)}
       ${supplierRows(r)}
       <div class="mini"><div class="mini-t">Where to source</div><div class="src-b">${esc(p.sourceName)} &middot; ${esc(SOURCING_LABELS[p.sourcingType] ?? '')}</div></div>

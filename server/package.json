@@ -18,6 +18,7 @@
     "niches:preview": "tsx scripts/preview-niches.ts",
     "app:preview": "tsx scripts/preview-app.ts",
     "research": "tsx scripts/research.ts",
+    "ingest": "tsx scripts/ingest/run.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "smoke": "node scripts/smoke.mjs"

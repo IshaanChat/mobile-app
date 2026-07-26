@@ -52,7 +52,58 @@ The sample file is placeholder content so the feed renders during
 development. Replace it with your own curation and import with
 `--archive-missing` to retire the samples.
 
-## Product research (`npm run research`)
+## Automated ingestion (`npm run ingest`)
+
+Pulls demand signals from official APIs, scores them into a 0–100 `heat`, and
+writes straight into `products/*.json`. No manual step.
+
+```bash
+npm run ingest                              # refresh signals on every product
+npm run ingest -- --niche ceramics-pottery  # one category
+npm run ingest -- --discover                # find NEW products per niche
+npm run ingest -- --discover --limit 3      # cap new products per niche
+npm run ingest -- --dry                     # show changes, write nothing
+```
+
+Keys go in `server/.env`. **Every source is optional** — adapters with no key
+are skipped, so this works from your first approval:
+
+| Source | What it gives | Getting a key |
+|---|---|---|
+| `ALIEXPRESS_APP_KEY` + `_APP_SECRET` | units sold, unit cost, image, **commission-paying link** | portals.aliexpress.com — few days |
+| `ETSY_API_KEY` | handmade listing counts + price band | developers.etsy.com — instant |
+| `EBAY_CLIENT_ID` + `_CLIENT_SECRET` | competing listings, price band | developer.ebay.com — instant |
+| `REDDIT_CLIENT_ID` + `_CLIENT_SECRET` | community mentions | reddit.com/prefs/apps — instant |
+| `YOUTUBE_API_KEY` | review-video views | console.cloud.google.com — instant |
+
+`--discover` needs AliExpress specifically, since it's the only source that
+returns actual products to create entries from.
+
+Scoring weights units sold highest and chatter lowest, and **subtracts** for a
+crowded market. A product evidenced only by chatter is capped well below one
+with real sales — you can suggest from talk, you can't confirm.
+
+```jsonc
+"signals": {
+  "heat": 78,               // drives ranking; replaces hand-set hotness
+  "unitsSold": 2400, "listings": 90, "views": 1900000, "mentions": 47,
+  "priceLow": 4.20, "priceHigh": 6.10,
+  "sources": ["aliexpress","ebay","youtube"],
+  "polledAt": "2026-07-26"
+}
+```
+
+Discover shows it: a "▲ 2.4k sold" chip on the card and a demand breakdown
+inside. Saturation is derived from listing counts rather than hand-set.
+
+**Why not TikTok or Shopify data?** Neither offers an API for it. Shopify's
+cross-store sales data is private to each merchant; the tools that show it
+crawl `/products.json` and poll inventory. TikTok ad data has no public API
+either. Both routes mean scraping — fragile, against terms, and a poor bet for
+an app going through App Store review. If you want ad data automated, license
+it from a provider that sells API access; it drops in as another adapter.
+
+## Manual research bench (`npm run research`)
 
 The bench at <http://localhost:4400> is for finding products that are
 *provably* selling, rather than ones that sound good.
