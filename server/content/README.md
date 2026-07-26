@@ -70,9 +70,18 @@ are skipped, so this works from your first approval:
 
 | Source | What it gives | Getting a key |
 |---|---|---|
+| *(none)* | **readership + its trend, for every product** | **nothing to get — Wikimedia needs no key** |
 | `ALIEXPRESS_APP_KEY` + `_APP_SECRET` | units sold, unit cost, image, **commission-paying link** | portals.aliexpress.com — few days |
+| `CJ_ACCESS_TOKEN` + `_COMPANY_ID` | real prices and live merchant listings across 15k+ advertisers | cj.com/publisher — free, and product search covers advertisers you haven't joined |
 | `ETSY_API_KEY` | handmade listing counts + price band | developers.etsy.com — allow a few days |
 | `META_ACCESS_TOKEN` | ad pressure: how many creatives, how long live | facebook.com/ads/library/api — ID check + app review, **not guaranteed** |
+
+Run `npm run ingest` with an empty `.env` and it still works: Wikimedia's
+pageview API needs no credential, so every product gets a measured `heat`,
+an `interest` figure and a trend before you have signed up for anything.
+Each niche carries a `wikiTitle` because no niche name is an article — and a
+near-miss title is worse than a missing one, since it returns plausible
+single-digit numbers rather than an error.
 
 Three sources, down from five. Reddit mentions and YouTube views were dropped:
 both were capped so low by the scorer that they rarely moved a result, and each

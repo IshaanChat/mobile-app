@@ -1,0 +1,47 @@
+{
+  "_comment": "A real-shaped CJ GraphQL shoppingProducts response. Includes the two things that break naive parsing: a bulk-lot outlier that would wreck a mean price, and a first result with no link so the adapter has to look past it for something openable.",
+  "data": {
+    "shoppingProducts": {
+      "totalCount": 412,
+      "resultList": [
+        {
+          "title": "Self-Watering Planter Pot, 6 inch",
+          "price": { "amount": "18.99", "currency": "USD" },
+          "imageLink": "https://cdn.example.com/planter-6.jpg",
+          "advertiserName": "Verdant Home",
+          "brand": "Verdant"
+        },
+        {
+          "title": "Self-Watering Planter, Ceramic",
+          "price": { "amount": "24.50", "currency": "USD" },
+          "imageLink": "https://cdn.example.com/planter-ceramic.jpg",
+          "link": "https://www.anrdoezrs.net/links/1234/type/dlg/https://verdanthome.co/planter",
+          "advertiserName": "Verdant Home",
+          "brand": "Verdant"
+        },
+        {
+          "title": "Self-Watering Planter — Wholesale Case of 48",
+          "price": { "amount": "912.00", "currency": "USD" },
+          "imageLink": "https://cdn.example.com/planter-case.jpg",
+          "link": "https://www.anrdoezrs.net/links/1234/type/dlg/https://bulkgarden.example/case",
+          "advertiserName": "BulkGarden Supply",
+          "brand": "BulkGarden"
+        },
+        {
+          "title": "Self-Watering Planter Insert",
+          "price": { "amount": "9.99", "currency": "USD" },
+          "imageLink": "https://cdn.example.com/planter-insert.jpg",
+          "link": "https://www.anrdoezrs.net/links/1234/type/dlg/https://potandsprout.eu/insert",
+          "advertiserName": "Pot & Sprout"
+        },
+        {
+          "title": "Self-Watering Planter, Large",
+          "price": { "amount": "31.00", "currency": "USD" },
+          "imageLink": "https://cdn.example.com/planter-large.jpg",
+          "link": "https://www.anrdoezrs.net/links/1234/type/dlg/https://verdanthome.co/large",
+          "advertiserName": "Verdant Home"
+        }
+      ]
+    }
+  }
+}

@@ -32,11 +32,12 @@ import { aliexpress } from './sources/aliexpress';
 import { etsy } from './sources/etsy';
 import { meta } from './sources/meta';
 import { wikipedia } from './sources/wikipedia';
+import { cj } from './sources/cj';
 
 // Resolved from this file rather than the cwd, which used to mean running
 // ingest from anywhere but server/ silently found no products at all.
 const DIR = resolve(__dirname, '..', '..', 'content');
-const ADAPTERS: Adapter[] = [aliexpress, etsy, meta, wikipedia];
+const ADAPTERS: Adapter[] = [aliexpress, etsy, cj, meta, wikipedia];
 
 const args = process.argv.slice(2).filter((a) => a !== '--');
 const has = (f: string) => args.includes(f);
@@ -97,6 +98,10 @@ function planFor(p: any, niche?: any): { adapter: Adapter; keyword: string; scop
     // Etsy always measures the market the seller actually sells into.
     { adapter: etsy, keyword: p.title, scope: 'category' },
     { adapter: meta, keyword: p.imageQuery || p.title, scope: 'category' },
+    // A merchant catalog prices the thing being sold for resale rows, and
+    // the materials for the rest — same split as AliExpress. Either way it
+    // reports a price and a live listing, never a sale.
+    { adapter: cj, keyword: resells ? p.title : supplyTerm(p), scope: resells ? 'product' : 'supply' },
     // Readership is a property of the subject, not the listing, so it is
     // asked once per niche. `wikiTitle` exists because "Ceramics & pottery"
     // is not an article and "Pottery" is — and a near-miss title returns
@@ -111,8 +116,13 @@ function planFor(p: any, niche?: any): { adapter: Adapter; keyword: string; scop
 // budget and then stops asking — a nightly cron covers the catalog over a
 // couple of nights instead of failing halfway through one.
 const META_BUDGET = Number(process.env.META_CALLS_PER_RUN) || 150;
-let metaCallsUsed = 0;
-let metaBudgetWarned = false;
+// CJ's published limits could not be confirmed from public docs, so it gets
+// the same treatment until a live token shows what the real numbers are.
+// Erring high rather than low: a budget that never binds costs nothing.
+const CJ_BUDGET = Number(process.env.CJ_CALLS_PER_RUN) || 400;
+const budgets: Record<string, number> = { meta: META_BUDGET, cj: CJ_BUDGET };
+const used: Record<string, number> = {};
+const warned = new Set<string>();
 
 async function gather(
   plan: { adapter: Adapter; keyword: string; scope: SignalScope }[],
@@ -121,17 +131,19 @@ async function gather(
   const out: Signal[] = [];
   for (const step of plan) {
     if (!live.includes(step.adapter)) continue;
-    if (step.adapter.name === 'meta') {
-      if (metaCallsUsed >= META_BUDGET) {
-        if (!metaBudgetWarned) {
+    const budget = budgets[step.adapter.name];
+    if (budget !== undefined) {
+      const spent = used[step.adapter.name] ?? 0;
+      if (spent >= budget) {
+        if (!warned.has(step.adapter.name)) {
           console.log(
-            `  \x1b[33mMeta budget of ${META_BUDGET} calls spent — skipping it for the rest of this run.\x1b[0m`
+            `  \x1b[33m${step.adapter.name} budget of ${budget} calls spent — skipping it for the rest of this run.\x1b[0m`
           );
-          metaBudgetWarned = true;
+          warned.add(step.adapter.name);
         }
         continue;
       }
-      metaCallsUsed++;
+      used[step.adapter.name] = spent + 1;
     }
     out.push(...(await safeSearch(step.adapter, step.keyword, step.scope)));
     await delay(250); // stay well inside every rate limit
