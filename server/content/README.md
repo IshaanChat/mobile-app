@@ -72,6 +72,7 @@ are skipped, so this works from your first approval:
 |---|---|---|
 | *(none)* | **readership + its trend, for every product** | **nothing to get — Wikimedia needs no key** |
 | *(none)* | **real base cost per unit on print-on-demand rows** | **nothing to get — Printful's v1 catalog is open** |
+| `EBAY_CLIENT_ID` + `_CLIENT_SECRET` | what reseller goods actually sell for, and how many sellers | developer.ebay.com — **self-serve, keys immediately, no approval queue** |
 | `ALIEXPRESS_APP_KEY` + `_APP_SECRET` | units sold, unit cost, image, **commission-paying link** | portals.aliexpress.com — few days |
 | `CJ_ACCESS_TOKEN` + `_COMPANY_ID` | real prices and live merchant listings across 15k+ advertisers | cj.com/publisher — free, and product search covers advertisers you haven't joined |
 | `ETSY_API_KEY` | handmade listing counts + price band | developers.etsy.com — allow a few days |
@@ -116,6 +117,49 @@ outfit sets" — names no blank at all, and gets no number rather than a guess.
 Note v2 (`/v2/catalog-*`) is **not** open despite what several guides claim; it
 answers `This endpoint requires Oauth authentication!`. Don't "upgrade" the
 adapter without a token in hand.
+
+### Working backwards from the selling price
+
+Sourcing cost is the one number nobody publishes. That is not bad luck with
+any particular supplier — it is the shape of the whole market. What something
+*sells* for is public because marketplaces want it indexed; what it *costs* to
+source is the only real moat in this business, so every tool that has it is
+reselling gated access. Printful is the exception precisely because it earns
+when you sell.
+
+So the criteria run in both directions:
+
+- `assess({ cost, ... })` — the supplier side. Needs a sourcing cost.
+- `assessListing({ retail, ... })` — the demand side. Needs no cost at all,
+  and instead **states the one the product must hit**: a $34 seller has to be
+  sourced under $11.33 to clear 3x, under $6.80 to hit 5x.
+
+The second is arguably the better card anyway. "Source this under $11" is
+actionable to a beginner in a way an unverifiable cost figure is not, it
+survives suppliers changing their prices, and Discover never blocks waiting on
+a credential.
+
+`Signal.retailPrice` is a separate field from `Signal.price` and must stay
+that way. They are opposite ends of one trade, and a $34 selling price landing
+in `priceLow` reads as a $34 sourcing cost — the criteria would reject it as
+unfundable when it is the best news about the product.
+
+### eBay — and why it came back
+
+eBay was in this pipeline once and removed, with the note that "its median
+price is used and mass-produced stock, and feeding that into `typicalResale`
+for a hand-thrown mug is worse than showing no number at all."
+
+That was right, and entirely scoped to the maker catalog. For the reseller
+lane the same property is the argument: somebody flipping goods IS selling
+used, mass-produced stock and wants to know what it clears. So eBay runs on
+`DROPSHIP` and `WHOLESALE` rows only and never touches the four fifths of the
+catalog that is things people make.
+
+It reports the **trimmed median**, not the cheapest listing. The bottom of any
+eBay search is damaged stock, miscategorised items and loss leaders; the outer
+decile goes before the median is taken. Its match count is the honest
+competition figure — how many sellers a beginner would be listing against.
 
 Three sources, down from five. Reddit mentions and YouTube views were dropped:
 both were capped so low by the scorer that they rarely moved a result, and each

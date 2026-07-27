@@ -22,7 +22,8 @@
     "test:watch": "vitest",
     "smoke": "node scripts/smoke.mjs",
     "catalog:import": "tsx scripts/import-catalog.ts",
-    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.scripts.json"
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.scripts.json",
+    "sourcing": "tsx scripts/sourcing.ts"
   },
   "dependencies": {
     "@clerk/backend": "^3.12.0",
