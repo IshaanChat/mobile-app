@@ -23,7 +23,11 @@ const SOURCING_LABELS: Record<string, string> = {
   DROPSHIP: 'Dropship', WHOLESALE: 'Wholesale', PRINT_ON_DEMAND: 'Print on demand',
   MATERIALS: 'Materials', MAKE_YOUR_OWN: 'Make your own',
 };
-const AUDIENCE_LABELS: Record<string, string> = { maker: 'Maker', reseller: 'Reseller', both: 'Maker + reseller' };
+// One word per card, never a compound. "Maker + reseller" was the honest
+// description of a `both` niche and the wrong thing to print on a card — it
+// reads as a third category rather than as "either works". A `both` niche is
+// shown as Maker, because making it is the specific claim; anyone can resell.
+const AUDIENCE_LABELS: Record<string, string> = { maker: 'Maker', reseller: 'Seller', both: 'Maker' };
 // Deepened sage / honey / rose from the artisan palette — these chips carry
 // white text over photos, so they need more depth than the palette's base
 // values to stay legible.
@@ -40,6 +44,19 @@ const PLATFORM_COLORS: Record<string, string> = {
 const KIND_LABELS: Record<string, string> = {
   community: 'Community', hashtag: 'Hashtag', marketplace: 'Marketplace', search: 'Search recipe', event: 'Event',
 };
+
+/** Reseller rows below this are dropped from Discover. */
+const RESELLER_HEAT_FLOOR = 40;
+
+/**
+ * The heat a row is judged on.
+ *
+ * Prefers the measured `signals.heat` and falls back to the curator's
+ * `hotness`, because a row with no signals block has never been polled — and
+ * treating "not measured yet" as zero would silently delete every reseller
+ * product the ingest has not reached.
+ */
+const heatOf = (p: any): number => Number(p?.signals?.heat ?? p?.hotness ?? 0);
 
 const esc = (s: any) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const attr = (s: any) => esc(s).replace(/"/g, '&quot;');
@@ -142,20 +159,23 @@ function supplierRows(r: any) {
 // Discover is a feed of PRODUCTS — the niche is a label on the card, not the
 // unit you scroll. Each product carries its niche so filtering, matching and
 // "choose this" still work at the niche level.
-function productCard(p: any) {
+function productCard(p: any, hotFloor = Infinity) {
   const n = p.niche ?? {};
   const r = p.research;
   const sig = p.signals;
   const aud = AUDIENCE_COLORS[n.audience] ?? '#60646c';
+  const hot = heatOf(p) >= hotFloor;
   const searchText = [p.title, p.blurb, n.name, n.domain, n.tags].filter(Boolean).join(' ').toLowerCase();
-  return `<div class="card product" data-slug="${attr(p.slug)}" data-niche="${attr(p.nicheSlug)}" data-aud="${attr(n.audience)}" data-text="${attr(searchText)}">
+  return `<div class="card product${hot ? ' hot' : ''}" data-slug="${attr(p.slug)}" data-niche="${attr(p.nicheSlug)}" data-aud="${attr(n.audience)}" data-heat="${heatOf(p)}" data-text="${attr(searchText)}">
     <div class="head" onclick="toggleCard(this,'open-niche')">
       <div class="hero" style="background-image:url('${attr(p.imageUrl)}')">
+        ${hot ? '<span class="hotbadge"><svg class="ic-sm"><use href="#i-flame"/></svg>Hot</span>' : ''}
+        ${p.tier === 'upside' ? '<span class="upbadge"><svg class="ic-sm"><use href="#i-spark"/></svg>High upside</span>' : ''}
         <div class="chips"><span class="chip" style="background:${aud}">${esc(AUDIENCE_LABELS[n.audience] ?? n.audience ?? '')}</span><span class="chip chip-dark">${esc(SOURCING_LABELS[p.sourcingType] ?? '')}</span></div>
         <span class="match-badge">&#9733; your kind of thing</span>
         ${evidenceStrip(r, sig)}
       </div>
-      <button class="savebtn" title="Save to your shelf" onclick="event.stopPropagation(); toggleSave('${attr(p.slug)}', this)"><svg><use href="#i-heart"/></svg></button>
+      <button class="savebtn" title="Bookmark this product" onclick="event.stopPropagation(); toggleSave('${attr(p.slug)}', this)"><svg><use href="#i-heart"/></svg></button>
       <div class="body"><div class="titlerow"><div><div class="kicker">${esc(n.name ?? '')}</div><div class="title">${esc(p.title)}</div><div class="econ-inline"><span class="cost">${esc(p.sourceCost)}</span><span class="arrow">&rarr;</span><span class="resale">${esc(p.typicalResale)}</span></div></div><div class="chev">&#9660;</div></div></div>
     </div>
     <div class="expand">
@@ -223,7 +243,39 @@ function milestoneRow(m: any) {
 }
 
 function page(products: any[], communities: any[], missions: any, onboarding: any) {
-  const domains = [...new Set(products.map((p) => p.niche?.domain).filter(Boolean))];
+  /**
+   * Section order, decided rather than inherited.
+   *
+   * This was whatever order the product files happened to be read in, so
+   * "Sourced" sat fifth purely because discovered.json sorts between
+   * digital-services.json and fashion-wearables.json. Filenames are not an
+   * editorial decision, and the feed's first screen is the most valuable
+   * space in the app.
+   *
+   * Sourced leads because it is the only section that is measured — every row
+   * in it cleared the criteria on live supplier data, where the curated
+   * sections are hand-written judgement. Put the evidence first.
+   */
+  const DOMAIN_ORDER = ['Sourced'];
+  const domains = [...new Set(products.map((p) => p.niche?.domain).filter(Boolean))].sort((a, b) => {
+    const ia = DOMAIN_ORDER.indexOf(a), ib = DOMAIN_ORDER.indexOf(b);
+    if (ia !== -1 || ib !== -1) return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+    return 0; // everything else keeps the order it already had
+  });
+
+  /**
+   * What counts as hot: the top fifth of whatever is currently loaded.
+   *
+   * A percentile rather than a fixed number, because heat is not one scale.
+   * Curated rows carry machine-measured heat in the 8–55 range while sourced
+   * rows carry a criteria-fit score in the 80s, so any constant would either
+   * flame every sourced product and none of yours, or the reverse. A
+   * percentile at least means "hot" always describes the same *proportion*
+   * of the feed — but the underlying two-scales problem is still there and
+   * still worth fixing properly.
+   */
+  const heats = products.map(heatOf).sort((a, b) => a - b);
+  const hotFloor = heats.length ? heats[Math.floor(heats.length * 0.8)] : Infinity;
   const byLevel = (lv: number) => missions.milestones.filter((m: any) => m.level === lv);
   const levelsHtml = missions.levels.map((lv: any) => `
     <section class="level lvsec" data-level="${lv.level}">
@@ -544,6 +596,38 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   .toast { position:fixed; bottom:80px; left:50%; transform:translateX(-50%); background:var(--scoreboard); color:#fdf7f4; font-size:13px; font-weight:600; padding:10px 16px; border-radius:999px; opacity:0; transition:opacity .25s; z-index:30; }
   .toast.show { opacity:1; }
   .empty { color:var(--text-dim); font-size:14px; text-align:center; padding:30px 0; display:none; }
+  /* Hot badge — top fifth of the feed by heat. */
+  .hotbadge { position:absolute; top:12px; left:12px; z-index:2; display:inline-flex; align-items:center; gap:5px;
+    background:linear-gradient(135deg,#ff8a3d,#e3452b); color:#fff; font-size:11px; font-weight:700;
+    letter-spacing:.03em; text-transform:uppercase; padding:5px 10px 5px 8px; border-radius:999px;
+    box-shadow:0 2px 8px rgba(227,69,43,.38); }
+  .hotbadge svg { width:13px; height:13px; fill:none; stroke:currentColor; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round; }
+  .card.hot .hero { box-shadow:inset 0 0 0 2px rgba(227,69,43,.5); }
+  @media (prefers-reduced-motion:no-preference){
+    .hotbadge svg { animation:flick 1.9s ease-in-out infinite; transform-origin:50% 80%; }
+    @keyframes flick { 0%,100%{transform:scale(1) rotate(0)} 45%{transform:scale(1.13) rotate(-4deg)} 70%{transform:scale(.97) rotate(3deg)} }
+  }
+
+  /* High-upside badge — early demand with the margin still intact. Sits
+     below the hot badge so a card can legitimately carry both. */
+  .upbadge { position:absolute; top:12px; left:12px; z-index:2; display:inline-flex; align-items:center; gap:5px;
+    background:linear-gradient(135deg,#6f6bd8,#8f5fd6); color:#fff; font-size:11px; font-weight:700;
+    letter-spacing:.03em; text-transform:uppercase; padding:5px 10px 5px 8px; border-radius:999px;
+    box-shadow:0 2px 8px rgba(111,107,216,.36); }
+  .card.hot .upbadge { top:44px; }
+  .upbadge svg { width:13px; height:13px; fill:none; stroke:currentColor; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round; }
+
+  /* Bookmarks pane. */
+  .bm-empty { color:var(--text-dim); font-size:14px; text-align:center; padding:26px 8px; line-height:1.5; }
+  .bm { display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--panel-border); }
+  .bm:last-child { border-bottom:none; }
+  .bm-img { width:52px; height:52px; border-radius:10px; object-fit:cover; background:var(--accent-soft); flex:none; }
+  .bm-b { flex:1; min-width:0; }
+  .bm-t { font-size:14px; font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .bm-m { font-size:12px; color:var(--text-dim); margin-top:2px; }
+  .bm-p { font-size:12px; color:var(--customer); font-weight:600; margin-top:3px; }
+  .bm-x { border:none; background:none; color:var(--text-dim); font-size:22px; line-height:1; cursor:pointer; padding:4px 6px; flex:none; }
+  .bm-x:hover { color:var(--accent); }
 
   /* ---- Onboarding: one question per screen, generous space, quiet chrome ---- */
   .onb { position:fixed; inset:0; z-index:100; background:var(--bg); display:none; }
@@ -642,16 +726,20 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   <div class="screen active" id="s-discover">
     <div class="top"><h1>Discover</h1><div class="sub">Trending products &mdash; and where to source them.</div></div>
     <div class="filters">
-      <button class="chipbtn on" data-f="all" onclick="setFilter(this)">All</button>
+      <button class="chipbtn" data-f="reseller" onclick="setFilter(this)">Seller</button>
       <button class="chipbtn" data-f="maker" onclick="setFilter(this)">Maker</button>
-      <button class="chipbtn" data-f="reseller" onclick="setFilter(this)">Reseller</button>
-      <button class="chipbtn" data-f="both" onclick="setFilter(this)">Both</button>
-      <button class="chipbtn" data-f="saved" onclick="setFilter(this)" id="chip-saved">Saved</button>
     </div>
     <div class="banner" id="disc-banner" style="margin-top:12px"></div>
     ${domains.map((d) => `<section class="dom" data-dom="${attr(d)}">
       <div class="dom-h">${esc(d)}</div>
-      ${products.filter((p) => p.niche?.domain === d).map(productCard).join('')}
+      ${products
+        .filter((p: any) => p.niche?.domain === d)
+        // Hottest first. The feed used to render in file order, which meant
+        // whichever category file happened to sort first in the directory
+        // led the section regardless of how good anything in it was.
+        .sort((a: any, b: any) => heatOf(b) - heatOf(a))
+        .map((p: any) => productCard(p, hotFloor))
+        .join('')}
     </section>`).join('')}
   </div>
   <!-- GROW -->
@@ -683,6 +771,7 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
       <button class="subtab on" data-pane="overview" onclick="setPane(this)"><svg class="ic-sm"><use href="#i-chart"/></svg>Overview</button>
       <button class="subtab" data-pane="clients" onclick="setPane(this)"><svg class="ic-sm"><use href="#i-book"/></svg>Clients</button>
       <button class="subtab" data-pane="money" onclick="setPane(this)"><svg class="ic-sm"><use href="#i-note"/></svg>Money</button>
+      <button class="subtab" data-pane="saved" id="tab-saved" onclick="setPane(this)"><svg class="ic-sm"><use href="#i-heart"/></svg>Bookmarks</button>
     </div>
 
     <div class="pane on" id="p-overview">
@@ -750,6 +839,13 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
           <button class="btn-fill" onclick="addProduct()">Add to the shelf</button>
         </div>
         <div id="products-list"></div>
+      </div>
+    </div>
+
+    <div class="pane" id="p-saved">
+      <div class="hcard">
+        <div class="hcard-h"><div class="hcard-t inline-ic"><svg class="ic-sm"><use href="#i-heart"/></svg>Bookmarked products</div><button class="hcard-a" onclick="setTab('discover')">Find more &rarr;</button></div>
+        <div id="bm-list"></div>
       </div>
     </div>
   </div>
@@ -974,36 +1070,133 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   }
 
   function setFilter(btn){
-    document.querySelectorAll('#s-discover .chipbtn').forEach(function(b){ b.classList.toggle('on', b===btn); });
-    var f = btn.dataset.f;
+    // Toggles rather than a radio group. "All" used to be a chip of its own;
+    // with it gone, clicking the active chip again is what clears the filter,
+    // so nothing is unreachable without spending a chip on the default state.
+    var wasOn = btn.classList.contains('on');
+    document.querySelectorAll('#s-discover .chipbtn').forEach(function(b){ b.classList.remove('on'); });
+    if(!wasOn) btn.classList.add('on');
+    applyFilter(wasOn ? null : btn.dataset.f);
+  }
+
+  // Remembered so matchDiscover() can re-sort without the chips being touched
+  // — the match flags arrive after onboarding, later than the last filter.
+  var CURRENT_FILTER = null;
+
+  function applyFilter(f){
+    CURRENT_FILTER = f;
     document.querySelectorAll('#s-discover .product').forEach(function(c){
-      var show = f==='all' ? true
-        : f==='saved' ? c.classList.contains('saved')
-        : c.getAttribute('data-aud')===f;
+      var aud = c.getAttribute('data-aud');
+      // The filter follows the BADGE, not the raw audience. A "both" niche is
+      // badged Maker, so showing it under Seller too put cards reading
+      // "Maker" inside the Seller list — the section and the label
+      // contradicting each other on the same screen.
+      // (No backticks in this comment: it lives inside a template literal,
+      // and one would end the string. tsc will not catch it.)
+      var show = !f || aud===f || (f==='maker' && aud==='both');
       c.style.display = show ? '' : 'none';
+    });
+    reorderFeed(f);
+  }
+
+  /**
+   * What floats to the top, and it differs by tab on purpose.
+   *
+   * Maker leads with "your kind of thing" — someone making the product picked
+   * their craft before they picked a product, so relevance to what they said
+   * they are into beats every other signal.
+   *
+   * Seller leads with Hot and High upside. A reseller has no craft to be
+   * matched against; what they want is the strongest bet on the shelf, which
+   * is exactly what those two badges mark.
+   */
+  function feedGroup(c, f){
+    var hot = c.classList.contains('hot');
+    var up = !!c.querySelector('.upbadge');
+    // Both badges together is the strongest thing the feed can say about a
+    // product: settled-enough demand to be scoring in the top fifth, AND the
+    // early-with-margin-intact profile. 133 of 874 qualify, so this is a real
+    // shelf rather than a rounding error — and lumping it in with
+    // single-badge cards buried it among 229 others.
+    var top = hot && up;
+    if(f === 'reseller'){
+      return top ? 0 : (hot || up) ? 1 : 2;
+    }
+    // Maker still leads with relevance — someone making a product chose their
+    // craft first — but a double-badged match beats a plain one.
+    var m = c.classList.contains('match');
+    if(m) return top ? 0 : 1;
+    return top ? 2 : (hot || up) ? 3 : 4;
+  }
+
+  function reorderFeed(f){
+    document.querySelectorAll('#s-discover .dom').forEach(function(sec){
+      var cards = [].slice.call(sec.querySelectorAll('.product'));
+      var visible = cards.filter(function(c){ return c.style.display !== 'none'; });
+      // A section whose cards are all filtered out used to leave its heading
+      // stranded over empty space. With most of the catalog in one domain
+      // that read as "the tab is broken" rather than "nothing matched here".
+      sec.style.display = visible.length ? '' : 'none';
+      if(!visible.length) return;
+      visible.sort(function(a,b){
+        var ga = feedGroup(a,f), gb = feedGroup(b,f);
+        if(ga !== gb) return ga - gb;
+        return (+b.getAttribute('data-heat') || 0) - (+a.getAttribute('data-heat') || 0);
+      });
+      visible.forEach(function(c){ sec.appendChild(c); });
     });
   }
 
-  /* ---- Save to shelf ---- */
+  /* ---- Bookmarks ---- */
+  // Storage stays on S.saved rather than renaming to S.bookmarks: the key is
+  // already in people's localStorage and a rename would silently empty every
+  // existing shelf on first load.
   function toggleSave(slug, btn){
     S.saved = S.saved || [];
     var card = btn.closest('.card');
     var at = S.saved.indexOf(slug);
-    if(at === -1){ S.saved.push(slug); card.classList.add('saved'); toast('Saved to your shelf'); }
-    else { S.saved.splice(at,1); card.classList.remove('saved'); }
-    save(); renderSavedChip();
-  }
-  function renderSavedChip(){
-    var n = (S.saved||[]).length;
-    var chip = document.getElementById('chip-saved');
-    if(chip) chip.textContent = n ? ('Saved \\u00b7 ' + n) : 'Saved';
+    if(at === -1){ S.saved.push(slug); card.classList.add('saved'); toast('Bookmarked \\u2014 find it in Business'); }
+    else { S.saved.splice(at,1); card.classList.remove('saved'); toast('Bookmark removed'); }
+    save(); renderBookmarks();
   }
   function applySaved(){
     (S.saved||[]).forEach(function(slug){
       var c = document.querySelector('#s-discover .product[data-slug="'+slug+'"]');
       if(c) c.classList.add('saved');
     });
-    renderSavedChip();
+    renderBookmarks();
+  }
+  function renderBookmarks(){
+    var list = S.saved || [];
+    var tab = document.getElementById('tab-saved');
+    if(tab) tab.textContent = list.length ? ('Bookmarks \\u00b7 ' + list.length) : 'Bookmarks';
+    var box = document.getElementById('bm-list');
+    if(!box) return;
+    if(!list.length){
+      // Not .empty — that class is display:none by default and the message
+      // would never appear.
+      box.innerHTML = '<div class="bm-empty">Nothing bookmarked yet. Tap the heart on a product in Discover and it lands here.</div>';
+      return;
+    }
+    box.innerHTML = list.map(function(slug){
+      var p = PRODUCTS[slug];
+      if(!p) return '';
+      return '<div class="bm">'
+        + (p.img ? '<img class="bm-img" src="'+p.img+'" alt="" loading="lazy">' : '<div class="bm-img"></div>')
+        + '<div class="bm-b">'
+        +   '<div class="bm-t">'+p.title+'</div>'
+        +   '<div class="bm-m">'+(p.niche||'')+'</div>'
+        +   '<div class="bm-p">'+(p.cost||'')+(p.cost&&p.resale?' \\u2192 ':'')+(p.resale||'')+'</div>'
+        + '</div>'
+        + '<button class="bm-x" title="Remove" onclick="unbookmark(\\''+slug+'\\')">&times;</button>'
+        + '</div>';
+    }).join('');
+  }
+  function unbookmark(slug){
+    S.saved = (S.saved||[]).filter(function(s){ return s !== slug; });
+    var c = document.querySelector('#s-discover .product[data-slug="'+slug+'"]');
+    if(c) c.classList.remove('saved');
+    save(); renderBookmarks();
   }
 
   /* ---- Streak: days in a row, counted honestly ---- */
@@ -1127,6 +1320,9 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
       ? 'Highlighted ' + count + ' products from what you said you\\'re into'
       : 'Nothing matched exactly — browse everything, something will click';
     banner.classList.add('on');
+    // Matches decide the Maker ordering, and they only exist once onboarding
+    // has run — so the feed has to be re-sorted here, not just on a chip tap.
+    reorderFeed(CURRENT_FILTER);
   }
 
   // With a large library almost everything overlaps on a token or two, so a
@@ -1527,6 +1723,20 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
     renderAiState(); renderSocialCount();
   }
 
+  // Keyed by product slug so the Bookmarks pane can render a card without
+  // scraping the Discover DOM — which would break the moment a filter hides
+  // the source card, since display:none elements still match querySelector
+  // but a re-render would not carry their markup across.
+  var PRODUCTS = ${JSON.stringify(
+    Object.fromEntries(
+      products.map((p: any) => [
+        p.slug,
+        { title: p.title, img: p.imageUrl ?? '', cost: p.sourceCost ?? '',
+          resale: p.typicalResale ?? '', niche: p.niche?.name ?? '' },
+      ])
+    )
+  )};
+
   /* ---------------- Onboarding ---------------- */
   var ONB = ${JSON.stringify(onboarding)};
   var NICHES = ${JSON.stringify(
@@ -1854,6 +2064,11 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   matchGrow();
   hydrateYou();
   applySaved();
+  // Group the feed on first paint, not only after a chip is tapped. The
+  // server sorts by heat, which cannot see the badges — those are decided in
+  // the browser — so without this the double-badged shelf only appeared once
+  // the user happened to touch a filter.
+  reorderFeed(null);
   tickStreak();
   refresh();
   if(S.tab){ setTab(S.tab); }
@@ -1873,7 +2088,18 @@ createServer((req, res) => {
       .filter((f) => f.endsWith('.json'))
       .flatMap((f) => JSON.parse(readFileSync(`${dir}/products/${f}`, 'utf8')))
       .map((p: any) => ({ ...p, niche: nicheBySlug[p.nicheSlug] }))
-      .filter((p: any) => p.niche);
+      .filter((p: any) => p.niche)
+      .filter((p: any) => {
+        // Reseller rows have to earn their place; maker rows are not held to
+        // this. A hand-thrown mug's low measured heat says Wikipedia is quiet
+        // about pottery, not that the product is weak — but a reseller row IS
+        // its numbers, so a cold one has nothing else to offer.
+        //
+        // Filtered at render rather than deleted from content/: the cut is a
+        // presentation decision and the underlying rows stay curated.
+        if (p.niche.audience !== 'reseller') return true;
+        return heatOf(p) >= RESELLER_HEAT_FLOOR;
+      });
     const communities = readdirSync(`${dir}/communities`)
       .filter((f) => f.endsWith('.json'))
       .flatMap((f) => JSON.parse(readFileSync(`${dir}/communities/${f}`, 'utf8')));
