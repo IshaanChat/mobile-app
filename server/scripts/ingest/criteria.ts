@@ -35,8 +35,15 @@ export const MARKUP_MAX = 5;
  */
 export const RETAIL_SWEET_LOW = 25;
 export const RETAIL_SWEET_HIGH = 100;
-/** Recent sales below this are indistinguishable from noise. */
-export const DEMAND_FLOOR = 40;
+/**
+ * Recent sales below this are indistinguishable from noise.
+ *
+ * Raised from 40 after the first real pull. At 40 the survivors included
+ * products with 47, 52 and 53 recent sales — technically above the line and
+ * nowhere near enough to tell a genuine early trend from a handful of orders
+ * that happened to land in the same month.
+ */
+export const DEMAND_FLOOR = 100;
 /**
  * Above this, assume the obvious buyers have been served and the ad auction
  * is expensive. Not a cliff — the score tapers past it.
@@ -58,6 +65,8 @@ export interface Candidate {
   listings?: number;
   /** Recent attention over the month before it; 1.2 is a fifth more. */
   interestTrend?: number;
+  /** How many candidates the rank is out of, when known. */
+  total?: number;
   /**
    * Where this sat in a volume-sorted result page, zero-based.
    *
@@ -81,6 +90,24 @@ export interface Assessment {
   blockers: string[];
   /** The retail band this cost supports, for the card. */
   retail?: { low: number; high: number };
+  /** Coming the other way: what it must cost to be worth sourcing. */
+  target?: { max: number; ideal: number };
+  /** Which shelf this belongs on: proven, high-upside, or neither. */
+  tier?: Tier;
+}
+
+/**
+ * A product seen from the demand side — what it sells for, not what it costs.
+ * This is the shape retail marketplaces can actually give us.
+ */
+export interface Listing {
+  /** Observed selling price. */
+  retail?: number;
+  unitsSold?: number;
+  listings?: number;
+  interestTrend?: number;
+  rank?: number;
+  total?: number;
 }
 
 const clamp01 = (n: number) => Math.max(0, Math.min(1, n));
@@ -97,6 +124,27 @@ export function band(value: number, low: number, high: number, taperLow: number,
 }
 
 /**
+ * A band with a slope inside it: best at the middle, ~0.82 at the edges.
+ *
+ * The flat-topped `band` was the other half of the tie problem. Everything
+ * in range scored exactly 1, so three of the six criteria returned the same
+ * number for almost every product and the total collapsed onto a single
+ * value. Sitting dead centre of the demand sweet spot is genuinely a better
+ * sign than scraping the edge of it, and the score should say so.
+ *
+ * The slope is deliberately gentle. It is a tiebreaker among products that
+ * already qualify, not a second opinion about whether they qualify — that
+ * question is settled by the blockers, which this cannot override.
+ */
+export function centred(value: number, low: number, high: number, taperLow: number, taperHigh: number): number {
+  const base = band(value, low, high, taperLow, taperHigh);
+  if (base <= 0 || value < low || value > high) return base;
+  const mid = (low + high) / 2;
+  const half = (high - low) / 2 || 1;
+  return 1 - 0.18 * Math.min(1, Math.abs(value - mid) / half);
+}
+
+/**
  * Demand, scored as a band rather than a maximum.
  *
  * This one line is the whole point of the module. Ranking by volume gave the
@@ -107,7 +155,7 @@ export function band(value: number, low: number, high: number, taperLow: number,
 export function demandScore(unitsSold?: number): number {
   if (unitsSold === undefined) return 0;
   if (unitsSold < DEMAND_FLOOR) return 0;
-  const raw = band(unitsSold, 150, 1200, DEMAND_FLOOR, DEMAND_CROWDED * 2);
+  const raw = centred(unitsSold, 150, 1200, DEMAND_FLOOR, DEMAND_CROWDED * 2);
   // Never taper the crowded end to zero. Doing so was an over-correction that
   // scored 9,000 recent sales exactly the same as 20 — it turned "this market
   // is well served" into "nobody wants this", which is a different and much
@@ -115,13 +163,28 @@ export function demandScore(unitsSold?: number): number {
   return unitsSold > 1200 ? Math.max(raw, CROWDED_FLOOR) : raw;
 }
 
-/** Position in a best-seller list. Mid-page beats the top of it. */
-export function rankScore(rank?: number): number {
+/**
+ * Position in a best-seller list, as a FRACTION of the list.
+ *
+ * This was absolute — positions 12–50 scored 1 and anything past 90 scored 0.
+ * That was survivable while a pull was one page of 20 and catastrophic once
+ * it was 11,000 products: every product past position 90 scored an identical
+ * zero, so an 18% weight became a constant and 607 of 662 picks tied on the
+ * exact same total. A score that cannot separate its inputs is not a ranking.
+ *
+ * Relative position is also the more honest measure. Being 40th out of 50 and
+ * 40th out of 5,000 are not remotely the same claim about how contested
+ * something is.
+ */
+export function rankScore(rank?: number, total?: number): number {
   if (rank === undefined) return 0.5; // unknown position, no opinion
-  // Positions 20–50 are where products with real demand and thin competition
-  // sit. Note the adapter currently requests one page of 20, so it can never
-  // see past position 19 — reaching this range needs page_no 2 and 3.
-  return band(rank, 12, 50, -8, 90);
+  // Short lists keep the absolute reading — a single page really is 20 items
+  // deep, and a percentile over 20 would be far too coarse to mean anything.
+  if (!total || total < 120) return centred(rank, 12, 50, -8, 90);
+  // The front of a long feed is where everyone else starts scrolling; the
+  // deep tail is stock the feed itself ranked last. The good stretch is
+  // between them.
+  return centred(rank / total, 0.12, 0.75, -0.05, 1.05);
 }
 
 /** How much room the cost leaves once ads, fees and returns are paid for. */
@@ -129,26 +192,57 @@ export function marginScore(cost?: number): number {
   if (cost === undefined || cost <= 0) return 0;
   // Cheap is good, but only down to a point: under a dollar or two the
   // product is usually too flimsy to survive a refund policy.
-  return band(cost, 2, 9, 0.5, COST_CEILING);
+  return centred(cost, 2, 9, 0.5, COST_CEILING);
 }
 
-/** Where the achievable retail lands against the bands buyers actually sit in. */
+/** Whether a retail price sits where buyers actually are. */
+export function retailBandScore(retail?: number): number {
+  if (retail === undefined || retail <= 0) return 0;
+  return centred(retail, RETAIL_SWEET_LOW, RETAIL_SWEET_HIGH, RETAIL_FLOOR, 250);
+}
+
+/** Where the achievable retail lands, given what the thing costs to source. */
 export function retailScore(cost?: number): number {
   if (cost === undefined || cost <= 0) return 0;
-  const mid = cost * ((MARKUP_MIN + MARKUP_MAX) / 2);
-  return band(mid, RETAIL_SWEET_LOW, RETAIL_SWEET_HIGH, RETAIL_FLOOR, 250);
+  return retailBandScore(cost * ((MARKUP_MIN + MARKUP_MAX) / 2));
 }
 
-/** Competing sellers, where anyone reported them. Fewer is better, flatly. */
-export function crowdingScore(listings?: number): number {
-  if (listings === undefined) return 0.5;
+/**
+ * The inversion, and the reason this module has two entry points.
+ *
+ * Sourcing cost is the one number nobody publishes. It is the whole moat of
+ * every "winning products" tool, and every open door that exists — Printful
+ * included — is a supplier choosing to publish it because they earn when you
+ * sell. Retail prices, by contrast, are public everywhere, because
+ * marketplaces want them indexed.
+ *
+ * So stop treating cost as an input. Given what something demonstrably SELLS
+ * for, the criteria already fix what it must COST to be worth doing, and that
+ * is a more useful thing to show a beginner anyway: "source this under $11" is
+ * actionable, survives suppliers changing their prices, and never blocks on a
+ * credential.
+ */
+export function sourcingTarget(retail: number): { max: number; ideal: number } {
+  return { max: retail / MARKUP_MIN, ideal: retail / MARKUP_MAX };
+}
+
+/**
+ * Competing sellers, where anyone reported them. Fewer is better, flatly.
+ *
+ * Undefined rather than a neutral 0.5 when nothing reported. A constant is
+ * not a neutral value — it is 10% of the weight pinned to the same number for
+ * every product, which lifts the whole population and compresses the range
+ * everything else is trying to spread across.
+ */
+export function crowdingScore(listings?: number): number | undefined {
+  if (listings === undefined) return undefined;
   if (listings <= 120) return 1;
   return clamp01(1 - (listings - 120) / 600);
 }
 
 /** Direction of travel. Flat is fine; falling is the thing to avoid. */
-export function trendScore(interestTrend?: number): number {
-  if (interestTrend === undefined) return 0.5;
+export function trendScore(interestTrend?: number): number | undefined {
+  if (interestTrend === undefined) return undefined;
   // 1.0 is flat. Below 0.85 attention is draining out of the category.
   return clamp01((interestTrend - 0.85) / 0.45);
 }
@@ -167,10 +261,25 @@ const WEIGHTS: [keyof ReturnType<typeof parts>, number][] = [
   ['trend', 0.08],
 ];
 
+/**
+ * Weighted mean over the components that actually have a value.
+ *
+ * A criterion with no data must not vote. Re-weighting is how score.ts
+ * already handles a source that stayed silent, and the alternative — a
+ * neutral constant — is what flattened this score into nine distinct values
+ * across 595 products.
+ */
+function weighted<K extends string>(p: Record<K, number | undefined>, weights: [K, number][]): number {
+  const live = weights.filter(([k]) => p[k] !== undefined);
+  const total = live.reduce((a, [, w]) => a + w, 0);
+  if (!total) return 0;
+  return Math.round((live.reduce((a, [k, w]) => a + (p[k] as number) * w, 0) / total) * 100);
+}
+
 function parts(c: Candidate) {
   return {
     demand: demandScore(c.unitsSold),
-    rank: rankScore(c.rank),
+    rank: rankScore(c.rank, c.total),
     margin: marginScore(c.cost),
     retail: retailScore(c.cost),
     crowding: crowdingScore(c.listings),
@@ -209,7 +318,10 @@ export function assess(c: Candidate): Assessment {
   }
 
   const p = parts(c);
-  const score = Math.round(WEIGHTS.reduce((a, [k, w]) => a + p[k] * w, 0) * 100);
+  // Re-weighted across whatever actually reported, the same way score.ts
+  // handles silent sources. Scoring an absent signal as 0.5 was quietly
+  // adding a fixed 9 points to every product and squashing the usable range.
+  const score = weighted(p, WEIGHTS);
 
   // Said plainly, because these lines are what a beginner reads on the card
   // to understand why this product and not another.
@@ -223,15 +335,158 @@ export function assess(c: Candidate): Assessment {
   if (c.listings !== undefined && c.listings > 600) reasons.push(`Roughly ${c.listings.toLocaleString('en-US')} sellers already listing it.`);
   if (c.interestTrend !== undefined && c.interestTrend < 0.85) reasons.push('Attention in this category is falling.');
 
-  const verdict: Verdict = blockers.length ? 'reject' : score >= 62 ? 'pass' : score >= 45 ? 'borderline' : 'reject';
+  const tier = tierFor(score, c, blockers);
+  if (tier === 'upside') {
+    reasons.push('Early rather than proven — modest sales, but the margin is intact and few sellers have found it.');
+  }
 
   return {
     score,
-    verdict,
+    verdict: verdictFor(score, blockers),
+    ...(tier ? { tier } : {}),
     reasons,
     blockers,
     ...(c.cost && c.cost > 0 ? { retail: { low: c.cost * MARKUP_MIN, high: c.cost * MARKUP_MAX } } : {}),
   };
+}
+
+/** Below this, no supplier is going to sell you a thing worth shipping. */
+export const MIN_SOURCEABLE = 1;
+
+/**
+ * Where the verdict boundaries sit.
+ *
+ * Raised from 62/45 once there were real products to look at. The first pull
+ * wrote entries scoring 61, 63 and 64 — none of them wrong exactly, all of
+ * them things you would scroll past. A feed of 200,000 products is not short
+ * of candidates, so the bar should sit where "worth someone's first business"
+ * is, not where "defensible" is. Scarcity of supply was never the constraint.
+ */
+export const PASS_SCORE = 70;
+export const BORDERLINE_SCORE = 58;
+
+/** The floor for the high-upside tier. Below this nothing qualifies. */
+export const UPSIDE_SCORE = 50;
+/**
+ * The sales window that reads as EARLY rather than weak.
+ *
+ * Above DEMAND_FLOOR, so somebody is definitely buying; below this, so the
+ * market has not yet been answered. A product with 180 recent sales and
+ * intact margin is not a worse version of one with 900 — it is an earlier
+ * one, and that is the whole bet the upside tier is making.
+ */
+export const UPSIDE_SALES_MAX = 600;
+
+export type Tier = 'proven' | 'upside';
+
+/**
+ * Which shelf a product belongs on, or neither.
+ *
+ * Two tiers because one threshold was hiding a real distinction. Everything
+ * between 50 and 70 was being discarded as "not good enough", but that range
+ * holds two completely different populations: products whose numbers are thin
+ * because nobody wants them, and products whose numbers are thin because
+ * almost nobody has found them yet. The second group is where an unusual
+ * product with room to run actually lives.
+ *
+ * What separates them is measurable, and it is deliberately NOT a guess at
+ * novelty — there is nothing in a supplier feed that reports whether a thing
+ * is interesting. What the feed does report is real-but-modest sales
+ * alongside undamaged margin, and that combination is what an early product
+ * looks like from the outside. A cheap thing selling 180 a month with a 4x
+ * markup available has room to run; the same score reached by scraping the
+ * cost ceiling with 110 sales does not.
+ */
+export function tierFor(score: number, c: Candidate, blockers: string[]): Tier | null {
+  if (blockers.length) return null;
+  if (score < UPSIDE_SCORE) return null;
+
+  const sold = c.unitsSold ?? 0;
+  const early = sold >= DEMAND_FLOOR && sold <= UPSIDE_SALES_MAX;
+  // Margin has to be genuinely intact, not merely inside the band. An upside
+  // pick is a bet, and a bet with thin margin has nothing to pay for itself.
+  const roomToRun = marginScore(c.cost) >= 0.8 && retailScore(c.cost) >= 0.8;
+
+  // Checked BEFORE the proven threshold, and that ordering is the whole
+  // design. Defining upside as "scores lower" was wrong on contact with real
+  // data: 16 of 2,354 products landed in the 50–70 band, because anything
+  // that clears the blockers is inside every good range by construction and
+  // therefore scores high. There is no population down there to find.
+  //
+  // The real distinction was never the score. It is whether the demand
+  // evidence is EARLY or SETTLED — a $6 product with 180 recent sales and a
+  // 4x markup available is a different proposition from an identical one with
+  // 900, and the first is where an unusual product with room to run lives.
+  // Both are good; they are good in different ways, and the app should say
+  // which is which rather than rank one below the other.
+  if (early && roomToRun) return 'upside';
+  return score >= PASS_SCORE ? 'proven' : null;
+}
+
+/** One definition of the boundaries, used by both entry points. */
+export function verdictFor(score: number, blockers: string[]): Verdict {
+  if (blockers.length) return 'reject';
+  if (score >= PASS_SCORE) return 'pass';
+  if (score >= BORDERLINE_SCORE) return 'borderline';
+  return 'reject';
+}
+
+/**
+ * Judge a product from the demand side, and say what it has to cost.
+ *
+ * The counterpart to `assess`. Same criteria, one fewer input: nothing here
+ * needs a sourcing cost, so it runs against any public retail catalog rather
+ * than waiting on supplier credentials.
+ */
+export function assessListing(l: Listing): Assessment {
+  const blockers: string[] = [];
+  const reasons: string[] = [];
+
+  if (l.retail === undefined || l.retail <= 0) {
+    blockers.push('No selling price, so there is nothing to work back from.');
+  } else {
+    if (l.retail < RETAIL_FLOOR) {
+      blockers.push(`Sells for $${l.retail.toFixed(2)} — under the $${RETAIL_FLOOR} floor, so there is no margin to split.`);
+    }
+    if (sourcingTarget(l.retail).max < MIN_SOURCEABLE) {
+      blockers.push(`Would need sourcing under $${MIN_SOURCEABLE.toFixed(2)} to work, which nothing worth shipping costs.`);
+    }
+  }
+
+  // Demand is softer here than in the cost-side path. A retail catalog often
+  // reports what is listed rather than what sold, so absence of a sales figure
+  // is normal rather than damning — but SOMETHING has to indicate a market,
+  // or this is just a price with no evidence attached.
+  if (l.unitsSold === undefined && l.listings === undefined) {
+    blockers.push('Nothing indicates a market — no sales and no competing listings.');
+  }
+
+  const p = {
+    retail: retailBandScore(l.retail),
+    demand: l.unitsSold === undefined ? 0.45 : demandScore(l.unitsSold),
+    crowding: crowdingScore(l.listings),
+    trend: trendScore(l.interestTrend),
+    rank: rankScore(l.rank, l.total),
+  };
+  const weights: [keyof typeof p, number][] = [
+    ['retail', 0.3],
+    ['demand', 0.26],
+    ['crowding', 0.18],
+    ['rank', 0.14],
+    ['trend', 0.12],
+  ];
+  const score = weighted(p, weights);
+
+  const target = l.retail && l.retail > 0 ? sourcingTarget(l.retail) : undefined;
+  if (l.retail && target) {
+    reasons.push(`Sells around $${l.retail.toFixed(0)} — source under $${target.max.toFixed(2)} to clear ${MARKUP_MIN}x, under $${target.ideal.toFixed(2)} to hit ${MARKUP_MAX}x.`);
+  }
+  if (l.unitsSold !== undefined && p.demand > 0.8) reasons.push(`${l.unitsSold.toLocaleString('en-US')} sold recently — demand without the crowd.`);
+  if (l.unitsSold === undefined) reasons.push('Listed rather than proven — no sales figure available for this one.');
+  if (l.listings !== undefined && l.listings > 600) reasons.push(`Roughly ${l.listings.toLocaleString('en-US')} sellers already listing it.`);
+  if (l.interestTrend !== undefined && l.interestTrend < 0.85) reasons.push('Attention in this category is falling.');
+
+  return { score, verdict: verdictFor(score, blockers), reasons, blockers, ...(target ? { target } : {}) };
 }
 
 /**
@@ -242,7 +497,7 @@ export function assess(c: Candidate): Assessment {
  */
 export function shortlist<T extends Candidate>(candidates: T[]): { candidate: T; assessment: Assessment }[] {
   return candidates
-    .map((candidate, i) => ({ candidate, assessment: assess({ ...candidate, rank: candidate.rank ?? i }) }))
+    .map((candidate, i, arr) => ({ candidate, assessment: assess({ ...candidate, rank: candidate.rank ?? i, total: arr.length }) }))
     .filter((r) => r.assessment.verdict !== 'reject')
     .sort((a, b) => b.assessment.score - a.assessment.score);
 }

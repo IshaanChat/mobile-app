@@ -2,7 +2,7 @@
 // things — units sold, competing listings, live ad creatives — so each adapter
 // normalises into this and the scorer reconciles them.
 
-export type SourceName = 'aliexpress' | 'etsy' | 'meta' | 'wikipedia' | 'cj' | 'printful';
+export type SourceName = 'aliexpress' | 'etsy' | 'meta' | 'wikipedia' | 'cj' | 'printful' | 'ebay';
 
 /**
  * What a number is ABOUT, which matters more than what it is.
@@ -30,7 +30,18 @@ export interface Signal {
   unitsSold?: number;
   /** Competing sellers — high means saturated, not popular. */
   listings?: number;
+  /** What it costs to SOURCE. Supplier-side. */
   price?: number;
+  /**
+   * What it SELLS for. Demand-side, and deliberately a separate field.
+   *
+   * These are opposite ends of the same trade and merging them would be the
+   * costliest possible unit error — a $34 eBay selling price landing in
+   * `priceLow` reads as a $34 sourcing cost, which the criteria would reject
+   * as unfundable when it is in fact the good news. Only ever set by a
+   * marketplace reporting what buyers pay.
+   */
+  retailPrice?: number;
   url?: string;
   imageUrl?: string;
 
@@ -70,6 +81,11 @@ export interface Signals {
   listings?: number;
   priceLow?: number;
   priceHigh?: number;
+  /** What buyers pay, where a retail marketplace reported it. */
+  retailLow?: number;
+  retailHigh?: number;
+  /** Worked back from retail: the most it can cost and still be worth doing. */
+  sourceUnder?: number;
   ads?: number;
   adDaysLive?: number;
   adReach?: number;

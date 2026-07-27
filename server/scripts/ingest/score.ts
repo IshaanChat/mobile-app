@@ -85,6 +85,15 @@ export function combine(signals: Signal[]): Signals {
     .filter((p): p is number => typeof p === 'number' && p > 0)
     .sort((a, b) => a - b);
 
+  // Kept in its own bucket, never merged with sourcing prices above. The two
+  // are opposite ends of one trade, and a selling price landing in `priceLow`
+  // would read as a cost — turning the best news about a product into the
+  // reason the criteria reject it.
+  const retails = signals
+    .map((s) => s.retailPrice)
+    .filter((p): p is number => typeof p === 'number' && p > 0)
+    .sort((a, b) => a - b);
+
   const sold = squash(unitsSold ?? 0, REF.unitsSold);
   const crowding = crowdingOf(listings);
 
@@ -139,6 +148,16 @@ export function combine(signals: Signal[]): Signals {
     ...(unitsSold !== undefined ? { unitsSold } : {}),
     ...(listings !== undefined ? { listings } : {}),
     ...(prices.length ? { priceLow: prices[0], priceHigh: prices[prices.length - 1] } : {}),
+    ...(retails.length
+      ? {
+          retailLow: retails[0],
+          retailHigh: retails[retails.length - 1],
+          // The median, not the cheapest, is what a new seller can expect to
+          // charge — the bottom of a marketplace is damaged stock and loss
+          // leaders, and planning a business against it guarantees a miss.
+          sourceUnder: Number((retails[Math.floor(retails.length / 2)] / 3).toFixed(2)),
+        }
+      : {}),
     ...(ads !== undefined ? { ads } : {}),
     ...(adDaysLive !== undefined ? { adDaysLive } : {}),
     ...(adReach !== undefined ? { adReach } : {}),

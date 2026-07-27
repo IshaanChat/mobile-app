@@ -3,7 +3,7 @@
 // returns a confident number and a plausible-looking shortlist.
 
 import { describe, expect, it } from 'vitest';
-import { assess, demandScore, marginScore, rankScore, retailScore, shortlist, trendScore } from './criteria';
+import { assess, assessListing, demandScore, marginScore, rankScore, retailScore, shortlist, trendScore, verdictFor, PASS_SCORE, BORDERLINE_SCORE } from './criteria';
 
 describe('demandScore', () => {
   it('rejects a product nobody is buying', () => {
@@ -11,7 +11,12 @@ describe('demandScore', () => {
   });
 
   it('peaks where demand is proven but not answered', () => {
-    expect(demandScore(600)).toBe(1);
+    // Near the top of the range but no longer a flat 1 — inside the band now
+    // slopes toward the middle, which is what stops every qualifying product
+    // scoring identically.
+    expect(demandScore(600)).toBeGreaterThan(0.95);
+    expect(demandScore(675)).toBe(1); // dead centre
+    expect(demandScore(675)).toBeGreaterThan(demandScore(160));
   });
 
   it('marks DOWN the best-selling end, not up', () => {
@@ -38,6 +43,20 @@ describe('rankScore', () => {
 
   it('holds no opinion when position is unknown', () => {
     expect(rankScore(undefined)).toBe(0.5);
+  });
+
+  it('reads position relative to the list once the list is long', () => {
+    // The regression that broke ranking at scale. Absolute positions scored
+    // zero past 90, so in an 11,000-product pull an 18% weight became the
+    // same constant for everyone and 607 of 662 picks tied on one number.
+    expect(rankScore(400, 5000)).toBeGreaterThan(0);
+    expect(rankScore(4900, 5000)).toBeLessThan(rankScore(2000, 5000));
+  });
+
+  it('still reads a single page absolutely', () => {
+    // 40th of 50 and 40th of 5,000 are different claims; a percentile over
+    // 20 items would be too coarse to mean anything.
+    expect(rankScore(40, 50)).toBeGreaterThan(rankScore(2, 50));
   });
 });
 
@@ -101,6 +120,80 @@ describe('assess', () => {
   it('warns when a product is top of the best-seller list', () => {
     const a = assess({ ...good, rank: 0 });
     expect(a.reasons.join(' ')).toContain('every other seller is already looking');
+  });
+});
+
+describe('assessListing — working back from what it sells for', () => {
+  const listed = { retail: 34, listings: 90, interestTrend: 1.1, rank: 20, unitsSold: 600 };
+
+  it('states the sourcing target rather than needing a cost', () => {
+    // The whole inversion. Cost is the number nobody publishes; retail is
+    // public everywhere. Given one, the criteria fix the other.
+    const a = assessListing(listed);
+    expect(a.target?.max).toBeCloseTo(34 / 3, 5);
+    expect(a.target?.ideal).toBeCloseTo(34 / 5, 5);
+    expect(a.verdict).toBe('pass');
+  });
+
+  it('says the target out loud, in money', () => {
+    expect(assessListing(listed).reasons.join(' ')).toContain('source under $11.33');
+  });
+
+  it('rejects a price too low to split', () => {
+    expect(assessListing({ ...listed, retail: 6 }).verdict).toBe('reject');
+  });
+
+  it('tolerates a missing sales figure, since catalogs list rather than sell', () => {
+    // Absence of a sold count is normal for a retail catalog and must not be
+    // treated as absence of demand — that would reject nearly everything.
+    const a = assessListing({ ...listed, unitsSold: undefined });
+    expect(a.blockers).toEqual([]);
+    expect(a.reasons.join(' ')).toContain('Listed rather than proven');
+  });
+
+  it('rejects when nothing at all indicates a market', () => {
+    const a = assessListing({ retail: 34, unitsSold: undefined, listings: undefined });
+    expect(a.verdict).toBe('reject');
+    expect(a.blockers.join(' ')).toContain('Nothing indicates a market');
+  });
+
+  it('agrees with the cost-side path on the same product', () => {
+    // A $34 seller sourced at $8 should pass either way round. If the two
+    // entry points disagreed on an identical product the criteria would mean
+    // two different things depending on which door you came through.
+    expect(assessListing(listed).verdict).toBe('pass');
+    expect(assess({ cost: 8, unitsSold: 600, listings: 90, interestTrend: 1.1, rank: 20 }).verdict).toBe('pass');
+  });
+});
+
+describe('the bar', () => {
+  it('rejects a handful of orders as noise', () => {
+    // Raised to 100 after the first real pull wrote products with 47, 52 and
+    // 53 recent sales — above the old floor of 40, and nowhere near enough to
+    // separate an early trend from a month that happened to go well.
+    expect(assess({ cost: 6.5, unitsSold: 99, rank: 20 }).verdict).toBe('reject');
+    expect(assess({ cost: 6.5, unitsSold: 400, rank: 20 }).verdict).toBe('pass');
+  });
+
+  it('holds back the merely defensible', () => {
+    // A 200,000-product feed is not short of candidates, so the bar sits at
+    // "worth someone's first business", not at "nothing wrong with it".
+    expect(verdictFor(PASS_SCORE, [])).toBe('pass');
+    expect(verdictFor(PASS_SCORE - 1, [])).toBe('borderline');
+    expect(verdictFor(BORDERLINE_SCORE - 1, [])).toBe('reject');
+  });
+
+  it('lets a blocker beat any score', () => {
+    expect(verdictFor(99, ['nope'])).toBe('reject');
+  });
+
+  it('applies the same boundaries from either entry point', () => {
+    // Two doors into one set of criteria; if they disagreed, "passes the
+    // criteria" would mean different things depending on the data source.
+    const cost = assess({ cost: 8, unitsSold: 600, listings: 90, rank: 20 });
+    const listing = assessListing({ retail: 34, unitsSold: 600, listings: 90, rank: 20 });
+    expect(cost.verdict).toBe('pass');
+    expect(listing.verdict).toBe('pass');
   });
 });
 

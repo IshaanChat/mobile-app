@@ -35,11 +35,12 @@ import { meta } from './sources/meta';
 import { wikipedia } from './sources/wikipedia';
 import { cj } from './sources/cj';
 import { printful } from './sources/printful';
+import { ebay } from './sources/ebay';
 
 // Resolved from this file rather than the cwd, which used to mean running
 // ingest from anywhere but server/ silently found no products at all.
 const DIR = resolve(__dirname, '..', '..', 'content');
-const ADAPTERS: Adapter[] = [aliexpress, etsy, cj, meta, wikipedia, printful];
+const ADAPTERS: Adapter[] = [aliexpress, etsy, cj, meta, wikipedia, printful, ebay];
 
 const args = process.argv.slice(2).filter((a) => a !== '--');
 const has = (f: string) => args.includes(f);
@@ -109,6 +110,11 @@ function planFor(p: any, niche?: any): { adapter: Adapter; keyword: string; scop
     ...(p.sourcingType === POD
       ? [{ adapter: printful, keyword: p.title, scope: 'supply' as SignalScope }]
       : []),
+    // Only reseller rows. eBay was dropped from this pipeline once because
+    // its used, mass-produced stock made a poor comparison for a hand-thrown
+    // mug — which was right, and is precisely why it belongs here: a flipper
+    // IS selling used mass-produced stock and wants to know what it clears.
+    ...(resells ? [{ adapter: ebay, keyword: p.title, scope: 'category' as SignalScope }] : []),
     { adapter: aliexpress, keyword: resells ? p.title : supplyTerm(p), scope: resells ? 'product' : 'supply' },
     // Etsy always measures the market the seller actually sells into.
     { adapter: etsy, keyword: p.title, scope: 'category' },
