@@ -7,26 +7,78 @@
     { "level": 5, "name": "Seller", "title": "Make your first sale" }
   ],
   "finalName": "Owner",
+
+  "playbooks": [
+    {
+      "id": "pb-pick-one",
+      "name": "Pick one thing and mean it",
+      "blurb": "The commonest first mistake is launching with fifty products. Depth beats breadth — prove one thing sells before you widen.",
+      "steps": ["open-discover", "try-filter", "bookmark-product", "pick-niche", "compare-three", "know-your-margin"]
+    },
+    {
+      "id": "pb-shop-ready",
+      "name": "Make it buyable",
+      "blurb": "Most sellers wait until everything is perfect before telling anyone the shop exists. Get it buyable, then improve it in public.",
+      "steps": ["find-source", "order-sample", "product-photos", "write-objection", "list-product", "add-shelf"]
+    },
+    {
+      "id": "pb-prove-organic",
+      "name": "Prove it before you pay",
+      "blurb": "Word of mouth and a social presence drive most first-year growth. Paid ads accelerate something that already works — they cannot create it.",
+      "steps": ["open-grow", "find-community", "read-first", "focus-community", "introduce-yourself", "add-social"]
+    },
+    {
+      "id": "pb-first-ten",
+      "name": "The first ten customers",
+      "blurb": "The first ten buyers get found one at a time, by hand. Nothing at this stage scales, and trying to make it scale is why people quit.",
+      "steps": ["add-contact", "log-interaction", "first-sale", "log-sale", "ask-referral", "five-sales"]
+    },
+    {
+      "id": "pb-test-cheap",
+      "name": "Test without burning cash",
+      "blurb": "If you ever run ads: decide the kill number before you spend, not after. A product gets a fixed budget and a deadline, then it lives or it dies.",
+      "steps": ["set-test-budget", "set-kill-number", "run-one-test", "ninety-days"]
+    }
+  ],
+
   "milestones": [
-    { "id": "open-discover", "level": 1, "title": "Open the Discover feed", "detail": "See what's trending and worth selling right now.", "where": "in-app", "trigger": "open-discover", "tab": "discover", "xp": 10 },
-    { "id": "open-niche", "level": 1, "title": "Open a niche that catches your eye", "detail": "Tap any card to see the product, the margin, and where to source it.", "where": "in-app", "trigger": "open-niche", "tab": "discover", "xp": 10 },
-    { "id": "pick-niche", "level": 1, "title": "Pick your niche", "detail": "Choose the one you want to build in. Everything else tunes to it.", "where": "in-app", "trigger": "pick-niche", "tab": "discover", "xp": 20 },
+    { "id": "open-discover", "level": 1, "title": "Open the Discover feed", "detail": "See what's worth selling right now, and what it costs to source.", "where": "in-app", "trigger": "open-discover", "tab": "discover", "xp": 10 },
+    { "id": "open-niche", "level": 1, "title": "Open a product that catches your eye", "detail": "Tap a card for the cost, the resale price, and the case for it.", "where": "in-app", "trigger": "open-niche", "tab": "discover", "xp": 10 },
+    { "id": "try-filter", "level": 1, "title": "Try the Maker and Seller filters", "detail": "Two different businesses. Maker means you make it; Seller means you source it and resell it.", "where": "in-app", "trigger": "try-filter", "tab": "discover", "xp": 10 },
+    { "id": "bookmark-product", "level": 1, "title": "Bookmark something", "detail": "Tap the heart on a product. It lands in Business → Bookmarks so you can come back to it.", "where": "in-app", "trigger": "bookmark-product", "tab": "discover", "xp": 10 },
+    { "id": "open-journey", "level": 1, "title": "Open your journey", "detail": "This list. Every step between here and your first sale.", "where": "in-app", "trigger": "open-journey", "tab": "discover", "xp": 5 },
+    { "id": "pick-niche", "level": 1, "title": "Pick your niche", "detail": "Choose one. You can change it later — but pick one now rather than three.", "where": "in-app", "trigger": "pick-niche", "tab": "discover", "xp": 20 },
 
-    { "id": "find-source", "level": 2, "title": "Find where to source your product", "detail": "Open the sourcing link on your niche's product.", "where": "in-app", "trigger": "view-source", "tab": "discover", "xp": 10 },
-    { "id": "name-business", "level": 2, "title": "Name your business", "detail": "Give it a name — you can change it later.", "where": "in-app", "trigger": "name-business", "tab": "journey", "xp": 10 },
-    { "id": "start-business", "level": 2, "title": "Start your business", "detail": "Lock it in and make it official inside the app.", "where": "in-app", "trigger": "start-business", "tab": "journey", "xp": 30 },
+    { "id": "find-source", "level": 2, "title": "Find where to source it", "detail": "Open the sourcing link on your product and see the real unit cost.", "where": "in-app", "trigger": "view-source", "tab": "discover", "xp": 10 },
+    { "id": "compare-three", "level": 2, "title": "Price three real competitors", "detail": "Search your product on Etsy or eBay and write down what three actual sellers charge. Not what you hope to charge.", "where": "outside", "tab": "discover", "xp": 15 },
+    { "id": "know-your-margin", "level": 2, "title": "Work out what you actually keep", "detail": "Unit cost, shipping, packaging, platform fee — subtract all of it from your price. That number is the business. If it is under a third of your price, change something now rather than later.", "where": "outside", "tab": "shop", "xp": 20 },
+    { "id": "name-business", "level": 2, "title": "Name your business", "detail": "A name you can say out loud without wincing. It does not have to be clever.", "where": "in-app", "trigger": "name-business", "tab": "journey", "xp": 10 },
+    { "id": "start-business", "level": 2, "title": "Start your business", "detail": "Mark the day you decided. It matters more than it sounds.", "where": "in-app", "trigger": "start-business", "tab": "journey", "xp": 30 },
 
-    { "id": "setup-shop", "level": 3, "title": "Open a place to sell", "detail": "Set up an Etsy, Shopify, or Instagram shop.", "where": "outside", "xp": 20 },
-    { "id": "product-photos", "level": 3, "title": "Take your first product photos", "detail": "Good light, plain background. This sells the product.", "where": "outside", "xp": 10 },
-    { "id": "list-product", "level": 3, "title": "List your first product", "detail": "Put it up for sale with your own description.", "where": "outside", "xp": 20 },
+    { "id": "order-sample", "level": 3, "title": "Order one for yourself", "detail": "Buy your own product before you sell it. You find out what the photos hide, how long shipping really takes, and what turns up in the box.", "where": "outside", "tab": "shop", "xp": 20 },
+    { "id": "setup-shop", "level": 3, "title": "Open a place to sell", "detail": "Etsy, Shopify, a marketplace, or an Instagram account with a checkout link. Anywhere someone can actually pay you.", "where": "outside", "tab": "shop", "xp": 20 },
+    { "id": "product-photos", "level": 3, "title": "Take your first product photos", "detail": "Daylight, plain background, one shot that shows scale. A phone is fine — lighting is what separates a listing that sells from one that does not.", "where": "outside", "tab": "shop", "xp": 10 },
+    { "id": "write-objection", "level": 3, "title": "Answer the objection in your listing", "detail": "Name the reason someone would hesitate — size, shipping time, whether it is really handmade — and answer it in the description. Most listings sell; the ones that convert reassure.", "where": "outside", "tab": "shop", "xp": 15 },
+    { "id": "list-product", "level": 3, "title": "List your first product", "detail": "One product, listed and live. Not five. One.", "where": "outside", "tab": "shop", "xp": 20 },
+    { "id": "add-shelf", "level": 3, "title": "Put it on your shelf here", "detail": "Business → Money → The shelf. Keeps your prices and stock in one place.", "where": "in-app", "trigger": "add-shelf", "tab": "shop", "xp": 10 },
 
-    { "id": "open-grow", "level": 4, "title": "Open the Grow feed", "detail": "See the communities where your customers already gather.", "where": "in-app", "trigger": "open-grow", "tab": "grow", "xp": 10 },
-    { "id": "find-community", "level": 4, "title": "Find a community for your niche", "detail": "Open one and read who you'll find there.", "where": "in-app", "trigger": "open-community", "tab": "grow", "xp": 10 },
-    { "id": "focus-community", "level": 4, "title": "Focus on one community", "detail": "Pick the one you'll show up in first.", "where": "in-app", "trigger": "pick-community", "tab": "grow", "xp": 20 },
-    { "id": "introduce-yourself", "level": 4, "title": "Introduce yourself there", "detail": "Show up as a person, not an ad — follow the community's playbook.", "where": "outside", "xp": 20 },
+    { "id": "open-grow", "level": 4, "title": "Open the Grow feed", "detail": "The places the people who buy what you make already gather.", "where": "in-app", "trigger": "open-grow", "tab": "grow", "xp": 10 },
+    { "id": "find-community", "level": 4, "title": "Find a community for your niche", "detail": "Open one and read the profile — what they discuss, what wins them over, what gets you removed.", "where": "in-app", "trigger": "open-community", "tab": "grow", "xp": 10 },
+    { "id": "read-first", "level": 4, "title": "Read it for a week before posting", "detail": "Every community here has a rules section, and the fastest way to get banned is to arrive selling. Lurking costs a week and saves the account.", "where": "outside", "tab": "grow", "xp": 15 },
+    { "id": "focus-community", "level": 4, "title": "Focus on one community", "detail": "One room you show up in properly beats five you drop links into.", "where": "in-app", "trigger": "pick-community", "tab": "grow", "xp": 20 },
+    { "id": "introduce-yourself", "level": 4, "title": "Introduce yourself there", "detail": "Not a pitch. Answer somebody's question, or show what you are making and how.", "where": "outside", "tab": "grow", "xp": 20 },
+    { "id": "add-social", "level": 4, "title": "Add where your business lives", "detail": "You → Socials. One place people can find you is enough to start with.", "where": "in-app", "trigger": "add-social", "tab": "you", "xp": 10 },
+    { "id": "add-contact", "level": 4, "title": "Add your first person", "detail": "Business → Clients. Anyone who showed interest, not only people who bought.", "where": "in-app", "trigger": "add-contact", "tab": "shop", "xp": 15 },
+    { "id": "log-interaction", "level": 4, "title": "Log a conversation", "detail": "Every time you talk to someone, log it. Their relationship strength rises, and it tells you who is worth following up.", "where": "in-app", "trigger": "log-interaction", "tab": "shop", "xp": 10 },
 
-    { "id": "first-sale", "level": 5, "title": "Make your first sale", "detail": "The one that turns a hobby into a business.", "where": "outside", "xp": 40 },
-    { "id": "log-sale", "level": 5, "title": "Log your first sale", "detail": "Record it in the app to start tracking your growth.", "where": "in-app", "trigger": "log-sale", "tab": "journey", "xp": 20 },
-    { "id": "second-niche", "level": 5, "title": "Find a second niche to grow into", "detail": "Pick a different niche in Discover — time to expand.", "where": "in-app", "trigger": "pick-second-niche", "tab": "discover", "xp": 20 }
+    { "id": "first-sale", "level": 5, "title": "Make your first sale", "detail": "Somebody paid you. Everything before this was preparation.", "where": "outside", "tab": "shop", "xp": 40 },
+    { "id": "log-sale", "level": 5, "title": "Log your first sale", "detail": "Business → Money. Record what sold, for how much, and to whom.", "where": "in-app", "trigger": "log-sale", "tab": "journey", "xp": 20 },
+    { "id": "ask-referral", "level": 5, "title": "Ask your buyer to tell one person", "detail": "Word of mouth is the biggest growth channel in a first year. One sentence once they have it: if you like it, tell somebody. Most people will.", "where": "outside", "tab": "shop", "xp": 20 },
+    { "id": "five-sales", "level": 5, "title": "Log five sales", "detail": "Five is where you stop guessing. You start seeing which product, which channel, and which kind of buyer.", "where": "in-app", "trigger": "five-sales", "tab": "shop", "xp": 30 },
+    { "id": "set-test-budget", "level": 5, "title": "Set a test budget before you advertise", "detail": "If you go paid: pick a fixed number per product and stop there. Sellers who test properly give one product a few hundred and no more.", "where": "outside", "tab": "shop", "xp": 15 },
+    { "id": "set-kill-number", "level": 5, "title": "Decide the kill number first", "detail": "Write down what a customer may cost before the sale stops being worth making — roughly under 40% of your profit per unit. Decide it before you spend, because afterwards you will argue with yourself.", "where": "outside", "tab": "shop", "xp": 20 },
+    { "id": "run-one-test", "level": 5, "title": "Test one product properly", "detail": "One product, the budget you set, the kill number you wrote. Then honour it — scale it or drop it, no exceptions.", "where": "outside", "tab": "shop", "xp": 25 },
+    { "id": "ninety-days", "level": 5, "title": "Give it ninety days", "detail": "First sales take weeks or months. Most shops that fail close before they were ever really tested. Mark a date ninety days out and do not judge it before then.", "where": "outside", "tab": "shop", "xp": 20 },
+    { "id": "second-niche", "level": 5, "title": "Find a second thing to sell", "detail": "Only now. One proven product first, then widen — not the other way round.", "where": "in-app", "trigger": "pick-second-niche", "tab": "discover", "xp": 25 }
   ]
 }

@@ -159,6 +159,14 @@ function supplierRows(r: any) {
 // Discover is a feed of PRODUCTS — the niche is a label on the card, not the
 // unit you scroll. Each product carries its niche so filtering, matching and
 // "choose this" still work at the niche level.
+/**
+ * Supplier catalogues serve square product shots; the curated Pexels images are
+ * 1200x627. Keyed off the host because that is what decides the shape — a
+ * `sourceName` can be edited, an image's proportions cannot.
+ */
+const SQUARE_IMAGE_HOSTS = /aliexpress-media\.com|cdn\.printful\.com|alicdn\.com/i;
+const heroShape = (url: string) => (SQUARE_IMAGE_HOSTS.test(String(url ?? '')) ? 'hero-sq' : 'hero-wide');
+
 function productCard(p: any, hotFloor = Infinity) {
   const n = p.niche ?? {};
   const r = p.research;
@@ -168,7 +176,7 @@ function productCard(p: any, hotFloor = Infinity) {
   const searchText = [p.title, p.blurb, n.name, n.domain, n.tags].filter(Boolean).join(' ').toLowerCase();
   return `<div class="card product${hot ? ' hot' : ''}" data-slug="${attr(p.slug)}" data-niche="${attr(p.nicheSlug)}" data-aud="${attr(n.audience)}" data-heat="${heatOf(p)}" data-text="${attr(searchText)}">
     <div class="head" onclick="toggleCard(this,'open-niche')">
-      <div class="hero" style="background-image:url('${attr(p.imageUrl)}')">
+      <div class="hero ${heroShape(p.imageUrl)}" style="background-image:url('${attr(p.imageUrl)}')">
         ${hot ? '<span class="hotbadge"><svg class="ic-sm"><use href="#i-flame"/></svg>Hot</span>' : ''}
         ${p.tier === 'upside' ? '<span class="upbadge"><svg class="ic-sm"><use href="#i-spark"/></svg>High upside</span>' : ''}
         <div class="chips"><span class="chip" style="background:${aud}">${esc(AUDIENCE_LABELS[n.audience] ?? n.audience ?? '')}</span><span class="chip chip-dark">${esc(SOURCING_LABELS[p.sourcingType] ?? '')}</span></div>
@@ -194,12 +202,29 @@ function bullets(text: string, mark: string, cls: string) {
   return lines(text).map((li) => `<div class="row"><span class="mk ${cls}">${mark}</span><span>${esc(li)}</span></div>`).join('');
 }
 
+/**
+ * A hero with no image should read as a design choice, not a broken request.
+ *
+ * 80 of the community entries have no `imageUrl` yet — they are waiting on the
+ * Pexels enricher — and an empty background-image url() renders as a plain
+ * grey void that looks like a failed load. A tinted panel carrying the
+ * platform name instead is honest about being unillustrated and stays
+ * readable, so the feed is usable before every photo is filled in.
+ */
+function heroStyle(url: string): string {
+  return url ? `background-image:url('${attr(url)}')` : '';
+}
+
 function communityCard(c: any) {
   const overview = String(c.overview ?? '').split(/\n\s*\n/).map((x: string) => `<p class="para">${esc(x.trim())}</p>`).join('');
-  return `<div class="card community" data-slug="${attr(c.slug)}" data-tags="${attr(c.tags)}">
+  // kind and hotness ride on the element so the browser can re-rank the feed
+  // without another round trip — the ordering depends on the user's niche,
+  // which the server does not know at render time.
+  return `<div class="card community" data-slug="${attr(c.slug)}" data-tags="${attr(c.tags)}" data-kind="${attr(c.kind)}" data-hot="${Number(c.hotness) || 50}">
     <div class="head" onclick="toggleCard(this,'open-community')">
-      <div class="hero" style="background-image:url('${attr(c.imageUrl)}')">
+      <div class="hero hero-tall${c.imageUrl ? '' : ' hero-empty'}" style="${heroStyle(c.imageUrl)}" data-platform="${attr(c.platform)}">
         <div class="chips"><span class="chip" style="background:${pColor(c.platform)}">${esc(c.platform)}</span><span class="chip chip-dark">${esc(KIND_LABELS[c.kind] ?? c.kind)}</span></div>
+        ${c.kind === 'search' ? '<span class="trendbadge"><svg class="ic-sm"><use href="#i-chart"/></svg>Trends &amp; research</span>' : ''}
         <span class="match-badge">&#9733; your niche</span>
       </div>
       <div class="body"><div class="titlerow"><div><div class="title">${esc(c.title)}</div><div class="tagline">${esc(c.tagline)}</div></div><div class="chev">&#9660;</div></div></div>
@@ -231,7 +256,7 @@ function milestoneRow(m: any) {
   } else {
     action = `<button class="mini-btn" data-tab="${esc(m.tab)}" onclick="goTab(this)">Go do it &#8599;</button>`;
   }
-  return `<div class="ms" data-id="${attr(m.id)}" data-level="${m.level}" data-trigger="${attr(m.trigger ?? '')}">
+  return `<div class="ms" data-id="${attr(m.id)}" data-level="${m.level}" data-xp="${Number(m.xp) || 0}" data-trigger="${attr(m.trigger ?? '')}">
     <div class="ms-check"></div>
     <div class="ms-main">
       <div class="ms-title">${esc(m.title)}</div>
@@ -277,6 +302,39 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   const heats = products.map(heatOf).sort((a, b) => a - b);
   const hotFloor = heats.length ? heats[Math.floor(heats.length * 0.8)] : Infinity;
   const byLevel = (lv: number) => missions.milestones.filter((m: any) => m.level === lv);
+  /**
+   * Playbooks: the same milestones, grouped by strategy rather than by level.
+   *
+   * Levels answer "what is next"; playbooks answer "why these, in this order".
+   * A beginner following levels reaches the shop-setup steps without ever
+   * being told the thing that decides whether it works — list one product,
+   * not fifty; prove it organically before paying for traffic; set the kill
+   * number before you spend, not after. That reasoning does not belong on any
+   * single milestone, so it lives here, on the group.
+   *
+   * Deliberately not a separate checklist. A step ticked in a level is ticked
+   * in every playbook containing it, because it is the same step.
+   */
+  const playbooksHtml = (missions.playbooks ?? []).map((pb: any) => {
+    const steps = (pb.steps ?? [])
+      .map((id: string) => missions.milestones.find((m: any) => m.id === id))
+      .filter(Boolean);
+    return `<section class="pb" data-pb="${attr(pb.id)}">
+      <div class="pb-h" onclick="togglePb(this)">
+        <div class="pb-t">${esc(pb.name)}</div>
+        <span class="pb-c" data-count="${steps.map((s: any) => s.id).join(' ')}"></span>
+        <span class="pb-x"><svg class="ic-sm"><use href="#i-chev"/></svg></span>
+      </div>
+      <div class="pb-body">
+        <p class="pb-blurb">${esc(pb.blurb)}</p>
+        <ol class="pb-steps">${steps.map((s: any) =>
+          `<li data-step="${attr(s.id)}"><span class="pb-dot"></span><span class="pb-s">${esc(s.title)}</span>` +
+          `<span class="pb-w ${s.where === 'outside' ? 'out' : ''}">${s.where === 'outside' ? 'outside' : 'in app'}</span></li>`
+        ).join('')}</ol>
+      </div>
+    </section>`;
+  }).join('');
+
   const levelsHtml = missions.levels.map((lv: any) => `
     <section class="level lvsec" data-level="${lv.level}">
       <div class="lvsec-h" onclick="toggleLevel(${lv.level})">
@@ -290,12 +348,12 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
 
   return `<!doctype html><html><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Sales Mechanic — base app</title>
+<title>Venturo — base app</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  /* Sales Mechanic — warm, encouraging, built for first-time founders.
+  /* Venturo — warm, encouraging, built for first-time founders.
      Light "the artisan": blush cream, dusty rose, honey and sage.
      Dark "the grind": warm charcoal and gold, not techy navy.
      Same palette as the web client and the native app. */
@@ -366,8 +424,37 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   .chipbtn:hover { border-color:var(--accent); }
   .chipbtn.on { background:var(--accent-soft); color:var(--text); border-color:var(--accent); font-weight:600; }
   .card { background:var(--panel); border:1px solid var(--panel-border); border-radius:16px; overflow:hidden; margin-bottom:16px; box-shadow:var(--shadow); }
-  .head { cursor:pointer; }
-  .hero { height:170px; background-size:cover; background-position:center; position:relative; }
+  /* The positioning context for everything absolutely placed on a card.
+     Without it .savebtn resolved against an ancestor far up the tree, so every
+     save button on the feed rendered stacked at one point near the top of the
+     screen instead of on its own product. The buttons worked when clicked —
+     they were simply not where the card was. */
+  .head { cursor:pointer; position:relative; }
+  .hero { height:170px; background-size:cover; background-position:center; position:relative; background-color:var(--accent-soft); }
+  /* The hero matches the shape of the image inside it, so background-size
+     cover has nothing left to crop. One fixed height could not serve both:
+     supplier photos are square and the curated Pexels shots are 1200x627, so a
+     170px band sliced the top and bottom off every square product and trimmed
+     the landscapes too. (No backticks in here — this whole block lives inside
+     a template literal and one would end the string; tsc will not catch it.) */
+  /* Just short of square. A true 1:1 hero was 396px tall on a 396px card and
+     read as top-heavy in a scrolling feed. Supplier photos centre the product
+     inside a margin of empty background, so trimming to 5:4 takes that padding
+     off the top and bottom evenly (background-position is centre) and leaves
+     the product itself untouched. Tune with one number. */
+  .hero-sq { height:auto; aspect-ratio:5 / 4; }
+  /* No photo yet. Shows the platform name on a tinted panel rather than the
+     grey void an empty url() produces, which reads as a failed image. */
+  .hero-empty { background:linear-gradient(135deg, var(--accent-soft), var(--panel)); display:flex; align-items:center; justify-content:center; }
+  .hero-empty::after { content:attr(data-platform); font-family:var(--font-display); font-size:26px; font-weight:600;
+    color:var(--accent); opacity:.42; letter-spacing:-0.01em; }
+
+  .hero-wide { height:auto; aspect-ratio:1200 / 627; }
+  /* Community cards get more vertical room than product cards. Their images
+     are mood rather than merchandise — a room, a workshop, a table of tools —
+     and a shallow band reads as a header strip instead of a photograph. The
+     stored URLs request 1200x900 to match, so cover crops nothing. */
+  .hero-tall { height:auto; aspect-ratio:4 / 3; }
   .chips { position:absolute; left:14px; bottom:14px; display:flex; gap:8px; }
   .chip { color:#fff; font-size:12px; font-weight:600; padding:4px 10px; border-radius:999px; }
   .chip-dark { background:rgba(0,0,0,0.55); font-weight:500; }
@@ -383,7 +470,10 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
 
   /* Evidence that a product is actually working — the thing that separates
      a researched feed from a list of ideas. */
-  .ev-strip { position:absolute; left:14px; top:14px; display:flex; gap:6px; }
+  /* Bottom-right, opposite the audience chips. It used to sit top-left,
+     where the Hot badge was later added directly over it — a decorative
+     label hiding the card's only piece of hard evidence. */
+  .ev-strip { position:absolute; right:14px; bottom:14px; display:flex; gap:6px; justify-content:flex-end; flex-wrap:wrap; max-width:60%; }
   .ev-chip { display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:700; padding:4px 9px; border-radius:999px; background:rgba(255,255,255,.92); color:#7a4a2a; }
   .ev-chip.rising { color:#8a3a1a; }
   .ev-chip.fresh { color:#3d6b52; }
@@ -514,7 +604,16 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   .lvsec.open .ms-list { display:block; }
   .lvsec.locked .lvsec-n, .lvsec.locked .lvsec-s { opacity:.5; }
 
-  .subtabs { display:flex; gap:6px; overflow-x:auto; padding-bottom:4px; margin-bottom:14px; }
+  .subtabs { display:flex; gap:6px; overflow-x:auto; padding-bottom:4px; margin-bottom:14px;
+    scrollbar-width:none; -webkit-overflow-scrolling:touch; position:relative; }
+  .subtabs::-webkit-scrollbar { display:none; }
+  /* Fades the right edge when there is more to scroll to, so an
+     overflowing bar does not read as a bar with fewer tabs. */
+  .subtabs-wrap { position:relative; }
+  .subtabs-wrap::after { content:''; position:absolute; right:0; top:0; bottom:8px; width:26px;
+    background:linear-gradient(90deg, transparent, var(--bg)); pointer-events:none; opacity:0;
+    transition:opacity .18s; }
+  .subtabs-wrap.more::after { opacity:1; }
   .subtab { display:flex; align-items:center; gap:6px; border:1px solid var(--panel-border); background:var(--panel); color:var(--text-dim); border-radius:999px; padding:7px 13px; font-size:13px; font-family:inherit; cursor:pointer; white-space:nowrap; }
   .subtab:hover { border-color:var(--accent); }
   .subtab.on { background:var(--accent-soft); border-color:var(--accent); color:var(--text); font-weight:600; }
@@ -551,8 +650,13 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   .addbox.on { display:block; }
   .note { font-size:13px; color:var(--text-dim); line-height:1.5; }
   .money { font-variant:tabular-nums; }
-  .saved { color:var(--customer); font-size:12px; font-weight:600; margin-left:8px; opacity:0; transition:opacity .2s; }
-  .saved.on { opacity:1; }
+  /* Scoped to the span deliberately. This is the "Saved ✓" flash beside a form
+     heading, and it starts at opacity 0 so it can fade in. Unscoped it also
+     matched .card.saved — a bookmarked product went invisible while still
+     occupying its full height, which read as the card vanishing and leaving a
+     hole in the feed. Two different meanings had the same class name. */
+  span.saved { color:var(--customer); font-size:12px; font-weight:600; margin-left:8px; opacity:0; transition:opacity .2s; }
+  span.saved.on { opacity:1; }
   .tabbar { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:430px; background:var(--panel); border-top:1px solid var(--panel-border); display:flex; height:64px; z-index:20; }
   .tab { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; cursor:pointer; color:var(--text-dim); font-size:11px; }
   .tab.on { color:var(--accent); }
@@ -586,6 +690,31 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   .burst { position:fixed; left:50%; top:38%; transform:translate(-50%,-50%); z-index:70; pointer-events:none; }
   .burst i { position:absolute; width:8px; height:8px; border-radius:2px; opacity:0; }
   @keyframes fly { 0%{opacity:1; transform:translate(0,0) rotate(0deg);} 100%{opacity:0; transform:translate(var(--dx),var(--dy)) rotate(var(--rot));} }
+  /* Milestone celebration. Smaller than a level-up on purpose: this happens
+     thirty-four times, a level-up five. It confirms and gets out of the way. */
+  .win { position:fixed; left:50%; top:calc(var(--topbar-h, 58px) + 12px); transform:translate(-50%, -12px) scale(.96);
+    z-index:70; display:flex; align-items:center; gap:12px; width:min(460px, calc(100vw - 24px));
+    background:var(--panel); border:1.5px solid var(--accent); border-radius:15px;
+    padding:13px 16px; box-shadow:0 10px 30px rgba(60,30,40,.2);
+    opacity:0; pointer-events:none; transition:opacity .2s ease, transform .24s cubic-bezier(.2,.8,.3,1); }
+  .win.on { opacity:1; transform:translate(-50%, 0) scale(1); }
+  .win-tick { width:30px; height:30px; border-radius:50%; background:var(--accent); color:var(--on-accent);
+    display:flex; align-items:center; justify-content:center; flex:none; }
+  .win-tick svg { width:16px; height:16px; fill:none; stroke:currentColor; stroke-width:2.6; stroke-linecap:round; stroke-linejoin:round; }
+  .win-b { flex:1; min-width:0; }
+  .win-k { font-size:10.5px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--accent); }
+  .win-t { font-size:14px; font-weight:600; line-height:1.3; margin-top:2px;
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  /* The points ride in a beat late and settle — the one bit of flourish. */
+  .win-xp { flex:none; font-family:var(--font-display); font-size:19px; font-weight:600; color:var(--accent);
+    opacity:0; transform:translateY(7px) scale(.85); transition:opacity .22s ease .16s, transform .3s cubic-bezier(.2,1.5,.4,1) .16s; }
+  .win.on .win-xp { opacity:1; transform:translateY(0) scale(1); }
+  .win-total { font-size:10.5px; color:var(--text-dim); font-weight:600; text-align:right; margin-top:1px; }
+  @media (prefers-reduced-motion:reduce){
+    .win, .win-xp { transition:opacity .15s linear; transform:none; }
+    .win.on { transform:translate(-50%, 0); }
+  }
+
   .levelup { position:fixed; left:50%; top:34%; transform:translate(-50%,-50%) scale(.9); z-index:71; background:var(--panel); border:1.5px solid var(--accent); border-radius:20px; padding:22px 26px; text-align:center; box-shadow:0 18px 50px rgba(60,30,40,.28); opacity:0; pointer-events:none; transition:opacity .25s, transform .25s; }
   .levelup.on { opacity:1; transform:translate(-50%,-50%) scale(1); }
   .levelup-k { font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); }
@@ -596,6 +725,55 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   .toast { position:fixed; bottom:80px; left:50%; transform:translateX(-50%); background:var(--scoreboard); color:#fdf7f4; font-size:13px; font-weight:600; padding:10px 16px; border-radius:999px; opacity:0; transition:opacity .25s; z-index:30; }
   .toast.show { opacity:1; }
   .empty { color:var(--text-dim); font-size:14px; text-align:center; padding:30px 0; display:none; }
+  /* Playbooks — strategy groupings under the level list. */
+  .pb-wrap { margin-top:26px; padding-top:20px; border-top:1px solid var(--panel-border); }
+  .pb-head { font-family:var(--serif); font-size:20px; font-weight:600; }
+  .pb-sub { font-size:13px; color:var(--text-dim); margin:3px 0 14px; line-height:1.45; }
+  .pb { border:1px solid var(--panel-border); border-radius:14px; margin-bottom:10px; background:var(--panel); overflow:hidden; }
+  .pb-h { display:flex; align-items:center; gap:10px; padding:13px 14px; cursor:pointer; }
+  .pb-t { flex:1; font-size:14.5px; font-weight:600; }
+  .pb-c { font-size:12px; color:var(--text-dim); font-weight:600; flex:none; }
+  .pb-x { display:flex; color:var(--text-dim); transition:transform .18s; }
+  .pb.open .pb-x { transform:rotate(180deg); }
+  .pb-body { display:none; padding:0 14px 14px; }
+  .pb.open .pb-body { display:block; }
+  .pb-blurb { font-size:13px; color:var(--text-dim); line-height:1.55; margin:0 0 12px; }
+  .pb-steps { list-style:none; margin:0; padding:0; }
+  .pb-steps li { display:flex; align-items:center; gap:9px; padding:7px 0; border-top:1px solid var(--panel-border); }
+  .pb-dot { width:8px; height:8px; border-radius:50%; border:1.5px solid var(--panel-border); flex:none; }
+  .pb-steps li.done .pb-dot { background:var(--accent); border-color:var(--accent); }
+  .pb-steps li.done .pb-s { color:var(--text-dim); text-decoration:line-through; }
+  .pb-s { flex:1; font-size:13px; }
+  .pb-w { font-size:10px; letter-spacing:.05em; text-transform:uppercase; color:var(--text-dim); font-weight:700; flex:none; }
+  .pb-w.out { color:var(--customer); }
+
+  /* Nudge — the quiet next-step prompt.
+     Deliberately not a game popup: no overlay, no scrim, nothing blocked. It
+     sits above the tab bar, states one thing, and leaves. Dismissing it is a
+     single tap and it stays gone for the rest of the session. */
+  /* Sits under the top bar rather than above the tab bar: a completion is
+     something you just did, and the confirmation belongs where you are
+     looking, not down beside the navigation you were not using. Slides down
+     into place, so the motion reads as arriving rather than rising. */
+  .nudge { position:fixed; left:50%; top:calc(var(--topbar-h, 58px) + 12px); transform:translate(-50%, -14px);
+    width:min(460px, calc(100vw - 24px)); z-index:60; display:flex; align-items:center; gap:12px;
+    background:var(--panel); border:1px solid var(--panel-border); border-radius:15px;
+    padding:13px 14px 13px 16px; box-shadow:0 8px 26px rgba(60,40,35,.16);
+    opacity:0; pointer-events:none; transition:opacity .22s ease, transform .22s ease; }
+  .nudge.on { opacity:1; transform:translate(-50%, 0); pointer-events:auto; }
+  .nudge-i { width:30px; height:30px; border-radius:9px; background:var(--accent-soft); color:var(--accent);
+    display:flex; align-items:center; justify-content:center; flex:none; }
+  .nudge-i svg { width:16px; height:16px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+  .nudge-b { flex:1; min-width:0; }
+  .nudge-k { font-size:11px; letter-spacing:.07em; text-transform:uppercase; color:var(--text-dim); font-weight:700; }
+  .nudge-t { font-size:14.5px; font-weight:600; line-height:1.3; margin-top:2px; }
+  .nudge-go { border:none; background:var(--accent); color:var(--on-accent); font-family:inherit; font-size:12.5px;
+    font-weight:700; border-radius:999px; padding:7px 14px; cursor:pointer; flex:none; }
+  .nudge-x { border:none; background:none; color:var(--text-dim); font-size:21px; line-height:1; cursor:pointer;
+    padding:4px 6px; flex:none; }
+  .nudge-x:hover { color:var(--text); }
+  @media (prefers-reduced-motion:reduce){ .nudge { transition:opacity .15s linear; transform:translate(-50%,0); } }
+
   /* Hot badge — top fifth of the feed by heat. */
   .hotbadge { position:absolute; top:12px; left:12px; z-index:2; display:inline-flex; align-items:center; gap:5px;
     background:linear-gradient(135deg,#ff8a3d,#e3452b); color:#fff; font-size:11px; font-weight:700;
@@ -616,6 +794,14 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
     box-shadow:0 2px 8px rgba(111,107,216,.36); }
   .card.hot .upbadge { top:44px; }
   .upbadge svg { width:13px; height:13px; fill:none; stroke:currentColor; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round; }
+
+  /* Trend & research surfaces — they answer "is anyone buying this" before
+     the community cards answer "where do I post". */
+  .trendbadge { position:absolute; top:12px; left:12px; z-index:2; display:inline-flex; align-items:center; gap:5px;
+    background:linear-gradient(135deg,#2f8f83,#1f6f77); color:#fff; font-size:11px; font-weight:700;
+    letter-spacing:.03em; text-transform:uppercase; padding:5px 10px 5px 8px; border-radius:999px;
+    box-shadow:0 2px 8px rgba(31,111,119,.34); }
+  .trendbadge svg { width:13px; height:13px; fill:none; stroke:currentColor; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round; }
 
   /* Bookmarks pane. */
   .bm-empty { color:var(--text-dim); font-size:14px; text-align:center; padding:26px 8px; line-height:1.5; }
@@ -713,7 +899,7 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
 
 <div class="app">
   <div class="topbar">
-    <div class="brand"><span class="brand-mark"><svg class="ic-xs"><use href="#i-spark"/></svg></span> Sales Mechanic</div>
+    <div class="brand"><span class="brand-mark"><svg class="ic-xs"><use href="#i-spark"/></svg></span> Venturo</div>
     <div style="display:flex; align-items:center; gap:10px">
       <div class="streak" id="streak" title="Days in a row"><svg class="ic-sm"><use href="#i-flame"/></svg><span id="streak-n">1</span></div>
       <button class="mbtn" id="mbtn" onclick="openMissions()">
@@ -728,6 +914,7 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
     <div class="filters">
       <button class="chipbtn" data-f="reseller" onclick="setFilter(this)">Seller</button>
       <button class="chipbtn" data-f="maker" onclick="setFilter(this)">Maker</button>
+      <button class="chipbtn" data-f="saved" id="chip-saved" onclick="setFilter(this)">Saved</button>
     </div>
     <div class="banner" id="disc-banner" style="margin-top:12px"></div>
     ${domains.map((d) => `<section class="dom" data-dom="${attr(d)}">
@@ -749,6 +936,13 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
     ${communities.map(communityCard).join('')}
   </div>
   <!-- JOURNEY — not a tab; a sheet the top bar opens. -->
+  <!-- The nudge. One line, one action, one X. Never blocks the screen. -->
+  <div class="nudge" id="nudge">
+    <div class="nudge-i"><svg><use href="#i-compass"/></svg></div>
+    <div class="nudge-b"><div class="nudge-k" id="nudge-k">Next up</div><div class="nudge-t" id="nudge-t"></div></div>
+    <button class="nudge-go" onclick="nudgeGo()">Go</button>
+    <button class="nudge-x" onclick="hideNudge(true)" aria-label="Dismiss">&times;</button>
+  </div>
   <div class="mscrim" id="mscrim" onclick="closeMissions()"></div>
   <div class="mpanel" id="s-journey">
     <div class="mgrab"></div>
@@ -763,16 +957,17 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
     <div class="lvbar" id="lvbar"></div>
     <div class="nextcard" id="nextcard"></div>
     ${levelsHtml}
+    <div class="pb-wrap"><div class="pb-head">Playbooks</div><div class="pb-sub">The same steps, grouped by what actually decides whether this works.</div>${playbooksHtml}</div>
   </div>
   <!-- BUSINESS — how the business is actually doing -->
   <div class="screen" id="s-shop">
     <div class="top"><h1 id="you-greet">Business</h1><div class="sub" id="you-sub">Your business at a glance.</div></div>
-    <div class="subtabs">
+    <div class="subtabs-wrap"><div class="subtabs">
       <button class="subtab on" data-pane="overview" onclick="setPane(this)"><svg class="ic-sm"><use href="#i-chart"/></svg>Overview</button>
       <button class="subtab" data-pane="clients" onclick="setPane(this)"><svg class="ic-sm"><use href="#i-book"/></svg>Clients</button>
       <button class="subtab" data-pane="money" onclick="setPane(this)"><svg class="ic-sm"><use href="#i-note"/></svg>Money</button>
-      <button class="subtab" data-pane="saved" id="tab-saved" onclick="setPane(this)"><svg class="ic-sm"><use href="#i-heart"/></svg>Bookmarks</button>
-    </div>
+      <button class="subtab" data-pane="saved" id="tab-saved" onclick="setPane(this)"><svg class="ic-sm"><use href="#i-heart"/></svg>Saved</button>
+    </div></div>
 
     <div class="pane on" id="p-overview">
       <div class="statgrid">
@@ -853,11 +1048,11 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   <!-- YOU — who you are and how the app is set up -->
   <div class="screen" id="s-you">
     <div class="top"><h1>You</h1><div class="sub">Your profile, your links, your settings.</div></div>
-    <div class="subtabs">
+    <div class="subtabs-wrap"><div class="subtabs">
       <button class="subtab on" data-pane="profile" onclick="setPane(this)"><svg class="ic-sm"><use href="#i-shop"/></svg>Profile</button>
       <button class="subtab" data-pane="socials" onclick="setPane(this)"><svg class="ic-sm"><use href="#i-link"/></svg>Socials</button>
       <button class="subtab" data-pane="settings" onclick="setPane(this)"><svg class="ic-sm"><use href="#i-sliders"/></svg>Settings</button>
-    </div>
+    </div></div>
 
     <div class="pane on" id="p-profile">
       <div class="hcard">
@@ -956,7 +1151,12 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   var FINAL = ${JSON.stringify(missions.finalName)};
   function esc(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
   function attr(s){ return esc(s).replace(/"/g,'&quot;'); }
-  var TITLES = {}; document.querySelectorAll('.ms').forEach(function(el){ TITLES[el.dataset.id] = el.querySelector('.ms-title').textContent; });
+  var TITLES = {}, XP = {};
+  document.querySelectorAll('.ms').forEach(function(el){
+    TITLES[el.dataset.id] = el.querySelector('.ms-title').textContent;
+    XP[el.dataset.id] = +el.dataset.xp || 0;
+  });
+  function totalXp(){ return done().reduce(function(n,id){ return n + (XP[id]||0); }, 0); }
   var S = load();
 
   function load(){
@@ -985,9 +1185,16 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
       var meta = LEVELS.filter(function(l){ return l.level===lv; })[0];
       if(meta) celebrate(meta.name, meta.title);
     } else if(!silent){
-      toast('\\u2713 ' + (TITLES[id]||'Milestone complete'));
+      celebrateMilestone(id);
     }
     refresh();
+    // Right after finishing something is the one moment a prompt is
+    // welcome rather than an interruption — they have just proven they
+    // are engaged. Anywhere else it is a nag.
+    // The next step arrives after the celebration has finished and
+    // cleared, not on top of it — both live in the same strip below the
+    // top bar, and overlapping them turns progress into a pile-up.
+    if(!silent) setTimeout(function(){ showNudge(true); }, WIN_MS + 1500);
   }
   function fire(trigger){
     var el = document.querySelector('.ms[data-trigger="'+trigger+'"]');
@@ -996,6 +1203,7 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
 
   // Journey is no longer a tab — it's a sheet the top bar opens.
   function openMissions(){
+    fire('open-journey');
     document.getElementById('s-journey').classList.add('on');
     document.getElementById('mscrim').classList.add('on');
     refresh();
@@ -1015,6 +1223,87 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   }
 
   // The single next thing to do, lifted out of the list so it's unmissable.
+  /* ---- The nudge ----
+     Shows the next step, once, quietly. Three rules keep it from becoming
+     the thing people close without reading:
+       it never appears while the Journey sheet is already open,
+       it appears at most once every few minutes,
+       and dismissing it silences it for the whole session.
+     A prompt that survives being dismissed is a prompt people learn to hate. */
+  var NUDGE_GAP = 4 * 60 * 1000;
+  var nudgeMuted = false, nudgeAt = 0, nudgeTimer = null, nudgeTarget = null;
+
+  function hideNudge(muted){
+    var n = document.getElementById('nudge');
+    if(n) n.classList.remove('on');
+    if(muted) nudgeMuted = true;
+    if(nudgeTimer){ clearTimeout(nudgeTimer); nudgeTimer = null; }
+  }
+  function nudgeGo(){
+    hideNudge(false);
+    if(nudgeTarget) setTab(nudgeTarget); else openMissions();
+  }
+  function showNudge(force, ms){
+    if(nudgeMuted) return;
+    if(document.getElementById('s-journey').classList.contains('on')) return;
+    if(!force && Date.now() - nudgeAt < NUDGE_GAP) return;
+    var el = document.querySelector('.level.unlocked .ms:not(.done)');
+    if(!el) return;
+    var n = document.getElementById('nudge');
+    if(!n) return;
+    var go = el.querySelector('.mini-btn[data-tab]');
+    nudgeTarget = go ? go.dataset.tab : null;
+    document.getElementById('nudge-k').textContent =
+      el.querySelector('.ms-where').classList.contains('out') ? 'Next up \\u00b7 outside the app' : 'Next up';
+    document.getElementById('nudge-t').textContent = el.querySelector('.ms-title').textContent;
+    n.classList.add('on');
+    nudgeAt = Date.now();
+    // Leaves on its own. Nothing here should need dismissing to get on with.
+    if(nudgeTimer) clearTimeout(nudgeTimer);
+    nudgeTimer = setTimeout(function(){ hideNudge(false); }, ms || 9000);
+  }
+
+  /* The top bar's height depends on its content, so it is measured rather
+     than guessed — the nudge has to clear it exactly on every screen size. */
+  function syncTopbarHeight(){
+    var bar = document.querySelector('.topbar');
+    if(bar) document.documentElement.style.setProperty('--topbar-h', Math.round(bar.getBoundingClientRect().height) + 'px');
+  }
+  window.addEventListener('resize', syncTopbarHeight);
+
+  /* The fade only means something when there is actually more to scroll to. */
+  function syncSubtabFades(){
+    document.querySelectorAll('.subtabs-wrap').forEach(function(w){
+      var bar = w.querySelector('.subtabs');
+      if(!bar) return;
+      var more = bar.scrollWidth - bar.clientWidth - bar.scrollLeft > 4;
+      w.classList.toggle('more', more);
+    });
+  }
+  window.addEventListener('resize', syncSubtabFades);
+  document.addEventListener('scroll', function(e){
+    if(e.target && e.target.classList && e.target.classList.contains('subtabs')) syncSubtabFades();
+  }, true);
+
+  function togglePb(h){ h.parentElement.classList.toggle('open'); }
+
+  /* Playbook progress reads off the same done-list as the levels — a step
+     ticked in a level is ticked here, because it is the same step. */
+  function renderPlaybooks(){
+    var d = done();
+    document.querySelectorAll('.pb').forEach(function(pb){
+      var items = [].slice.call(pb.querySelectorAll('.pb-steps li'));
+      var n = 0;
+      items.forEach(function(li){
+        var isDone = d.indexOf(li.dataset.step) !== -1;
+        li.classList.toggle('done', isDone);
+        if(isDone) n++;
+      });
+      var c = pb.querySelector('.pb-c');
+      if(c) c.textContent = n + '/' + items.length;
+    });
+  }
+
   function renderNext(){
     var card = document.getElementById('nextcard');
     if(!card) return;
@@ -1070,6 +1359,7 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   }
 
   function setFilter(btn){
+    fire('try-filter');
     // Toggles rather than a radio group. "All" used to be a chip of its own;
     // with it gone, clicking the active chip again is what clears the filter,
     // so nothing is unreachable without spending a chip on the default state.
@@ -1086,6 +1376,16 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   function applyFilter(f){
     CURRENT_FILTER = f;
     document.querySelectorAll('#s-discover .product').forEach(function(c){
+      // Saving is triage: the Saved chip is the only place a saved product
+      // shows, and everywhere else it is gone. That keeps the browsing feed a
+      // list of things still to decide on, which shrinks as you work through
+      // it — the point of saving in the first place.
+      var isSaved = c.classList.contains('saved');
+      if(f === 'saved'){
+        c.style.display = isSaved ? '' : 'none';
+        return;
+      }
+      if(isSaved){ c.style.display = 'none'; return; }
       var aud = c.getAttribute('data-aud');
       // The filter follows the BADGE, not the raw audience. A "both" niche is
       // badged Maker, so showing it under Seller too put cards reading
@@ -1097,6 +1397,21 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
       c.style.display = show ? '' : 'none';
     });
     reorderFeed(f);
+
+    // The Saved filter can legitimately match nothing, and with every section
+    // hidden the screen goes blank with no explanation. Say so instead.
+    var banner = document.getElementById('disc-banner');
+    if(banner){
+      if(f === 'saved' && !(S.saved || []).length){
+        banner.textContent = 'Nothing saved yet \u2014 tap the heart on a product and it lands here.';
+        banner.classList.add('on');
+      } else if(f === 'saved'){
+        banner.textContent = (S.saved || []).length + ' saved \u00b7 also in Business \u203a Saved';
+        banner.classList.add('on');
+      } else if(!S.interests){
+        banner.classList.remove('on');
+      }
+    }
   }
 
   /**
@@ -1155,9 +1470,9 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
     S.saved = S.saved || [];
     var card = btn.closest('.card');
     var at = S.saved.indexOf(slug);
-    if(at === -1){ S.saved.push(slug); card.classList.add('saved'); toast('Bookmarked \\u2014 find it in Business'); }
+    if(at === -1){ S.saved.push(slug); card.classList.add('saved'); toast('Saved \\u2014 Business \\u203a Saved'); fire('bookmark-product'); }
     else { S.saved.splice(at,1); card.classList.remove('saved'); toast('Bookmark removed'); }
-    save(); renderBookmarks();
+    save(); renderBookmarks(); applyFilter(CURRENT_FILTER);
   }
   function applySaved(){
     (S.saved||[]).forEach(function(slug){
@@ -1168,8 +1483,16 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   }
   function renderBookmarks(){
     var list = S.saved || [];
+    var chip = document.getElementById('chip-saved');
+    if(chip) chip.textContent = list.length ? ('Saved \u00b7 ' + list.length) : 'Saved';
+    // If the Saved filter is showing while the last bookmark is removed, the
+    // feed would otherwise sit empty with no way back to it.
+    if(CURRENT_FILTER === 'saved') applyFilter('saved');
     var tab = document.getElementById('tab-saved');
-    if(tab) tab.textContent = list.length ? ('Bookmarks \\u00b7 ' + list.length) : 'Bookmarks';
+    // "Saved", not "Bookmarks": with a count appended the longer word pushed
+    // this fourth subtab off the right edge of the bar, so the one place
+    // bookmarks live was the one tab you could not see.
+    if(tab) tab.textContent = list.length ? ('Saved \\u00b7 ' + list.length) : 'Saved';
     var box = document.getElementById('bm-list');
     if(!box) return;
     if(!list.length){
@@ -1196,7 +1519,7 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
     S.saved = (S.saved||[]).filter(function(s){ return s !== slug; });
     var c = document.querySelector('#s-discover .product[data-slug="'+slug+'"]');
     if(c) c.classList.remove('saved');
-    save(); renderBookmarks();
+    save(); renderBookmarks(); applyFilter(CURRENT_FILTER);
   }
 
   /* ---- Streak: days in a row, counted honestly ---- */
@@ -1232,6 +1555,47 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
     document.body.appendChild(wrap);
     setTimeout(function(){ wrap.remove(); }, 1400);
   }
+  /* A lighter burst for a milestone — a dozen pieces over a short upward arc
+     rather than the level-up's twenty-six across the whole screen. */
+  function sparkle(){
+    var wrap = document.createElement('div'); wrap.className = 'burst';
+    for(var i=0;i<12;i++){
+      var b = document.createElement('i');
+      var a = (-Math.PI/2) + (Math.random()-0.5)*1.9, d = 50 + Math.random()*80;
+      b.style.background = COLORS[i % COLORS.length];
+      b.style.setProperty('--dx', Math.cos(a)*d + 'px');
+      b.style.setProperty('--dy', Math.sin(a)*d + 'px');
+      b.style.setProperty('--rot', (Math.random()*360-180) + 'deg');
+      b.style.animation = 'fly ' + (520 + Math.random()*320) + 'ms cubic-bezier(.2,.7,.3,1) forwards';
+      wrap.appendChild(b);
+    }
+    document.body.appendChild(wrap);
+    setTimeout(function(){ wrap.remove(); }, 1000);
+  }
+
+  /* How long a milestone celebration stays on screen. The nudge waits for
+     this plus a beat, because both live in the same strip below the top bar. */
+  var WIN_MS = 2000;
+
+  function celebrateMilestone(id){
+    var gained = XP[id] || 0;
+    var el = document.createElement('div');
+    el.className = 'win';
+    el.innerHTML =
+      '<div class="win-tick"><svg><use href="#i-check"/></svg></div>' +
+      '<div class="win-b"><div class="win-k">Milestone</div>' +
+      '<div class="win-t">' + esc(TITLES[id] || 'Done') + '</div></div>' +
+      '<div class="win-xp">+' + gained +
+      '<div class="win-total">' + totalXp() + ' total</div></div>';
+    document.body.appendChild(el);
+    sparkle();
+    requestAnimationFrame(function(){ el.classList.add('on'); });
+    setTimeout(function(){
+      el.classList.remove('on');
+      setTimeout(function(){ el.remove(); }, 300);
+    }, WIN_MS);
+  }
+
   function celebrate(levelName, title){
     burst();
     var el = document.createElement('div');
@@ -1330,29 +1694,60 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   // Score by how many tokens match, float the strongest to the top, and only
   // badge a genuine shortlist.
   var GROW_TOP = 8;
+  /**
+   * Order the Grow feed. Three bands, in this order:
+   *
+   *   1. Communities matching the niche the user actually chose.
+   *   2. Trend and research surfaces — Pinterest Trends, cottage food law,
+   *      industry data. These apply to everyone regardless of niche and they
+   *      answer the question that comes BEFORE "where do I post", which is
+   *      "is anyone buying this and may I legally sell it".
+   *   3. Everything else, hottest first.
+   *
+   * Previously the feed only reordered when a niche was set, and did nothing
+   * at all before onboarding — so a new user got 122 communities in whatever
+   * order the category files happened to load.
+   */
+  function growBand(el, matched){
+    if(matched) return 0;
+    if(el.getAttribute('data-kind') === 'search') return 1;
+    return 2;
+  }
+
   function matchGrow(){
     var banner = document.getElementById('grow-banner');
     var screen = document.getElementById('s-grow');
     var cards = [].slice.call(screen.querySelectorAll('.community'));
-    if(!S.niche){
-      banner.classList.remove('on');
-      cards.forEach(function(c){ c.classList.remove('match'); });
-      return;
-    }
-    var want = tokens(S.niche.tags);
+    if(!cards.length) return;
+
+    var want = S.niche ? tokens(S.niche.tags) : [];
     var scored = cards.map(function(c){
       var have = (c.getAttribute('data-tags')||'').toLowerCase();
       var score = 0;
       want.forEach(function(t){ if(t && have.indexOf(t) !== -1) score++; });
-      return { el: c, score: score };
+      return { el: c, score: score, hot: +c.getAttribute('data-hot') || 50 };
     });
-    scored.sort(function(a,b){ return b.score - a.score; });
-    var top = scored.filter(function(s){ return s.score > 0; }).slice(0, GROW_TOP);
+
+    var ranked = scored.slice().sort(function(a,b){ return b.score - a.score; });
+    var top = ranked.filter(function(s){ return s.score > 0; }).slice(0, GROW_TOP);
     var inTop = new Set(top.map(function(s){ return s.el; }));
+
+    scored.sort(function(a,b){
+      var ba = growBand(a.el, inTop.has(a.el)), bb = growBand(b.el, inTop.has(b.el));
+      if(ba !== bb) return ba - bb;
+      if(a.score !== b.score) return b.score - a.score;
+      return b.hot - a.hot;
+    });
     scored.forEach(function(s){
       s.el.classList.toggle('match', inTop.has(s.el));
       screen.appendChild(s.el);
     });
+
+    if(!S.niche){
+      banner.textContent = 'Start with the trend and research pages — they tell you what sells before you pick where to post.';
+      banner.classList.add('on');
+      return;
+    }
     banner.textContent = top.length
       ? 'Your best ' + top.length + ' communities for ' + S.niche.name + ' — sorted by fit'
       : 'No close match yet for ' + S.niche.name + ' — the general ones still apply';
@@ -1360,6 +1755,9 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   }
 
   function refresh(){
+    renderPlaybooks();
+    syncSubtabFades();
+    syncTopbarHeight();
     // milestone + level states
     LEVELS.forEach(function(lv){
       var sec = document.querySelector('.level[data-level="'+lv.level+'"]');
@@ -1475,12 +1873,14 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
       strength: 0, touches: [], createdAt: new Date().toISOString(), lastAt: null
     });
     save();
+    fire('add-contact');
     ['nc-name','nc-channel','nc-notes'].forEach(function(i){ document.getElementById(i).value=''; });
     document.getElementById('add-contact').classList.remove('on');
     toast('Added to your book');
     refresh();
   }
   function logTouch(id, type){
+    fire('log-interaction');
     var c = (S.contacts||[]).filter(function(x){ return x.id===id; })[0];
     if(!c) return;
     c.touches = c.touches || [];
@@ -1509,6 +1909,8 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
     });
     S.sales = (S.sales||0)+1;
     save();
+    // Five is the milestone; the engine ignores a repeat completion.
+    if((S.payments||[]).length >= 5) fire('five-sales');
     ['ns-amount','ns-who','ns-note'].forEach(function(i){ document.getElementById(i).value=''; });
     complete('log-sale');
     toast('Sale recorded \\u2014 ' + money(amt));
@@ -1524,6 +1926,7 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
       stock: document.getElementById('np-stock').value.trim()==='' ? null : parseInt(document.getElementById('np-stock').value,10)
     });
     save();
+    fire('add-shelf');
     ['np-name','np-price','np-stock'].forEach(function(i){ document.getElementById(i).value=''; });
     document.getElementById('add-product').classList.remove('on');
     toast('On the shelf');
@@ -1570,6 +1973,7 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
     S.socialLinks = S.socialLinks || {};
     S.socialLinks[p] = document.getElementById('soc-'+p).value;
     save(); flash('sv-soc'); renderSocialCount();
+    fire('add-social');
   }
   function saveCooling(){
     S.settings = S.settings || {};
@@ -2073,6 +2477,16 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   refresh();
   if(S.tab){ setTab(S.tab); }
   if(!S.onboarded){ onbOpen(); }
+
+  /* A glance at where you left off, every time the app opens.
+     Held to three seconds and shown only once the app is actually usable —
+     never over onboarding, which is its own guided sequence and does not need
+     a second prompt competing with it. The short beat before it appears lets
+     the feed paint first, so it reads as a note on top of the app rather than
+     part of the loading. */
+  if(S.onboarded){
+    setTimeout(function(){ showNudge(true, 3000); }, 550);
+  }
 </script>
 </body></html>`;
 }
@@ -2084,8 +2498,11 @@ createServer((req, res) => {
     // their niche. Adding a category is just another file in the folder.
     const nicheBySlug: Record<string, any> = {};
     for (const n of niches) nicheBySlug[n.slug] = n;
+    // Same underscore convention as communities. Nothing stages here yet, but
+    // the sourcing pipeline is one flag away from wanting somewhere to put
+    // picks a human has not looked at.
     const products = readdirSync(`${dir}/products`)
-      .filter((f) => f.endsWith('.json'))
+      .filter((f) => f.endsWith('.json') && !f.startsWith('_'))
       .flatMap((f) => JSON.parse(readFileSync(`${dir}/products/${f}`, 'utf8')))
       .map((p: any) => ({ ...p, niche: nicheBySlug[p.nicheSlug] }))
       .filter((p: any) => p.niche)
@@ -2100,8 +2517,13 @@ createServer((req, res) => {
         if (p.niche.audience !== 'reseller') return true;
         return heatOf(p) >= RESELLER_HEAT_FLOOR;
       });
+    // Underscore-prefixed files are staging, not content. _discovered.json
+    // holds verified candidates whose audience, overview, loves, dislikes and
+    // approach are still empty by design — they were being rendered straight
+    // into the feed as 95 blank cards, which is exactly what staging exists to
+    // prevent. Same convention the validators already use.
     const communities = readdirSync(`${dir}/communities`)
-      .filter((f) => f.endsWith('.json'))
+      .filter((f) => f.endsWith('.json') && !f.startsWith('_'))
       .flatMap((f) => JSON.parse(readFileSync(`${dir}/communities/${f}`, 'utf8')));
     const missions = JSON.parse(readFileSync(`${dir}/missions.json`, 'utf8'));
     const onboarding = JSON.parse(readFileSync(`${dir}/onboarding.json`, 'utf8'));
@@ -2112,6 +2534,6 @@ createServer((req, res) => {
     res.end(`Could not render: ${err.message}`);
   }
 }).listen(PORT, () => {
-  console.log(`Sales Mechanic base app: http://localhost:${PORT}`);
+  console.log(`Venturo base app: http://localhost:${PORT}`);
   console.log('Discover + Grow + Journey in one shell. Ctrl+C to stop.');
 });
