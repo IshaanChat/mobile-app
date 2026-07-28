@@ -23,7 +23,7 @@ const BASE = 'https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article';
 // Wikimedia asks for a descriptive User-Agent and blocks clients that send
 // nothing useful. This is the etiquette for a free service, and the one thing
 // most likely to get us cut off.
-const UA = 'SalesMechanic/0.1 (https://github.com/IshaanChat/sales-mechanic; product trend research)';
+const UA = 'Venturo/0.1 (https://github.com/IshaanChat/sales-mechanic; product trend research)';
 
 /** Days per comparison window. Two of these make the trend. */
 const WINDOW = 30;

@@ -1,4 +1,4 @@
-# Shipping Sales Mechanic
+# Shipping Venturo
 
 The app currently runs on `localhost` with SQLite and no authentication. That
 is fine for a prototype and impossible to ship. This document records the

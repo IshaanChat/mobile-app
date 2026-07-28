@@ -1,4 +1,4 @@
-# Sales Mechanic — iOS app (Expo)
+# Venturo — iOS app (Expo)
 
 The native client. Product decisions and the build plan live in
 [DESIGN.md](DESIGN.md) — read that first; it is the spec.

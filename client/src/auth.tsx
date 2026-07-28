@@ -68,7 +68,7 @@ function SignInScreen() {
     >
       <div style={{ textAlign: 'center', maxWidth: 420 }}>
         <div className="brand-row" style={{ justifyContent: 'center' }}>
-          <span className="brand-mark">🔧</span> Sales Mechanic
+          <span className="brand-mark">🔧</span> Venturo
         </div>
         <h1 style={{ margin: '8px 0 4px' }}>Welcome back.</h1>
         <p style={{ color: 'var(--text-dim)', margin: 0 }}>

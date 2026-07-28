@@ -28,7 +28,7 @@ import type { Adapter, Signal } from '../types';
 const BASE = 'https://api.printful.com';
 
 // Same etiquette as the Wikimedia adapter: a free service, used politely.
-const UA = 'SalesMechanic/0.1 (https://github.com/IshaanChat/sales-mechanic; product cost research)';
+const UA = 'Venturo/0.1 (https://github.com/IshaanChat/sales-mechanic; product cost research)';
 
 export interface CatalogEntry {
   id: number;

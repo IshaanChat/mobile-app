@@ -16,7 +16,7 @@ import type { Adapter, Signal } from '../types';
 // the adapter would report itself unconfigured whatever is in .env.
 const KEY = () => process.env.ALIEXPRESS_APP_KEY ?? '';
 const SECRET = () => process.env.ALIEXPRESS_APP_SECRET ?? '';
-const TRACKING = () => process.env.ALIEXPRESS_TRACKING_ID ?? 'salesmechanic';
+const TRACKING = () => process.env.ALIEXPRESS_TRACKING_ID ?? 'venturo';
 const ENDPOINT = 'https://api-sg.aliexpress.com/sync';
 
 /**

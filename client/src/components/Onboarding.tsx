@@ -117,7 +117,7 @@ export default function Onboarding({
   return (
     <div style={{ maxWidth: 520, margin: '60px auto', padding: 24 }}>
       <div className="brand-row">
-        <span className="brand-mark">🔧</span> Sales Mechanic
+        <span className="brand-mark">🔧</span> Venturo
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
         <h1 style={{ marginBottom: 4, marginTop: 0 }}>

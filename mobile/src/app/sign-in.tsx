@@ -124,7 +124,7 @@ export default function SignInScreen() {
           <ThemedView style={styles.hero}>
             <ThemedText style={styles.mark}>🔧</ThemedText>
             <ThemedText type="subtitle" style={styles.title}>
-              Sales Mechanic
+              Venturo
             </ThemedText>
             <ThemedText themeColor="textSecondary" style={styles.tagline}>
               Big companies have sales teams.{'\n'}You have this.

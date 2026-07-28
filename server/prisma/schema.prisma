@@ -1,4 +1,4 @@
-// Sales Mechanic — data model
+// Venturo — data model
 // PostgreSQL via Prisma (Neon in dev and production).
 //
 // Note: "enum-like" fields (channel type, contact status, interaction type,

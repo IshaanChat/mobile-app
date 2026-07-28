@@ -108,7 +108,7 @@ export default function Dashboard({
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, flexWrap: 'wrap' }}>
           <div>
             <div className="brand-row">
-              <span className="brand-mark">🔧</span> Sales Mechanic
+              <span className="brand-mark">🔧</span> Venturo
             </div>
             <h2 style={{ margin: 0 }}>{business.name}</h2>
             <p style={{ color: 'var(--text-dim)', fontSize: 13, marginTop: 4 }}>

@@ -37,7 +37,7 @@ export function TopBar({ onOpenJourney, hasNews }: { onOpenJourney: () => void; 
         <View style={[styles.mark, { backgroundColor: theme.accent }]}>
           <Icon name="spark" size={13} color={theme.accentText} />
         </View>
-        <ThemedText type="smallBold" style={styles.wordmark}>Sales Mechanic</ThemedText>
+        <ThemedText type="smallBold" style={styles.wordmark}>Venturo</ThemedText>
       </View>
 
       <View style={styles.right}>

@@ -1,4 +1,4 @@
-# Sales Mechanic — Fortify & Ship: Tomorrow's To-Do
+# Venturo — Fortify & Ship: Tomorrow's To-Do
 
 No new features. Everything here either hardens what exists or moves the app
 toward shipping. Ordered by priority — the morning block is non-negotiable,
@@ -54,7 +54,7 @@ the afternoon is decisions, the evening is outward-facing prep.
 ## Evening — Outward-facing prep (start the clocks that tick slowly)
 
 - [ ] **10. Name & domain check.** Search trademark databases and domain
-      availability for "Sales Mechanic" *before* any marketing. If taken,
+      availability for "Venturo" *before* any marketing. If taken,
       better to know now.
 - [ ] **11. Register an Etsy developer Personal App** (free). Commercial
       Access review takes unknown time — start it as early as the privacy

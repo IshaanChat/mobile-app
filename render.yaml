@@ -1,4 +1,4 @@
-# Render blueprint for the Sales Mechanic API.
+# Render blueprint for the Venturo API.
 #
 # The database is NOT defined here — it lives on Neon, so it survives
 # anything that happens to this service and never expires the way Render's

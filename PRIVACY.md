@@ -13,7 +13,7 @@
 
 ## The short version
 
-Sales Mechanic helps you keep track of the people you sell to. To do that it
+Venturo helps you keep track of the people you sell to. To do that it
 stores what you type in, and — right now — it stores it **on your own machine**.
 We don't have a server, so we can't see your data.
 
@@ -46,9 +46,9 @@ history and progress.
 
 ## An important note about your clients' data
 
-When you add a client to Sales Mechanic, you are storing personal information
+When you add a client to Venturo, you are storing personal information
 about someone else. Under laws like the GDPR that makes **you** responsible for
-that data, and Sales Mechanic a tool you use to process it.
+that data, and Venturo a tool you use to process it.
 
 In practice: only record what you genuinely need for your business
 relationship, and if one of your clients asks you to delete what you hold about
@@ -91,7 +91,7 @@ If you configure no AI, no business information leaves your machine.
 
 ## Children
 
-Sales Mechanic is not intended for anyone under 13, and the app will not
+Venturo is not intended for anyone under 13, and the app will not
 accept an age below 13.
 
 ## Changes

@@ -7,7 +7,7 @@ import '@/global.css';
 
 import { Platform } from 'react-native';
 
-// Sales Mechanic's palette, carried over from the web client so both
+// Venturo's palette, carried over from the web client so both
 // surfaces feel like one product.
 //
 // Light — "the artisan": blush cream, dusty rose, honey and sage. For the

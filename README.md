@@ -1,4 +1,4 @@
-# Sales Mechanic
+# Venturo
 
 A relationship-first sales and marketing app for solo sellers and first-time
 founders — people running Etsy shops, home businesses, coaching practices.

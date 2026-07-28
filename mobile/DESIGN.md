@@ -1,4 +1,4 @@
-# Sales Mechanic — Mobile Design & Decisions
+# Venturo — Mobile Design & Decisions
 
 The iOS app is not a port of the web client's *design* — it ports the web
 client's *features* into a different product shape. The web client is the

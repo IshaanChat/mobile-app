@@ -655,7 +655,7 @@ function AiSection() {
   return (
     <Section
       title="Your AI"
-      subtitle="Point Sales Mechanic at a model you run yourself (Ollama, LM Studio, vLLM — anything OpenAI-compatible). It powers tailored Discover recommendations."
+      subtitle="Point Venturo at a model you run yourself (Ollama, LM Studio, vLLM — anything OpenAI-compatible). It powers tailored Discover recommendations."
     >
       <div style={{ marginBottom: 12 }}>
         <span className="channel-badge">

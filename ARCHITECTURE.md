@@ -1,4 +1,4 @@
-# Sales Mechanic — Architecture
+# Venturo — Architecture
 
 A relationship-first sales & marketing app for solo founders. Local-first:
 one user, their machine, their data.
