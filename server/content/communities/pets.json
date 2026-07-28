@@ -16,7 +16,7 @@
     "tags": "dog, pet, collar, harness, training, accessories",
     "hotness": 58,
     "imageQuery": "dog owner walking park happy",
-    "imageUrl": "https://images.pexels.com/photos/33295047/pexels-photo-33295047.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageUrl": "https://images.pexels.com/photos/33295047/pexels-photo-33295047.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=900&w=1200",
     "imageCredit": "Josh Hild / Pexels"
   },
   {
@@ -36,7 +36,7 @@
     "tags": "dog, pet, bandana, collar, accessories, apparel",
     "hotness": 66,
     "imageQuery": "dog wearing bandana photo cute portrait",
-    "imageUrl": "https://images.pexels.com/photos/36008942/pexels-photo-36008942.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageUrl": "https://images.pexels.com/photos/36008942/pexels-photo-36008942.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=900&w=1200",
     "imageCredit": "Yetkin Ağaç / Pexels"
   },
   {
@@ -56,7 +56,7 @@
     "tags": "pet, dog, treats, diy, toys, handmade, bed",
     "hotness": 48,
     "imageQuery": "homemade dog treats baking pet",
-    "imageUrl": "https://images.pexels.com/photos/7309448/pexels-photo-7309448.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageUrl": "https://images.pexels.com/photos/7309448/pexels-photo-7309448.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=900&w=1200",
     "imageCredit": "RDNE Stock project / Pexels"
   },
   {
@@ -76,7 +76,67 @@
     "tags": "dog, pet, bandana, costume, treats, accessories, apparel",
     "hotness": 70,
     "imageQuery": "dog costume playful outdoor fun",
-    "imageUrl": "https://images.pexels.com/photos/14043062/pexels-photo-14043062.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+    "imageUrl": "https://images.pexels.com/photos/14043062/pexels-photo-14043062.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=900&w=1200",
     "imageCredit": "Lisett Kruusimäe / Pexels"
+  },
+  {
+    "slug": "american-pet-products",
+    "title": "American Pet Products Association",
+    "platform": "Forum",
+    "kind": "community",
+    "url": "https://americanpetproducts.org/",
+    "tagline": "The pet industry trade body — data, trade shows, and retail buyers.",
+    "audience": "Pet product manufacturers, retailers and suppliers. Business-to-business rather than hobbyist, and the route to getting a product into shops.",
+    "overview": "The main trade association for the pet products industry, running industry research and the trade shows where independent pet retailers find new products.\n\nRelevant to a small maker at one specific moment: when you stop selling one collar at a time and start wanting shops to stock you. The industry data is also the most reliable read available on which pet categories are actually growing.",
+    "discussions": "Industry sales data and category trends\nTrade shows and buyer meetings\nRetail and distribution routes\nRegulatory and safety standards",
+    "loves": "Makers who arrive with wholesale pricing worked out\nProducts that meet safety standards",
+    "dislikes": "Approaching retail buyers without wholesale terms ready",
+    "rules": "Membership required for most resources and events\nTrade show participation has costs and requirements",
+    "approach": "Not a first step — a scaling one. Use the published category data now to check whether your pet niche is growing, and come back to the trade shows once you can supply wholesale volume with a real margin.",
+    "tags": "pet products, wholesale, retail, trade, industry, collars, treats",
+    "hotness": 50,
+    "imageQuery": "pet accessories collars display shop",
+    "imageUrl": "https://images.pexels.com/photos/37559533/pexels-photo-37559533.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=900&w=1200",
+    "imageCredit": "Fidel Gallaga filmmaker / Pexels"
+  },
+  {
+    "slug": "paw-talk",
+    "title": "Paw Talk",
+    "platform": "Forum",
+    "kind": "community",
+    "url": "https://www.paw-talk.net/",
+    "tagline": "Pet owners talking about what they buy and why.",
+    "audience": "Pet owners across dogs, cats, small animals and reptiles. Buyers rather than makers — which is precisely the value.",
+    "overview": "A general pet owner forum covering care, behaviour, health and the endless question of which products are worth it.\n\nFor a seller this is a listening post rather than a channel. Owners discuss what fails — collars that break, beds their dog destroyed, treats that upset a stomach — and every one of those complaints is a product specification waiting to be written.",
+    "discussions": "Product recommendations and failures\nBreed-specific care and equipment needs\nHealth, diet and treats\nClassifieds and rehoming",
+    "loves": "Genuinely helpful answers about care\nHonest product experiences, good and bad",
+    "dislikes": "Vendors appearing only to promote\nUnsupported health claims about products",
+    "rules": "Commercial promotion is restricted — read before posting\nHealth advice is moderated",
+    "approach": "Read, do not sell. Search for your product category and collect the complaints — \"chewed through it in a week\", \"too small for a large breed\". Those sentences are your product improvements and your listing copy, written by the buyer.",
+    "tags": "pets, dogs, cats, research, product feedback, accessories",
+    "hotness": 52,
+    "imageQuery": "dog with toys home living room",
+    "imageUrl": "https://images.pexels.com/photos/30537541/pexels-photo-30537541.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=900&w=1200",
+    "imageCredit": "susana MaRo / Pexels"
+  },
+  {
+    "slug": "dog-forums",
+    "title": "Dog Forums",
+    "platform": "Forum",
+    "kind": "community",
+    "url": "https://www.dogforums.com/",
+    "tagline": "Dog owners, deep on gear, training and what holds up.",
+    "audience": "Dog owners from casual to serious — trainers, breeders, sport handlers. The demanding end of the market, and the most useful for product feedback.",
+    "overview": "A long-running dog community covering training, health, breeds and equipment. Gear threads are detailed: harnesses that chafe, leads that fray, toys that survived a determined chewer and toys that lasted four minutes.\n\nSerious handlers are the toughest customers a pet product can have, and their standards are the ones worth designing against.",
+    "discussions": "Gear and equipment durability\nTraining tools and methods\nBreed-specific requirements\nHealth, diet and treats",
+    "loves": "Long-term reviews after months of real use\nDetailed answers about fit and sizing\nHonesty about what wore out",
+    "dislikes": "Promotional posting from brands\nProduct claims without evidence",
+    "rules": "Promotion restricted; check the rules before linking\nTraining method discussion is moderated",
+    "approach": "Search your category, read the durability complaints, and design against them. If you make collars or leads, the sizing and wear discussions here are a free product brief from the most demanding customers you will ever have.",
+    "tags": "dogs, gear, collars, leads, training, durability, treats",
+    "hotness": 54,
+    "imageQuery": "dog harness leash outdoor walk",
+    "imageUrl": "https://images.pexels.com/photos/38134816/pexels-photo-38134816.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=900&w=1200",
+    "imageCredit": "Emrecan Dora / Pexels"
   }
 ]
