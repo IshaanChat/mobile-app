@@ -8,6 +8,12 @@ that tells you who needs a follow-up, where to find people who'd love what you
 make, and what to do next — structured as missions you complete rather than a
 spreadsheet you maintain.
 
+> **This README describes the original React web client in `client/`, which is
+> now a design reference rather than where the work happens.** The current
+> surface is a localhost HTML prototype on port 4300, and the product catalog
+> and community database have both grown well past what is described below.
+> See **[HANDOFF.md](HANDOFF.md)** for the project as it actually stands.
+
 > Status: working prototype, local-first, single user. Not yet deployed and
 > has no authentication — see [TODO.md](TODO.md) for the path to shipping.
 
