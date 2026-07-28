@@ -290,6 +290,52 @@ curated community set — **review and edit them; they carry the product's
 voice.** Only put real numbers in `memberCount` (leave it out rather than
 guess); a later enricher job fills stats from sanctioned APIs.
 
+### Reddit discovery and refresh (`npm run communities`)
+
+```bash
+npm run communities                  # refresh member counts + rules on every Reddit entry
+npm run communities -- --discover    # find NEW subreddits, one pass per niche
+npm run communities -- --niche pets  # one niche
+npm run communities -- --dry         # show changes, write nothing
+```
+
+Needs `REDDIT_CLIENT_ID` / `REDDIT_CLIENT_SECRET` — create a **script** app at
+<https://www.reddit.com/prefs/apps>. Free, instant, no review queue. Set
+`REDDIT_USER_AGENT` too; Reddit rate-limits generic agents hard.
+
+**Reddit only, and that is a finding rather than a shortcut.** Checked live:
+the anonymous `/r/x/about.json` endpoints now return 403, so everything goes
+through `oauth.reddit.com`. Of the other eight platforms in this feed, none
+will tell you about a community you do not own — X withdrew its free tier and
+now charges per post read with full-archive search at Enterprise pricing;
+Instagram's Graph API covers only accounts you administer; TikTok has no
+discovery API; Discord only sees servers your bot has joined. Reddit carries
+this feed because it is the only one that can.
+
+**Refresh** is the job that runs forever. It updates the two things that go
+stale and that nobody can maintain by hand — `memberCount` and `rules` — and
+touches nothing else. Rules are only written when you have not written your
+own, so a stats job can never overwrite real editing.
+
+**Discover** writes to `communities/_discovered.json`, never into the curated
+files, and it leaves `audience`, `overview`, `loves`, `dislikes` and
+`approach` **empty on purpose**. Reddit reports how big a room is and what its
+posted rules are. It does not report what wins that room over, and generating
+those five fields from a sidebar blurb would be inventing the most
+load-bearing content in the app — the part a beginner actually acts on. An
+empty `approach` is a visible to-do; a plausible generated one is a silent
+fabrication.
+
+What it does fill is real: subscriber count, the verbatim posted rules, and
+the top post titles of the year as evidence of what the place discusses.
+Rules matter more than they look — getting them wrong is the one content
+error that gets a user *banned* rather than ignored.
+
+The usability filter is narrower than "big": NSFW and non-public subreddits
+are dropped outright (you cannot post in a restricted sub), under 3,000
+subscribers is a ghost town, and over 3,000,000 is a default-subscribed
+firehose where a small seller is invisible. Tune with `--min` / `--max`.
+
 ### Community images (Pexels)
 
 Cards show a photo. Rather than hand-pick 24 of them, let the enricher pull

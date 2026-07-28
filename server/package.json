@@ -23,7 +23,9 @@
     "smoke": "node scripts/smoke.mjs",
     "catalog:import": "tsx scripts/import-catalog.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.scripts.json",
-    "sourcing": "tsx scripts/sourcing.ts"
+    "sourcing": "tsx scripts/sourcing.ts",
+    "communities": "tsx scripts/communities.ts",
+    "communities:verify": "tsx scripts/verify-communities.ts"
   },
   "dependencies": {
     "@clerk/backend": "^3.12.0",

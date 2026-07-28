@@ -31,6 +31,15 @@ interface Post {
   [key: string]: unknown;
 }
 
+// Reads server/.env like every other script here. Without this the key had to
+// be prefixed onto the command every single run, which is both a nuisance and
+// a good way to end up with a credential in your shell history.
+try {
+  process.loadEnvFile();
+} catch {
+  /* no .env — the environment may already carry the key */
+}
+
 function fail(message: string): never {
   console.error(`\x1b[31m${message}\x1b[0m`);
   process.exit(1);

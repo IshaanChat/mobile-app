@@ -2,7 +2,7 @@
 // things — units sold, competing listings, live ad creatives — so each adapter
 // normalises into this and the scorer reconciles them.
 
-export type SourceName = 'aliexpress' | 'etsy' | 'meta' | 'wikipedia' | 'cj' | 'printful' | 'ebay';
+export type SourceName = 'aliexpress' | 'etsy' | 'meta' | 'wikipedia' | 'cj' | 'printful' | 'ebay' | 'reddit';
 
 /**
  * What a number is ABOUT, which matters more than what it is.
