@@ -24,6 +24,7 @@ import { tipsRouter } from './routes/tips';
 import { accountRouter } from './routes/account';
 import { adminRouter } from './routes/admin';
 import { requireAdmin } from './core/admin-auth';
+import { legalRouter } from './routes/legal';
 import { errorHandler, notFoundHandler } from './core/http';
 import { requireAuth, clerkConfigured } from './core/auth';
 
@@ -51,6 +52,11 @@ app.use(express.json());
 app.get('/api/health', (_req, res) =>
   res.json({ ok: true, auth: clerkConfigured() ? 'clerk' : 'dev' })
 );
+
+// Public legal pages. Outside /api and above requireAuth: App Store Connect
+// needs a Privacy Policy URL that anyone can open, and a URL that 401s is not
+// a privacy policy.
+app.use('/', legalRouter);
 
 // Curator write endpoints. Mounted ABOVE requireAuth deliberately: these are
 // not user routes and must not be reachable with a user's session token. They

@@ -8,13 +8,37 @@ export const profileRouter = Router();
 const VALID_GENDERS = ['WOMAN', 'MAN', 'NON_BINARY', 'OTHER', 'PREFER_NOT_TO_SAY'];
 const VALID_EXPERIENCE = ['FIRST_TIME', 'SOME_EXPERIENCE', 'EXPERIENCED'];
 
+/**
+ * What a profile must have.
+ *
+ * `gender` used to be required and is now optional, because nothing in the app
+ * ever read it. App Store guideline 5.1.1(i) says an app may not require
+ * personal information that is not relevant to its core functionality, and a
+ * field that is collected, stored, and never used is the clearest possible
+ * example. It stays *available* — some people want to be addressed correctly —
+ * but it can no longer block anyone from finishing onboarding.
+ *
+ * `age` stays required, and that is a deliberate difference rather than an
+ * oversight. It is not decoration: the 13 floor is the under-13 gate, which is
+ * what keeps this app out of COPPA's scope. Removing it to satisfy 5.1.1(i)
+ * would trade a small compliance risk for a much larger one. What was wrong
+ * was the *claim* around it — onboarding told users it "helps us tune advice
+ * to where you are", and nothing tunes anything on age. The honest reason is
+ * the gate, and the copy should say so.
+ */
 function validateRequired(body: any): string | null {
   const { name, email, age, gender } = body;
   if (!name || typeof name !== 'string') return 'name is required';
   if (!email || typeof email !== 'string' || !/^\S+@\S+\.\S+$/.test(email)) return 'a valid email is required';
   const parsedAge = Number(age);
-  if (!Number.isInteger(parsedAge) || parsedAge < 13 || parsedAge > 120) return 'age must be between 13 and 120';
-  if (!gender || !VALID_GENDERS.includes(gender)) return `gender must be one of ${VALID_GENDERS.join(', ')}`;
+  if (!Number.isInteger(parsedAge) || parsedAge < 13 || parsedAge > 120) {
+    return 'age must be between 13 and 120';
+  }
+  // Optional, but still checked when supplied — an unrecognised value would
+  // otherwise sit in the column forever and break any future typed read.
+  if (gender != null && gender !== '' && !VALID_GENDERS.includes(gender)) {
+    return `gender must be one of ${VALID_GENDERS.join(', ')}`;
+  }
   return null;
 }
 
@@ -37,7 +61,11 @@ profileRouter.post('/', ah(async (req, res) => {
       name: body.name.trim(),
       email: body.email.trim(),
       age: Number(body.age),
-      gender: body.gender,
+      // Skipping the question is recorded as PREFER_NOT_TO_SAY rather than
+      // left null. The column is non-nullable, and this is the one enum value
+      // that already means "no answer" — so no migration is needed and the
+      // stored value does not misrepresent anyone. Nothing reads this field.
+      gender: body.gender || 'PREFER_NOT_TO_SAY',
       location: body.location?.trim() || null,
       phone: body.phone?.trim() || null,
       bio: body.bio?.trim() || null,
