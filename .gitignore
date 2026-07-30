@@ -27,3 +27,10 @@ npm-debug.log*
 .idea/
 .DS_Store
 Thumbs.db
+
+# Xcode — generated per-developer state, not project configuration
+ios/**/xcuserdata/
+ios/**/*.xcworkspace/xcuserdata/
+ios/build/
+ios/DerivedData/
+.DS_Store
