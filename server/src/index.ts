@@ -21,6 +21,7 @@ import { productsRouter } from './routes/products';
 import { trendsRouter } from './routes/trends';
 import { growthRouter } from './routes/growth';
 import { tipsRouter } from './routes/tips';
+import { accountRouter } from './routes/account';
 import { adminRouter } from './routes/admin';
 import { requireAdmin } from './core/admin-auth';
 import { errorHandler, notFoundHandler } from './core/http';
@@ -74,6 +75,7 @@ app.use('/api/products', productsRouter);
 app.use('/api/trends', trendsRouter);
 app.use('/api/growth', growthRouter);
 app.use('/api/tips', tipsRouter);
+app.use('/api/account', accountRouter);
 
 // Subscribe cross-cutting modules to the event bus.
 registerAnalytics();
