@@ -471,3 +471,41 @@ model Interaction {
   contactId String
   contact   Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
 }
+
+/// A tip: the thing a mission cannot carry.
+///
+/// Missions are steps you complete and get credit for. A tip is either a small
+/// practical detail nobody thought to tell you (`kind = "know"`) or a line that
+/// exists purely to be on your side (`kind = "lift"`). Neither is worth a step,
+/// and both are worth saying.
+///
+/// Curator-owned global content, like TrendProduct and CommunityPost — there is
+/// no per-user row here. What a given person has already seen is client state,
+/// deliberately: it is high-churn, low-value, and not worth a write per tap.
+model Tip {
+  id   String @id @default(cuid())
+  /// Stable curator-chosen identity so re-importing updates in place rather
+  /// than duplicating. Matches the `id` field in content/tips.json.
+  slug String @unique
+
+  /// "know" — practical. "lift" — encouragement, or a joke.
+  kind String
+  text String
+
+  /// Which tab it belongs to: discover | grow | shop | you | any.
+  /// Named `tab` rather than `where`, which is a SQL reserved word — Prisma
+  /// would quote it correctly but any hand-written query later would not.
+  /// The content JSON still calls it `where`; the importer maps it.
+  tab   String @default("any")
+  /// The journey level that must be unlocked before this is eligible.
+  level Int    @default(1)
+
+  /// ACTIVE | ARCHIVED. Same soft-delete contract as CommunityPost: an import
+  /// never deletes, and --archive-missing is what makes the files authoritative.
+  status String @default("ACTIVE")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status, tab, level])
+}

@@ -20,16 +20,36 @@ import { useTheme } from '@/hooks/use-theme';
 import { AUDIENCE_COLORS, AUDIENCE_LABELS, SOURCING_LABELS } from '@/lib/catalog';
 import type { DiscoverProduct } from '@/types';
 
+/**
+ * The hero matches the shape of the image inside it, so `cover` has nothing
+ * left to crop. One fixed height could not serve both: supplier catalogues
+ * serve square product shots while the curated Pexels images are 1200x627,
+ * so a 168px band sliced the top and bottom off every sourced product and
+ * trimmed the landscapes too.
+ *
+ * Keyed off the host, because that is what decides the shape — a `sourceName`
+ * can be edited, an image's proportions cannot. 5:4 rather than a true square:
+ * supplier photos centre the product inside a margin of empty background, so
+ * trimming takes that padding off evenly and leaves the product untouched.
+ */
+const SQUARE_IMAGE_HOSTS = /aliexpress-media\.com|cdn\.printful\.com|alicdn\.com/i;
+const heroAspect = (url: string | null) => (SQUARE_IMAGE_HOSTS.test(url ?? '') ? 5 / 4 : 1200 / 627);
+
 export function ProductCard({
   product,
   onToggleSave,
+  hotFloor = Infinity,
 }: {
   product: DiscoverProduct;
   onToggleSave: (p: DiscoverProduct) => void;
+  /** Hotness at or above which a card is badged Hot. Computed by the feed as
+   *  a percentile of what's loaded, so it can't be decided card by card. */
+  hotFloor?: number;
 }) {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const audience = product.niche?.audience;
+  const hot = product.hotness >= hotFloor;
 
   return (
     <Animated.View
@@ -39,7 +59,11 @@ export function ProductCard({
         accessibilityRole="button"
         accessibilityState={{ expanded: open }}
         onPress={() => setOpen((v) => !v)}>
-        <View style={[styles.hero, { backgroundColor: theme.backgroundSelected }]}>
+        <View
+          style={[
+            styles.hero,
+            { backgroundColor: theme.backgroundSelected, aspectRatio: heroAspect(product.imageUrl) },
+          ]}>
           {product.imageUrl ? (
             <Image
               source={{ uri: product.imageUrl }}
@@ -47,6 +71,15 @@ export function ProductCard({
               contentFit="cover"
               transition={200}
             />
+          ) : null}
+
+          {hot ? (
+            <View style={[styles.hotBadge, { backgroundColor: theme.accent }]}>
+              <Icon name="flame" size={12} color={theme.accentText} />
+              <ThemedText type="smallBold" style={[styles.hotText, { color: theme.accentText }]}>
+                Hot
+              </ThemedText>
+            </View>
           ) : null}
 
           <View style={styles.heroTop}>
@@ -146,8 +179,20 @@ export function ProductCard({
 
 const styles = StyleSheet.create({
   card: { borderRadius: Spacing.three, borderWidth: 1, overflow: 'hidden' },
-  hero: { height: 168, justifyContent: 'space-between', padding: Spacing.two },
+  hero: { justifyContent: 'space-between', padding: Spacing.two },
   heroTop: { flexDirection: 'row' },
+  hotBadge: {
+    position: 'absolute',
+    top: Spacing.two,
+    right: Spacing.two,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.one,
+    borderRadius: 999,
+    paddingHorizontal: Spacing.two,
+    paddingVertical: 2,
+  },
+  hotText: { fontSize: 11, lineHeight: 14 },
   heroBottom: { flexDirection: 'row', flexWrap: 'wrap', gap: Spacing.one },
   body: { padding: Spacing.three, gap: Spacing.half },
   kicker: { fontSize: 11, letterSpacing: 0.6 },

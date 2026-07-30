@@ -267,7 +267,7 @@ function milestoneRow(m: any) {
   </div>`;
 }
 
-function page(products: any[], communities: any[], missions: any, onboarding: any) {
+function page(products: any[], communities: any[], missions: any, onboarding: any, tips: any[]) {
   /**
    * Section order, decided rather than inherited.
    *
@@ -351,7 +351,21 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
 <title>Venturo — base app</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- Baloo 2 is loaded for the wordmark alone — no other element is allowed it.
+     A logotype is the one place a typeface can be chosen for personality
+     rather than for reading, because it is read once and recognised by shape
+     forever after.
+     Chosen over the geometric rounded faces because its strokes actually
+     swell and taper rather than holding one width — that modulation is what
+     reads as drawn rather than constructed, and it is the difference between
+     rounded and curvy. Still upright and evenly spaced, so it stays neat.
+
+     Set at 500 rather than 700. Baloo is a heavy family by design and the
+     bold weight closed up the counters at this size; the medium keeps the
+     curves and drops the mass. Tracking went back to zero to match — the
+     negative tracking was there to hold a bolder word together and pinches
+     a lighter one. -->
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   /* Venturo — warm, encouraging, built for first-time founders.
      Light "the artisan": blush cream, dusty rose, honey and sage.
@@ -365,8 +379,12 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
     --input-bg:#f8ede8;
     --text:#34262b;
     --text-dim:#98818a;
-    --accent:#c2647e;
-    --accent-soft:rgba(194,100,126,0.1);
+    /* Deep violet, not the icon's lavender. Same hue, darker: the lavender
+       measures 1.64:1 against this cream background and white on it is 1.78:1,
+       both well under the 4.5 a text colour needs. This is 5.78:1, and 6.29:1
+       for white on top. See constants/theme.ts in the app for the full table. */
+    --accent:#6e4eab;
+    --accent-soft:rgba(110,78,171,0.1);
     --on-accent:#ffffff;
     --prospect:#a3919a;
     --engaged:#cf8f2e;
@@ -391,9 +409,14 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
       --input-bg:#0b0c0f;
       --text:#edeef2;
       --text-dim:#8b92a0;
-      --accent:#e3a82b;
-      --accent-soft:rgba(227,168,43,0.12);
-      --on-accent:#1a1408;
+      /* The app icon's own lavender. It reaches 10.99:1 on this charcoal —
+         better than the gold it replaces at 9.22 — and the icon's near-black
+         background is within a hair of --bg, so the icon and dark mode match
+         with no work. --on-accent is near-black because white on this is
+         1.78:1. */
+      --accent:#d0b8f0;
+      --accent-soft:rgba(208,184,240,0.14);
+      --on-accent:#1a1024;
       --prospect:#79808f;
       --engaged:#5b9cf0;
       --customer:#34c477;
@@ -550,10 +573,34 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
 
   /* ---- You: the hub. Ported from the old web app's tabbed business area ---- */
   /* ---- Top bar + the missions panel it opens (the old app's rail) ---- */
-  .topbar { position:sticky; top:0; z-index:15; background:var(--bg); display:flex; align-items:center; justify-content:space-between; padding:12px 16px 10px; border-bottom:1px solid var(--panel-border); }
-  .brand { display:flex; align-items:center; gap:7px; font-size:12px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--accent); }
-  .brand-mark { width:20px; height:20px; border-radius:6px; background:var(--accent); color:var(--on-accent); display:flex; align-items:center; justify-content:center; font-size:11px; }
-  .mbtn { position:relative; display:flex; align-items:center; gap:9px; border:1px solid var(--panel-border); background:var(--panel); color:var(--text); border-radius:999px; padding:7px 13px; font-size:13px; font-weight:600; font-family:inherit; cursor:pointer; transition:border-color .15s, background .15s; }
+  /* The top bar carries the identity, the streak, the way into Journey and the
+     tip bubble. It is the one piece of chrome on every screen, so it is given
+     real height rather than being squeezed into a strip — a 38px bar reads as
+     a browser toolbar, not as part of the app. Everything that positions
+     itself under it (the nudge, the milestone win) measures the height at
+     runtime, so growing it here needs no other number changed. */
+  .topbar { position:sticky; top:0; z-index:15; background:var(--bg); display:flex; flex-direction:column; gap:8px; padding:11px 16px 10px; border-bottom:1px solid var(--panel-border); }
+  .tb-row { display:flex; align-items:center; justify-content:space-between; }
+  /* The wordmark, set as a logotype rather than as a label.
+     It used to be 13.5px uppercase with .08em tracking — the same treatment
+     the section headings get, so the app's name read as one more piece of
+     furniture. A logotype is the opposite: a script face nothing else is
+     allowed to use, set large enough to be recognised by silhouette.
+
+     Tracking is pulled slightly in. A rounded face already carries air inside
+     the letters, so default spacing makes a short word drift apart at this
+     size — the negative tracking is what makes seven letters read as one
+     object rather than as seven.
+
+     Deliberately outside the type ramp: this is artwork that happens to be
+     text, and it should not move when the ramp is retuned. To try another
+     face, change the family here and the href above; nothing else references
+     it. */
+  .brand { display:flex; align-items:center; gap:9px; color:var(--accent); }
+  .brand-word { font-family:'Baloo 2',var(--font-sans);
+    font-size:25px; font-weight:500; letter-spacing:0; line-height:1; padding-bottom:2px; }
+  .brand-mark { width:27px; height:27px; border-radius:9px; background:var(--accent); color:var(--on-accent); display:flex; align-items:center; justify-content:center; font-size:13px; }
+  .mbtn { position:relative; display:flex; align-items:center; gap:9px; border:1px solid var(--panel-border); background:var(--panel); color:var(--text); border-radius:999px; padding:9px 15px; font-size:13.5px; font-weight:600; font-family:inherit; cursor:pointer; transition:border-color .15s, background .15s; }
   .mbtn:hover { border-color:var(--accent); }
   .mbtn.hasnew { border-color:var(--accent); background:var(--accent-soft); }
   .mbtn-ring { position:relative; width:18px; height:18px; border-radius:50%; background:conic-gradient(var(--accent) var(--pct,0%), var(--panel-border) 0); display:flex; align-items:center; justify-content:center; }
@@ -561,6 +608,43 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   .mbtn.hasnew .mbtn-ring:after { background:var(--bg); }
   .mdot { position:absolute; top:-2px; right:-2px; width:9px; height:9px; background:var(--danger); border-radius:50%; border:2px solid var(--bg); display:none; }
   .mbtn.hasnew .mdot { display:block; }
+
+  /* The tip bubble.
+     Missions carry the things you have to do. This carries the two things a
+     mission cannot: a small fact nobody thought to tell you, and a line that
+     is just kind. It is a speech bubble tailed up at the wordmark on purpose —
+     the app is saying it, not the interface reporting it.
+     Tapping anywhere on it moves to the next one, so it never has to be
+     dismissed and never has to rotate on a timer while somebody is reading. */
+  .tipbub { position:relative; display:flex; align-items:center; gap:10px; width:100%; text-align:left;
+    background:var(--panel); border:1px solid var(--panel-border); border-radius:14px;
+    padding:9px 12px; font-family:inherit; color:var(--text); cursor:pointer;
+    box-shadow:var(--shadow); transition:border-color .15s, transform .1s; }
+  .tipbub:hover { border-color:var(--accent); }
+  .tipbub:active { transform:scale(.99); }
+  /* The tail. Two stacked triangles — the border colour behind, the panel
+     colour a pixel in front — because a CSS triangle cannot carry a border. */
+  .tipbub::before, .tipbub::after { content:''; position:absolute; top:-7px; left:17px;
+    border-left:7px solid transparent; border-right:7px solid transparent; border-bottom:7px solid var(--panel-border); }
+  .tipbub::after { top:-6px; border-bottom-color:var(--panel); }
+  .tipbub-i { width:26px; height:26px; border-radius:8px; flex:none; display:flex; align-items:center; justify-content:center;
+    background:var(--accent-soft); color:var(--accent); }
+  .tipbub-i svg { width:15px; height:15px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+  /* Clamped at two lines. Tips are written to fit, but one long one should
+     shorten itself rather than push the whole feed down the screen. */
+  .tipbub-t { flex:1; min-width:0; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+    font-size:12.5px; line-height:1.4; }
+  .tipbub-n { flex:none; display:flex; color:var(--text-dim); transform:rotate(-90deg); }
+  .tipbub-n svg { width:16px; height:16px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+  /* A lift tip is not advice and should not wear advice's colour. With no
+     label above the line the icon is the only thing carrying which kind this
+     is, so it does the whole job: sage for warmth, rose for advice. */
+  .tipbub[data-kind="lift"] .tipbub-i { background:rgba(95,155,122,0.12); color:var(--customer); }
+  /* Swapped text crossfades rather than snapping, so a tap reads as the bubble
+     saying something else rather than as the screen redrawing. */
+  .tipbub-t, .tipbub-i { transition:opacity .16s; }
+  .tipbub.swapping .tipbub-t, .tipbub.swapping .tipbub-i { opacity:0; }
+  @media (prefers-reduced-motion:reduce){ .tipbub-t, .tipbub-i { transition:none; } }
 
   /* The journey sheet — slides up over whatever you were doing. */
   .mscrim { position:fixed; inset:0; background:rgba(30,18,22,.42); z-index:55; opacity:0; pointer-events:none; transition:opacity .25s; }
@@ -668,7 +752,7 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   .inline-ic { display:inline-flex; align-items:center; gap:7px; }
 
   /* Streak — a quiet reason to come back tomorrow. */
-  .streak { display:flex; align-items:center; gap:5px; font-size:13px; font-weight:700; color:var(--engaged); font-variant-numeric:tabular-nums; }
+  .streak { display:flex; align-items:center; gap:5px; font-size:14.5px; font-weight:700; color:var(--engaged); font-variant-numeric:tabular-nums; }
   .streak svg { stroke:var(--engaged); }
   .streak.cold { color:var(--text-dim); } .streak.cold svg { stroke:var(--text-dim); }
 
@@ -895,22 +979,31 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   <symbol id="i-shop" viewBox="0 0 24 24"><path d="M4 9h16l-1 11H5z"/><path d="M8.5 9V6.5a3.5 3.5 0 017 0V9"/></symbol>
   <symbol id="i-tag" viewBox="0 0 24 24"><path d="M4 11V5h6l9 9-6 6z"/><circle cx="7.8" cy="8.2" r="1.1"/></symbol>
   <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l1.9 5.6L19.5 10l-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.4z"/><path d="M18.5 16l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/></symbol>
+  <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9.5 17a6 6 0 115 0v1.5h-5z"/><path d="M10 21h4"/></symbol>
 </defs></svg>
 
 <div class="app">
   <div class="topbar">
-    <div class="brand"><span class="brand-mark"><svg class="ic-xs"><use href="#i-spark"/></svg></span> Venturo</div>
-    <div style="display:flex; align-items:center; gap:10px">
-      <div class="streak" id="streak" title="Days in a row"><svg class="ic-sm"><use href="#i-flame"/></svg><span id="streak-n">1</span></div>
-      <button class="mbtn" id="mbtn" onclick="openMissions()">
-        <span class="mbtn-ring" id="mbtn-ring"></span>Journey<span class="mdot"></span>
-      </button>
+    <div class="tb-row">
+      <div class="brand"><span class="brand-mark"><svg class="ic-sm"><use href="#i-spark"/></svg></span><span class="brand-word">Venturo</span></div>
+      <div style="display:flex; align-items:center; gap:10px">
+        <div class="streak" id="streak" title="Days in a row"><svg class="ic-sm"><use href="#i-flame"/></svg><span id="streak-n">1</span></div>
+        <button class="mbtn" id="mbtn" onclick="openMissions()">
+          <span class="mbtn-ring" id="mbtn-ring"></span>Journey<span class="mdot"></span>
+        </button>
+      </div>
     </div>
+    <!-- The tip bubble. Hidden until there is something eligible to say. -->
+    <button class="tipbub" id="tipbub" onclick="nextTip()" style="display:none" aria-label="Next tip">
+      <span class="tipbub-i"><svg id="tipbub-ic"><use href="#i-bulb"/></svg></span>
+      <span class="tipbub-t" id="tipbub-t"></span>
+      <span class="tipbub-n"><svg><use href="#i-chev"/></svg></span>
+    </button>
   </div>
 
   <!-- DISCOVER -->
   <div class="screen active" id="s-discover">
-    <div class="top"><h1>Discover</h1><div class="sub">Trending products &mdash; and where to source them.</div></div>
+    <div class="top"><h1>Discover</h1><div class="sub">Somebody is already selling all of this. Here is what it costs them.</div></div>
     <div class="filters">
       <button class="chipbtn" data-f="reseller" onclick="setFilter(this)">Seller</button>
       <button class="chipbtn" data-f="maker" onclick="setFilter(this)">Maker</button>
@@ -961,7 +1054,7 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   </div>
   <!-- BUSINESS — how the business is actually doing -->
   <div class="screen" id="s-shop">
-    <div class="top"><h1 id="you-greet">Business</h1><div class="sub" id="you-sub">Your business at a glance.</div></div>
+    <div class="top"><h1 id="you-greet">Business</h1><div class="sub" id="you-sub">What you have built so far, counted honestly.</div></div>
     <div class="subtabs-wrap"><div class="subtabs">
       <button class="subtab on" data-pane="overview" onclick="setPane(this)"><svg class="ic-sm"><use href="#i-chart"/></svg>Overview</button>
       <button class="subtab" data-pane="clients" onclick="setPane(this)"><svg class="ic-sm"><use href="#i-book"/></svg>Clients</button>
@@ -1047,7 +1140,7 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
 
   <!-- YOU — who you are and how the app is set up -->
   <div class="screen" id="s-you">
-    <div class="top"><h1>You</h1><div class="sub">Your profile, your links, your settings.</div></div>
+    <div class="top"><h1>You</h1><div class="sub">Who you are, and where people can find you.</div></div>
     <div class="subtabs-wrap"><div class="subtabs">
       <button class="subtab on" data-pane="profile" onclick="setPane(this)"><svg class="ic-sm"><use href="#i-shop"/></svg>Profile</button>
       <button class="subtab" data-pane="socials" onclick="setPane(this)"><svg class="ic-sm"><use href="#i-link"/></svg>Socials</button>
@@ -1149,6 +1242,7 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
 <script>
   var LEVELS = ${JSON.stringify(missions.levels)};
   var FINAL = ${JSON.stringify(missions.finalName)};
+  var TIPS = ${JSON.stringify(tips)};
   function esc(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
   function attr(s){ return esc(s).replace(/"/g,'&quot;'); }
   var TITLES = {}, XP = {};
@@ -1271,6 +1365,89 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
   }
   window.addEventListener('resize', syncTopbarHeight);
 
+  /* ---- Tips ----
+     The two things the Journey cannot carry. A milestone is something you have
+     to do and get credit for; a tip is a detail nobody thought to tell you, or
+     a line that exists purely to be on your side. Neither is worth a step, and
+     both are worth saying.
+
+     Rules the bubble follows:
+     - it never interrupts. It changes when you tap it, when you move to a tab
+       where the current line does not belong, or when a level unlocks new ones
+     - it never repeats until it has run out of things you have not seen
+     - it never goes quiet. Out of fresh lines, it starts the rotation over,
+       because an empty bubble reads as a bug and a repeat does not. */
+  var tipCur = null;
+
+  function tipEligible(t){
+    if(!levelUnlocked(t.level || 1)) return false;
+    var w = t.where || 'any';
+    return w === 'any' || w === (S.tab || 'discover');
+  }
+
+  function pickTip(){
+    var pool = TIPS.filter(tipEligible);
+    if(!pool.length) return null;
+    var seen = S.tipsSeen || [];
+    var fresh = pool.filter(function(t){ return seen.indexOf(t.id) === -1; });
+    if(!fresh.length){
+      // Forget only this tab's tips, so moving to Grow does not wipe the
+      // record of everything already read on Discover.
+      S.tipsSeen = seen.filter(function(id){
+        return !pool.some(function(t){ return t.id === id; });
+      });
+      fresh = pool;
+    }
+    // Anything but the line already on screen — a tap that changes nothing
+    // reads as a broken button.
+    if(fresh.length > 1 && tipCur){
+      fresh = fresh.filter(function(t){ return t.id !== tipCur.id; });
+    }
+    // Random rather than in order: the file groups know-tips by tab, so
+    // walking it would spend somebody's first week on sourcing advice and
+    // never once say anything kind.
+    return fresh[Math.floor(Math.random() * fresh.length)];
+  }
+
+  function paintTip(t){
+    var bub = document.getElementById('tipbub');
+    if(!bub) return;
+    if(!t){ bub.style.display = 'none'; syncTopbarHeight(); return; }
+    tipCur = t;
+    bub.style.display = '';
+    // The icon is the only signal of which kind this is — there is no label.
+    bub.dataset.kind = t.kind;
+    document.getElementById('tipbub-t').textContent = t.text;
+    // setAttribute on the existing <use> rather than rewriting the svg's
+    // innerHTML, which is unreliable for SVG content.
+    var use = document.querySelector('#tipbub-ic use');
+    if(use) use.setAttribute('href', t.kind === 'lift' ? '#i-spark' : '#i-bulb');
+    S.tipsSeen = S.tipsSeen || [];
+    if(S.tipsSeen.indexOf(t.id) === -1) S.tipsSeen.push(t.id);
+    save();
+    // A two-line tip is taller than a one-line tip, and everything positioned
+    // under the bar is measured off it.
+    syncTopbarHeight();
+  }
+
+  function nextTip(){
+    var t = pickTip();
+    if(!t) return;
+    var bub = document.getElementById('tipbub');
+    var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(still || bub.style.display === 'none'){ paintTip(t); return; }
+    // Swap while it is invisible, not while it is being read.
+    bub.classList.add('swapping');
+    setTimeout(function(){ paintTip(t); bub.classList.remove('swapping'); }, 160);
+  }
+
+  function syncTip(){
+    // Leave a line that still belongs where it is. Switching tabs to check
+    // one thing should not cost you the tip you were halfway through.
+    if(tipCur && tipEligible(tipCur)) return;
+    paintTip(pickTip());
+  }
+
   /* The fade only means something when there is actually more to scroll to. */
   function syncSubtabFades(){
     document.querySelectorAll('.subtabs-wrap').forEach(function(w){
@@ -1347,6 +1524,7 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
     document.querySelectorAll('.tab').forEach(function(t){ t.classList.toggle('on', t.dataset.tab===name); });
     S.tab = name; save();
     window.scrollTo(0,0);
+    syncTip();
     if(name==='discover') fire('open-discover');
     if(name==='grow') fire('open-grow');
   }
@@ -1470,8 +1648,8 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
     S.saved = S.saved || [];
     var card = btn.closest('.card');
     var at = S.saved.indexOf(slug);
-    if(at === -1){ S.saved.push(slug); card.classList.add('saved'); toast('Saved \\u2014 Business \\u203a Saved'); fire('bookmark-product'); }
-    else { S.saved.splice(at,1); card.classList.remove('saved'); toast('Bookmark removed'); }
+    if(at === -1){ S.saved.push(slug); card.classList.add('saved'); toast('Kept \\u2014 it is in Business \\u203a Saved'); fire('bookmark-product'); }
+    else { S.saved.splice(at,1); card.classList.remove('saved'); toast('Off the list'); }
     save(); renderBookmarks(); applyFilter(CURRENT_FILTER);
   }
   function applySaved(){
@@ -1533,13 +1711,21 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
       S.streak.last = t;
       save();
     }
+    // Guarded rather than assumed: the readout has been in and out of the top
+    // bar, and a missing element should not take the whole boot down with it.
     var el = document.getElementById('streak-n');
     if(el) el.textContent = S.streak.n;
-    document.getElementById('streak').classList.toggle('cold', S.streak.n < 2);
+    var box = document.getElementById('streak');
+    if(box) box.classList.toggle('cold', S.streak.n < 2);
   }
 
   /* ---- Level-up moment ---- */
-  var COLORS = ['#c2647e','#5f9b7a','#cf8f2e','#a8536c','#4a7c61'];
+  // Confetti. Literal rather than var(--accent) because these fly over both
+  // themes and want to stay the same either way — a celebration that changes
+  // colour with the system appearance reads as a bug. Rose is gone from the
+  // palette, so the lead colour is now the brand violet; the sage and honey
+  // are the success/engaged colours and stay.
+  var COLORS = ['#6e4eab','#5f9b7a','#cf8f2e','#d0b8f0','#4a7c61'];
   function burst(){
     var wrap = document.createElement('div'); wrap.className = 'burst';
     for(var i=0;i<26;i++){
@@ -1639,13 +1825,13 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
     S.niche = { slug: slug, name: btn.dataset.name, tags: btn.dataset.tags }; save();
     fire('pick-niche');
     matchGrow();
-    toast('Niche set: ' + btn.dataset.name);
+    toast(btn.dataset.name + ' it is');
     refresh();
   }
   function focusCommunity(btn){
     S.comm = { slug: btn.dataset.slug, title: btn.dataset.title }; save();
     fire('pick-community');
-    toast('Focused: ' + btn.dataset.title);
+    toast('You show up in ' + btn.dataset.title + ' now');
     refresh();
   }
   function saveName(btn){
@@ -1654,9 +1840,9 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
     S.biz = v; save();
     complete('name-business');
   }
-  function startBiz(){ if(!S.biz){ toast('Name your business first'); return; } complete('start-business'); }
+  function startBiz(){ if(!S.biz){ toast('It needs a name first'); return; } complete('start-business'); }
   // The Journey milestone hands off to the real place sales get recorded.
-  function logSale(){ goPane('money'); toast('Record it here'); }
+  function logSale(){ goPane('money'); toast('Put the number in here'); }
   function markDone(btn){ complete(btn.closest('.ms').dataset.id); }
 
   var STOP = ['and','the','for','with','your','from','that','this','are','you','our','its','all','who','what','how','made','only',
@@ -1758,6 +1944,9 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
     renderPlaybooks();
     syncSubtabFades();
     syncTopbarHeight();
+    // Levelling up unlocks tips as well as milestones, so the bubble is
+    // re-checked wherever progress is re-checked.
+    syncTip();
     // milestone + level states
     LEVELS.forEach(function(lv){
       var sec = document.querySelector('.level[data-level="'+lv.level+'"]');
@@ -1876,7 +2065,7 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
     fire('add-contact');
     ['nc-name','nc-channel','nc-notes'].forEach(function(i){ document.getElementById(i).value=''; });
     document.getElementById('add-contact').classList.remove('on');
-    toast('Added to your book');
+    toast('In your book now');
     refresh();
   }
   function logTouch(id, type){
@@ -1899,7 +2088,7 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
 
   function addSale(){
     var amt = parseFloat(document.getElementById('ns-amount').value);
-    if(!(amt>0)){ toast('Enter an amount'); return; }
+    if(!(amt>0)){ toast('How much was it?'); return; }
     S.payments = S.payments || [];
     S.payments.push({
       id:'p'+Date.now(), amount: amt,
@@ -1913,12 +2102,12 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
     if((S.payments||[]).length >= 5) fire('five-sales');
     ['ns-amount','ns-who','ns-note'].forEach(function(i){ document.getElementById(i).value=''; });
     complete('log-sale');
-    toast('Sale recorded \\u2014 ' + money(amt));
+    toast('Somebody paid you \\u2014 ' + money(amt));
     refresh();
   }
   function addProduct(){
     var n = document.getElementById('np-name').value.trim();
-    if(!n){ toast('Name the product'); return; }
+    if(!n){ toast('What is it called?'); return; }
     S.products = S.products || [];
     S.products.push({
       id:'pr'+Date.now(), name:n,
@@ -2016,7 +2205,9 @@ function page(products: any[], communities: any[], missions: any, onboarding: an
 
     document.getElementById('you-greet').textContent = S.me && S.me.name ? ('Hi, ' + S.me.name.split(' ')[0])
       : (S.profile && S.profile.name ? ('Hi, ' + S.profile.name.split(' ')[0]) : 'You');
-    document.getElementById('you-sub').textContent = S.biz ? ('Here\\'s where ' + S.biz + ' stands.') : 'Your business at a glance.';
+    document.getElementById('you-sub').textContent = S.biz
+      ? ('Where ' + S.biz + ' actually stands today.')
+      : 'What you have built so far, counted honestly.';
 
     countTo(document.getElementById('ov-people'), contacts.length);
     countTo(document.getElementById('ov-revenue'), total, '$');
@@ -2527,8 +2718,11 @@ createServer((req, res) => {
       .flatMap((f) => JSON.parse(readFileSync(`${dir}/communities/${f}`, 'utf8')));
     const missions = JSON.parse(readFileSync(`${dir}/missions.json`, 'utf8'));
     const onboarding = JSON.parse(readFileSync(`${dir}/onboarding.json`, 'utf8'));
+    // Tips are advice, not steps — the one content file the Journey does not
+    // own. Keys starting with _ are notes to whoever edits the file.
+    const tips = JSON.parse(readFileSync(`${dir}/tips.json`, 'utf8')).tips ?? [];
     res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-    res.end(page(products, communities, missions, onboarding));
+    res.end(page(products, communities, missions, onboarding, tips));
   } catch (err: any) {
     res.writeHead(500, { 'Content-Type': 'text/plain' });
     res.end(`Could not render: ${err.message}`);

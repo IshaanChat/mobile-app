@@ -6,8 +6,14 @@
 #
 # After connecting the repo in the Render dashboard, set these env vars
 # (marked sync:false below, so they are never stored in git):
-#   DATABASE_URL   Neon DIRECT connection string (pooling off)
-#   CLIENT_ORIGIN  the Vercel URL, for CORS
+#   DATABASE_URL      Neon DIRECT connection string (pooling off)
+#   CLIENT_ORIGIN     the Vercel URL, for CORS
+#   CLERK_SECRET_KEY  required — the server refuses to boot without it when
+#                     NODE_ENV=production, because requireAuth falls open
+#                     without it and would accept any caller
+#   ADMIN_TOKEN       optional — enables the curator write endpoints under
+#                     /api/admin. Unset means those routes 404, which is the
+#                     safe default. Minimum 24 chars.
 #
 services:
   - type: web
@@ -28,7 +34,18 @@ services:
     envVars:
       - key: NODE_VERSION
         value: "22"
+      # NODE_ENV is deliberately NOT set here. buildCommand runs `npm ci`, and
+      # typescript, prisma and tsx are all devDependencies — npm omits those
+      # when NODE_ENV=production, so setting it would break `npm run build`.
+      # The boot-time Clerk check keys off Render's own RENDER=true instead.
       - key: DATABASE_URL
         sync: false
       - key: CLIENT_ORIGIN
+        sync: false
+      # Declared so a blueprint redeploy prompts for it rather than silently
+      # starting a server that trusts every caller. sync:false means the value
+      # lives only in the dashboard, never in git.
+      - key: CLERK_SECRET_KEY
+        sync: false
+      - key: ADMIN_TOKEN
         sync: false

@@ -10,7 +10,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Icon } from '@/components/icon';
 import { ThemedText } from '@/components/themed-text';
-import { Spacing } from '@/constants/theme';
+import { Fonts, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { touchStreak } from '@/lib/prefs';
 
@@ -37,7 +37,7 @@ export function TopBar({ onOpenJourney, hasNews }: { onOpenJourney: () => void; 
         <View style={[styles.mark, { backgroundColor: theme.accent }]}>
           <Icon name="spark" size={13} color={theme.accentText} />
         </View>
-        <ThemedText type="smallBold" style={styles.wordmark}>Venturo</ThemedText>
+        <ThemedText style={[styles.wordmark, { color: theme.accent }]}>Venturo</ThemedText>
       </View>
 
       <View style={styles.right}>
@@ -71,8 +71,18 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   brand: { flexDirection: 'row', alignItems: 'center', gap: Spacing.two },
-  mark: { width: 22, height: 22, borderRadius: 6, alignItems: 'center', justifyContent: 'center' },
-  wordmark: { fontSize: 15 },
+  mark: { width: 27, height: 27, borderRadius: 9, alignItems: 'center', justifyContent: 'center' },
+  /**
+   * The logotype, not a label. It was 15px semibold in the body font, which
+   * is the same treatment a section heading gets — so the app's name read as
+   * furniture. Baloo 2 Medium at 25px, and nothing else in the app is allowed
+   * this family.
+   *
+   * `lineHeight` is pinned rather than left to default: Baloo ships tall
+   * ascender metrics and RN reserves the full line box, so without this the
+   * bar grew ~8px taller than the design for glyphs that are not there.
+   */
+  wordmark: { fontFamily: Fonts.wordmark, fontSize: 25, lineHeight: 28 },
   right: { flexDirection: 'row', alignItems: 'center', gap: Spacing.two },
   streak: { flexDirection: 'row', alignItems: 'center', gap: Spacing.one },
   journey: {

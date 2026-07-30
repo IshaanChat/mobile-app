@@ -122,8 +122,15 @@ function readJson(path: string): unknown {
 const rawNiches = readJson(join(CONTENT, 'niches.json'));
 if (!Array.isArray(rawNiches)) fail('niches.json must contain a JSON array.');
 
-const productFiles = readdirSync(join(CONTENT, 'products')).filter((f) => f.endsWith('.json'));
-if (productFiles.length === 0) fail('No product files found in content/products/.');
+// Underscore-prefixed files are staging, not content — the same convention the
+// preview loader and the community importer use. Nothing stages here yet, but
+// the omission was a live bug waiting: staged rows carry deliberately empty
+// write-ups, and importing them is how 95 blank cards once reached the Grow
+// feed. Cheaper to honour the convention everywhere than to remember which
+// importer respects it.
+const productFiles = readdirSync(join(CONTENT, 'products'))
+  .filter((f) => f.endsWith('.json') && !f.startsWith('_'));
+if (productFiles.length === 0) fail('No product files found in content/products/ (underscore-prefixed files are staging).');
 
 const rawProducts: { file: string; index: number; raw: any }[] = [];
 for (const file of productFiles) {

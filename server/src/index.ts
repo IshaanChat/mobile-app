@@ -20,6 +20,9 @@ import { analyticsRouter, registerAnalytics } from './modules/analytics';
 import { productsRouter } from './routes/products';
 import { trendsRouter } from './routes/trends';
 import { growthRouter } from './routes/growth';
+import { tipsRouter } from './routes/tips';
+import { adminRouter } from './routes/admin';
+import { requireAdmin } from './core/admin-auth';
 import { errorHandler, notFoundHandler } from './core/http';
 import { requireAuth, clerkConfigured } from './core/auth';
 
@@ -48,6 +51,11 @@ app.get('/api/health', (_req, res) =>
   res.json({ ok: true, auth: clerkConfigured() ? 'clerk' : 'dev' })
 );
 
+// Curator write endpoints. Mounted ABOVE requireAuth deliberately: these are
+// not user routes and must not be reachable with a user's session token. They
+// carry their own auth (ADMIN_TOKEN, fail-closed) — see core/admin-auth.ts.
+app.use('/api/admin', requireAdmin, adminRouter);
+
 app.use('/api', requireAuth);
 
 app.use('/api/business', businessRouter);
@@ -65,6 +73,7 @@ app.use('/api/analytics', analyticsRouter);
 app.use('/api/products', productsRouter);
 app.use('/api/trends', trendsRouter);
 app.use('/api/growth', growthRouter);
+app.use('/api/tips', tipsRouter);
 
 // Subscribe cross-cutting modules to the event bus.
 registerAnalytics();
@@ -73,6 +82,34 @@ registerAnalytics();
 // error thrown or rejected in a handler becomes a clean HTTP response.
 app.use('/api', notFoundHandler);
 app.use(errorHandler);
+
+// Refuse to start in production without Clerk.
+//
+// requireAuth falls open by design: with no CLERK_SECRET_KEY it reads an
+// `x-dev-user` header and lets the request through, which is what makes local
+// development against a real database bearable. In production that same
+// behaviour means anyone can read or write any account with one header, and
+// CORS is no defence against a non-browser client.
+//
+// The failure mode this guards against is not "someone deleted the variable" —
+// it is a fresh deploy from the blueprint, or a new environment, where nobody
+// remembers it was ever set by hand. A server that refuses to boot is a five
+// minute outage. A server that boots wide open is a breach nobody notices.
+// Keyed off Render's own RENDER=true rather than NODE_ENV, which this service
+// deliberately does not set: `npm ci` omits devDependencies under
+// NODE_ENV=production, and typescript, prisma and tsx all live there, so
+// setting it would break the build. NODE_ENV is still honoured for anywhere
+// else this might run.
+const isHosted = process.env.RENDER === 'true' || process.env.NODE_ENV === 'production';
+if (isHosted && !clerkConfigured()) {
+  console.error(
+    'FATAL: CLERK_SECRET_KEY is not set on a hosted deploy.\n' +
+      '  Without it every request is treated as the shared development account,\n' +
+      '  so the API would accept any caller. Set it in the Render dashboard\n' +
+      '  (Environment -> Add Environment Variable) and redeploy.'
+  );
+  process.exit(1);
+}
 
 // Bind on all interfaces, not just loopback: hosting platforms route
 // external traffic to the container's public interface, and a server

@@ -15,7 +15,7 @@ tables and forms. Five bottom tabs, no labels:
 | Home | house | The feed: network pulse, money, who's going quiet, activity — as scrollable cards. Stories-style missions row on top. |
 | Discover | compass | **Free, for everyone.** A feed of product sources with viral potential — what you could sell, where it's blowing up. The hook *and* the tutorial. |
 | Create (+) | plus | Quick actions: log a sale, add a client, log an interaction. |
-| Growth | chart | **$5/month.** Finding online communities and customers to sell to — the web app's Discover engine lives here, behind the paywall. |
+| Growth | chart | **Free.** Finding online communities and customers to sell to — the web app's Discover engine lives here. Was going to be $5/month; see Paywall below. |
 | Business | person | Profile, business settings, switcher, theme, sign out. |
 
 ## Onboarding (Hinge-feel)
@@ -43,12 +43,23 @@ Browse-first: a profile with **no business** is a first-class state.
 App state model everywhere: `no profile → onboarding`, `profile, no business
 → explorer`, `business exists → active`.
 
-## Paywall (v1)
+## Paywall — none (decided 2026-07-29)
 
-Growth is fully built but locked: a polished upgrade screen, no live billing.
-Testers get unlocked manually during validation. Real billing (Stripe web
-checkout vs Apple IAP) is decided *after* demand is proven. Do not add
-StoreKit or Stripe SDKs yet.
+**Everything is free, and no screen mentions a price.** No upgrade screen, no
+lock, no banner, no StoreKit, no Stripe.
+
+This supersedes the earlier plan (Growth locked at $5/month behind a polished
+upgrade screen, testers unlocked by hand). Two reasons it changed:
+
+1. **App Review.** Purchase UI with no purchasable product behind it is the
+   standard guideline 3.1.1 rejection. A `$5/month` banner with no IAP is
+   exactly that shape, and it was reachable on the Growth tab.
+2. **It buys nothing yet.** The point of the beta is finding out whether people
+   come back, not whether they will pay. Pricing is a question to ask once the
+   first question has an answer.
+
+Real billing (Stripe web checkout vs Apple IAP) is decided *after* demand is
+proven. Until then nothing in the app refers to money it does not take.
 
 ## Discover content (v1)
 

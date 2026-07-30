@@ -25,7 +25,10 @@
     "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.scripts.json",
     "sourcing": "tsx scripts/sourcing.ts",
     "communities": "tsx scripts/communities.ts",
-    "communities:verify": "tsx scripts/verify-communities.ts"
+    "communities:verify": "tsx scripts/verify-communities.ts",
+    "tips:import": "tsx scripts/import-tips.ts",
+    "content:sync": "npm run catalog:import && npm run growth:import && npm run tips:import",
+    "content:check": "npm run growth:import -- --dry-run && npm run tips:import -- --dry-run"
   },
   "dependencies": {
     "@clerk/backend": "^3.12.0",

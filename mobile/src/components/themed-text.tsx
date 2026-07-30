@@ -30,40 +30,61 @@ export function ThemedText({ style, type = 'default', themeColor, ...rest }: The
   );
 }
 
+/**
+ * Weight is carried by the family, never by `fontWeight`.
+ *
+ * These styles used to set `fontWeight: 500/600/700` with no family at all,
+ * which worked only because everything was the system font. With registered
+ * custom families that combination is a trap: iOS ignores the weight and
+ * renders Regular, Android fakes it by smearing the glyphs. Picking
+ * `PlusJakartaSans_600SemiBold` is the whole instruction.
+ *
+ * Fraunces on title and subtitle, matching the prototype's rule that the
+ * serif is for single moments — a screen title, one question, one big number.
+ * Anything that repeats down a feed stays sans, which is why `default` and
+ * `small` are Jakarta even though they are the most common styles in the app.
+ */
 const styles = StyleSheet.create({
   small: {
+    fontFamily: Fonts.sansMedium,
     fontSize: 14,
     lineHeight: 20,
-    fontWeight: 500,
   },
   smallBold: {
+    fontFamily: Fonts.sansBold,
     fontSize: 14,
     lineHeight: 20,
-    fontWeight: 700,
   },
   default: {
+    fontFamily: Fonts.sansMedium,
     fontSize: 16,
     lineHeight: 24,
-    fontWeight: 500,
   },
   title: {
+    fontFamily: Fonts.display,
     fontSize: 48,
-    fontWeight: 600,
     lineHeight: 52,
+    letterSpacing: -0.7,
   },
   subtitle: {
+    fontFamily: Fonts.display,
     fontSize: 32,
     lineHeight: 44,
-    fontWeight: 600,
+    letterSpacing: -0.5,
   },
   link: {
+    fontFamily: Fonts.sansMedium,
     lineHeight: 30,
     fontSize: 14,
   },
   linkPrimary: {
+    fontFamily: Fonts.sansSemiBold,
     lineHeight: 30,
     fontSize: 14,
-    color: '#C2647E',
+    // No colour here on purpose. This used to hardcode the light-mode accent,
+    // which meant primary links stayed rose in dark mode and survived the move
+    // to purple untouched — a literal in a StyleSheet cannot follow the theme.
+    // `themeColor="accent"` on the element supplies it instead.
   },
   code: {
     fontFamily: Fonts.mono,

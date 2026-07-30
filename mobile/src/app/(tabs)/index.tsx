@@ -15,36 +15,38 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { api } from '@/api/client';
 import { ProductCard } from '@/components/discover/product-card';
-import { Icon, type IconName } from '@/components/icon';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { MaxContentWidth, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { getInterests } from '@/lib/prefs';
 import { useAppData } from '@/state/app-data';
-import type { Audience, DiscoverProduct, TrendsPayload } from '@/types';
+import type { DiscoverProduct, TrendsPayload } from '@/types';
 
-type Sort = 'niche' | 'trending';
-
-const SORTS: { key: Sort; label: string; icon: IconName }[] = [
-  { key: 'niche', label: 'By niche', icon: 'compass' },
-  { key: 'trending', label: 'Trending', icon: 'flame' },
-];
-
-const AUDIENCES: { key: Audience | 'all'; label: string }[] = [
-  { key: 'all', label: 'All' },
+/**
+ * One row of filters, three chips, each a toggle. This replaces the previous
+ * two-row control set (By niche / Trending, then All / Maker / Reseller /
+ * Both) to match the prototype, which is the design being shipped.
+ *
+ * "Seller" rather than "Reseller", and no "Both" chip: a `both` niche is
+ * badged Maker on the card, so giving it its own chip put cards reading
+ * "Maker" inside a list the user had filtered to something else — the label
+ * and the section contradicting each other on screen. Maker now means
+ * `maker` or `both`, matching the badge.
+ */
+const FILTERS = [
+  { key: 'reseller', label: 'Seller' },
   { key: 'maker', label: 'Maker' },
-  { key: 'reseller', label: 'Reseller' },
-  { key: 'both', label: 'Both' },
-];
+  { key: 'saved', label: 'Saved' },
+] as const;
+
+type Filter = (typeof FILTERS)[number]['key'];
 
 export default function DiscoverScreen() {
   const theme = useTheme();
   const { activeBusiness } = useAppData();
 
-  const [sort, setSort] = useState<Sort>('niche');
-  const [audience, setAudience] = useState<Audience | 'all'>('all');
-  const [savedOnly, setSavedOnly] = useState(false);
+  const [filter, setFilter] = useState<Filter | null>(null);
   const [data, setData] = useState<TrendsPayload | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
@@ -56,17 +58,20 @@ export default function DiscoverScreen() {
       // interests stand in. Discover is their home screen — it has to work
       // before anything else exists.
       const interests = activeBusiness ? undefined : await getInterests();
+      // Always the sectioned payload, and never an audience filter on the
+      // request. The prototype filters in place so the shelves stay put and a
+      // chip is instant; refetching per chip would rebuild the feed and lose
+      // scroll position for a filter the client can already apply.
       const payload = await api.getTrends({
         ...(activeBusiness ? { businessId: activeBusiness.id } : {}),
         ...(interests?.length ? { interests } : {}),
-        sort,
-        ...(audience !== 'all' ? { audience } : {}),
+        sort: 'niche',
       });
       setData(payload);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not load the feed.');
     }
-  }, [activeBusiness, sort, audience]);
+  }, [activeBusiness]);
 
   useEffect(() => {
     void load();
@@ -91,11 +96,41 @@ export default function DiscoverScreen() {
     }
   }, []);
 
+  /**
+   * What counts as hot: the top fifth of whatever is loaded.
+   *
+   * A percentile rather than a fixed number, because hotness is not one
+   * scale. Curated rows carry machine-measured heat in the 8–55 range while
+   * sourced rows carry a criteria-fit score in the 80s, so any constant would
+   * either flame every sourced product and none of the curated ones, or the
+   * reverse. A percentile at least means "hot" always describes the same
+   * *proportion* of the feed — the underlying two-scales problem is still
+   * open and still worth fixing at the source.
+   */
+  const hotFloor = useMemo(() => {
+    if (!data?.products.length) return Infinity;
+    const heats = data.products.map((p) => p.hotness).sort((a, b) => a - b);
+    return heats[Math.floor(heats.length * 0.8)];
+  }, [data]);
+
   const sections = useMemo(() => {
     if (!data) return [];
-    const visible = savedOnly ? data.products.filter((p) => p.saved) : data.products;
 
-    if (data.sort === 'trending' || data.sections.length === 0) {
+    // Saving takes a product *out* of the browsing feed and puts it on the
+    // Saved chip. The feed shrinks as you triage, so a long catalogue ends
+    // rather than repeating — and Saved is a shelf you chose, not a copy.
+    const visible = data.products.filter((p) => {
+      if (filter === 'saved') return p.saved;
+      if (p.saved) return false;
+      if (!filter) return true;
+      const aud = p.niche?.audience;
+      // Follows the badge, not the raw audience: `both` is badged Maker.
+      return filter === 'maker' ? aud === 'maker' || aud === 'both' : aud === filter;
+    });
+
+    // Saved is a flat shelf — domain headings over a handful of hand-picked
+    // rows read as filing, not as browsing.
+    if (filter === 'saved' || data.sections.length === 0) {
       return visible.length ? [{ title: '', data: visible }] : [];
     }
     const byId = new Map(visible.map((p) => [p.id, p]));
@@ -105,9 +140,9 @@ export default function DiscoverScreen() {
         data: s.productIds.map((id) => byId.get(id)).filter((p): p is DiscoverProduct => Boolean(p)),
       }))
       // A shelf whose products all got filtered out shouldn't leave its
-      // header stranded above nothing, which is what the prototype does.
+      // header stranded above empty space.
       .filter((s) => s.data.length > 0);
-  }, [data, savedOnly]);
+  }, [data, filter]);
 
   const savedCount = data?.products.filter((p) => p.saved).length ?? 0;
 
@@ -136,48 +171,23 @@ export default function DiscoverScreen() {
               <View style={styles.header}>
                 <ThemedText type="subtitle" style={styles.h1}>Discover</ThemedText>
                 <ThemedText type="small" themeColor="textSecondary">
-                  Products worth selling — and where to source them.
+                  Somebody is already selling all of this. Here is what it costs them.
                 </ThemedText>
 
                 <View style={styles.controls}>
-                  {SORTS.map((s) => {
-                    const on = s.key === sort;
+                  {FILTERS.map((f) => {
+                    const on = f.key === filter;
+                    const label =
+                      f.key === 'saved' && savedCount > 0 ? `Saved · ${savedCount}` : f.label;
                     return (
                       <Pressable
-                        key={s.key}
+                        key={f.key}
                         accessibilityRole="button"
                         accessibilityState={{ selected: on }}
-                        onPress={() => setSort(s.key)}
-                        style={[
-                          styles.pill,
-                          {
-                            borderColor: on ? theme.accent : theme.border,
-                            backgroundColor: on ? theme.accentSoft : theme.backgroundElement,
-                          },
-                        ]}>
-                        <Icon name={s.icon} size={16} color={on ? theme.accent : theme.textSecondary} />
-                        <ThemedText
-                          type={on ? 'smallBold' : 'small'}
-                          themeColor={on ? 'text' : 'textSecondary'}>
-                          {s.label}
-                        </ThemedText>
-                      </Pressable>
-                    );
-                  })}
-                </View>
-
-                <View style={styles.controls}>
-                  {AUDIENCES.map((a) => {
-                    const on = a.key === audience && !savedOnly;
-                    return (
-                      <Pressable
-                        key={a.key}
-                        accessibilityRole="button"
-                        accessibilityState={{ selected: on }}
-                        onPress={() => {
-                          setSavedOnly(false);
-                          setAudience(a.key);
-                        }}
+                        // Tapping the active chip clears it. Every chip is a
+                        // toggle, so there is always a way back to the whole
+                        // feed without hunting for an "All" that isn't there.
+                        onPress={() => setFilter(on ? null : f.key)}
                         style={[
                           styles.chip,
                           {
@@ -188,28 +198,11 @@ export default function DiscoverScreen() {
                         <ThemedText
                           type={on ? 'smallBold' : 'small'}
                           themeColor={on ? 'text' : 'textSecondary'}>
-                          {a.label}
+                          {label}
                         </ThemedText>
                       </Pressable>
                     );
                   })}
-                  <Pressable
-                    accessibilityRole="button"
-                    accessibilityState={{ selected: savedOnly }}
-                    onPress={() => setSavedOnly((v) => !v)}
-                    style={[
-                      styles.chip,
-                      {
-                        borderColor: savedOnly ? theme.accent : theme.border,
-                        backgroundColor: savedOnly ? theme.accentSoft : 'transparent',
-                      },
-                    ]}>
-                    <ThemedText
-                      type={savedOnly ? 'smallBold' : 'small'}
-                      themeColor={savedOnly ? 'text' : 'textSecondary'}>
-                      Saved{savedCount > 0 ? ` · ${savedCount}` : ''}
-                    </ThemedText>
-                  </Pressable>
                 </View>
               </View>
             }
@@ -220,7 +213,9 @@ export default function DiscoverScreen() {
                 </ThemedText>
               ) : null
             }
-            renderItem={({ item }) => <ProductCard product={item} onToggleSave={toggleSave} />}
+            renderItem={({ item }) => (
+              <ProductCard product={item} onToggleSave={toggleSave} hotFloor={hotFloor} />
+            )}
             ItemSeparatorComponent={() => <View style={styles.gap} />}
             ListEmptyComponent={
               <View style={styles.empty}>
@@ -241,13 +236,13 @@ export default function DiscoverScreen() {
                   </>
                 ) : data === null ? (
                   <ActivityIndicator color={theme.accent} />
-                ) : savedOnly ? (
+                ) : filter === 'saved' ? (
                   <ThemedText type="small" themeColor="textSecondary" style={styles.centered}>
-                    Nothing saved yet. Tap the heart on anything worth a second look.
+                    Nothing saved yet — tap the heart on a product and it lands here.
                   </ThemedText>
                 ) : (
                   <ThemedText type="small" themeColor="textSecondary" style={styles.centered}>
-                    Nothing here for that filter yet.
+                    Nothing matched exactly — browse everything, something will click.
                   </ThemedText>
                 )}
               </View>
@@ -267,15 +262,6 @@ const styles = StyleSheet.create({
   header: { paddingTop: Spacing.three, paddingBottom: Spacing.two, gap: Spacing.two },
   h1: { fontSize: 30, lineHeight: 38 },
   controls: { flexDirection: 'row', flexWrap: 'wrap', gap: Spacing.two, marginTop: Spacing.one },
-  pill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.two,
-    borderWidth: 1,
-    borderRadius: 999,
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.two,
-  },
   chip: {
     borderWidth: 1,
     borderRadius: 999,

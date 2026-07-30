@@ -1,28 +1,78 @@
-# Discover feed content
+# Content
 
-This folder is the curator's workspace. The Discover feed shows exactly what
-you load here — the app ranks and personalizes it, but **you decide what
-exists**: what the trend is, where you sourced it, and how it's described.
+This folder is the curator's workspace, and it is the source of truth. These
+files are edited by hand, then pushed into your database. The app reads only
+the database — it never reads this folder — so **nothing you write here is live
+until you sync it**.
 
-## Workflow
+## What lives where
 
-1. Edit a JSON file of cards (start from `trends.sample.json`).
-2. Load it:
+| File | Holds | Importer | In the database? |
+|---|---|---|---|
+| `niches.json` | 48 categories | `catalog:import` | yes — `Niche` |
+| `products/*.json` | 886 products | `catalog:import` | yes — `TrendProduct` |
+| `communities/*.json` | 166 communities | `growth:import` | yes — `CommunityPost` |
+| `tips.json` | 50 tips | `tips:import` | yes — `Tip` |
+| `missions.json` | 34 milestones, 5 levels, 5 playbooks | — | **no** |
+| `onboarding.json` | the onboarding script | — | **no** |
+
+The last two have no model, no importer and no endpoint. They are read only by
+the localhost prototype (`npm run app:preview`). Until that changes, editing
+them changes the prototype and nothing else.
+
+## Updating your database
+
+One command does everything, in dependency order — products reference a niche,
+so niches load first:
 
 ```bash
-npm run trends:import -- content/trends.sample.json
+npm run content:sync
 ```
 
-Re-importing the same file updates cards in place (matched by `slug`), so you
-can polish copy freely. Add `--archive-missing` to also archive every card
-*not* in the file — that makes your JSON the single source of truth:
+Check your edits before they land. This validates every file and writes
+nothing:
 
 ```bash
-npm run trends:import -- content/trends.json --archive-missing
+npm run content:check
 ```
 
-Archived cards leave everyone's feed but stay on the shelves of users who
-saved them.
+Every importer follows the same contract:
+
+- **Upsert by slug.** Re-importing updates in place, so you can polish copy
+  freely without creating duplicates.
+- **Nothing is ever deleted.** Removing an entry from a file leaves the row
+  alone.
+- **`--archive-missing` makes the files authoritative.** Anything active in the
+  database but absent from the files gets archived. Archived rows leave
+  everyone's feed but stay on the shelves of users who saved them.
+
+```bash
+npm run growth:import -- --archive-missing
+```
+
+## Two conventions worth knowing
+
+**Underscore-prefixed files are staging, not content.** `_discovered.json`
+holds verified candidates whose write-ups are deliberately empty, awaiting a
+human. Every loader and importer skips them. They did not always: 95 blank
+cards once rendered live in the Grow feed, which is what the convention exists
+to prevent.
+
+**Empty beats invented.** A missing field is honest; a plausible number nobody
+can stand behind is not. That is why some products ship with empty `research`
+and `signals` blocks rather than estimates.
+
+## Adding one thing
+
+- **A product** — append to the right file in `products/`. `nicheSlug` must
+  match a slug in `niches.json`, or the importer rejects it rather than
+  silently dropping the row.
+- **A community** — append to the niche file in `communities/`. All fourteen
+  text fields are required; the importer names the file and index of anything
+  incomplete.
+- **A tip** — append to `tips` in `tips.json`. Keep it under ~80 characters:
+  the bubble clamps to two lines and clips silently past about 90. The importer
+  warns when a tip is too long.
 
 ## Card format
 

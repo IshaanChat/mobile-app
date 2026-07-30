@@ -1,11 +1,14 @@
-// Growth: the paid tier. A feed of coached community posts — where this
-// business's next customers already gather. Each community is an accordion
-// card: image + one-line teaser collapsed; tap to expand the full profile
-// (overview, what they talk about, buyer likes/dislikes, house rules, the
-// play, Explore) in place.
+// Growth: a feed of coached community posts — where this business's next
+// customers already gather. Each community is an accordion card: image +
+// one-line teaser collapsed; tap to expand the full profile (overview, what
+// they talk about, buyer likes/dislikes, house rules, the play, Explore) in
+// place.
 //
-// v1 billing stance (see DESIGN.md): no live paywall yet — early testers
-// get it free, and the banner says so. The hard lock arrives with billing.
+// Billing stance: there is none, and no purchase UI of any kind. Growth is
+// free. The tier was going to be $5/month and a banner used to say so, but a
+// price with no StoreKit product behind it is what App Review rejects under
+// guideline 3.1.1 — it reads as a purchase the app cannot actually complete.
+// Nothing here mentions money until there is billing to mention.
 import { Image } from 'expo-image';
 import * as WebBrowser from 'expo-web-browser';
 import { ReactNode, useCallback, useEffect, useState } from 'react';
@@ -229,11 +232,6 @@ export default function GrowthScreen() {
                 <ThemedText type="small" themeColor="textSecondary">
                   Where {activeBusiness?.name ?? 'your business'} finds its next customers.
                 </ThemedText>
-                <View style={[styles.banner, { backgroundColor: theme.accentSoft, borderColor: theme.border }]}>
-                  <ThemedText type="small" themeColor="textSecondary">
-                    🔓 $5/month at launch — free while you’re an early tester.
-                  </ThemedText>
-                </View>
               </View>
             }
             ListEmptyComponent={
@@ -274,13 +272,6 @@ const styles = StyleSheet.create({
   body: { flex: 1, width: '100%', maxWidth: MaxContentWidth },
   listContent: { paddingHorizontal: Spacing.three, paddingBottom: Spacing.five },
   header: { paddingVertical: Spacing.three, gap: Spacing.one },
-  banner: {
-    marginTop: Spacing.two,
-    borderRadius: Spacing.two,
-    borderWidth: 1,
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.two,
-  },
   card: {
     borderRadius: Spacing.three,
     borderWidth: 1,

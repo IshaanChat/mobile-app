@@ -1,0 +1,335 @@
+{
+  "_comment": [
+    "Tips are the things a mission cannot carry: one-line advice too small to be a step,",
+    "and warmth that is not advice at all. They surface in the bubble under the top bar.",
+    "",
+    "kind   'know' — a practical detail we should not assume someone already knows.",
+    "       'lift' — encouragement, or a joke. Allowed to be useless. Not allowed to be smug.",
+    "where  which tab it belongs to: discover | grow | shop | you | any.",
+    "level  the journey level that has to be unlocked first. Default 1.",
+    "",
+    "There is no label above the line — the icon carries the kind. That means the",
+    "text has to stand on its own, with no 'Good to know:' in front of it to explain",
+    "what it is doing there.",
+    "",
+    "Keep every tip to about 80 characters. The bubble sits under the Journey row",
+    "with a 255px column clamped at two lines, and it clips silently at 375px, which",
+    "is worse than not having said the thing at all. 87 is the measured ceiling but",
+    "character count is only a proxy for width — a line of long words clips at 82.",
+    "After adding a tip, check it: paintTip(t) in the console, then compare",
+    "scrollHeight against clientHeight on #tipbub-t.",
+    "Same rule as the rest of the content: nothing invented. If a number cannot be stood",
+    "behind, say the shape of the thing instead of the number."
+  ],
+  "tips": [
+    {
+      "id": "moq",
+      "kind": "know",
+      "where": "discover",
+      "text": "MOQ is the minimum order quantity. Dropship has none, wholesale usually does."
+    },
+    {
+      "id": "cost-is-not-cost",
+      "kind": "know",
+      "where": "discover",
+      "text": "The source cost is not your cost. Shipping, fees and the platform cut come first."
+    },
+    {
+      "id": "your-own-photo",
+      "kind": "know",
+      "where": "discover",
+      "text": "Supplier photos are everyone's photos. One shot of your own is the cheapest edge."
+    },
+    {
+      "id": "order-a-sample",
+      "kind": "know",
+      "where": "discover",
+      "text": "Order one before you list it. Photos mislead about size more than about anything else."
+    },
+    {
+      "id": "sold-counts",
+      "kind": "know",
+      "where": "discover",
+      "text": "\"Sold\" on a supplier listing counts resellers buying stock, not shoppers."
+    },
+    {
+      "id": "shipping-is-a-feature",
+      "kind": "know",
+      "where": "discover",
+      "text": "Overseas shipping takes weeks. Say so on the listing or hear about it later."
+    },
+    {
+      "id": "free-shipping",
+      "kind": "know",
+      "where": "discover",
+      "text": "Free shipping is not free. It is priced in, whether you meant it to be or not."
+    },
+    {
+      "id": "branded-goods",
+      "kind": "know",
+      "where": "discover",
+      "text": "Check the product for a logo. Someone else's brand is the fastest takedown."
+    },
+    {
+      "id": "same-photo-same-factory",
+      "kind": "know",
+      "where": "discover",
+      "text": "Identical photo, identical factory. Choose on shipping time and reply speed."
+    },
+    {
+      "id": "variants-multiply",
+      "kind": "know",
+      "where": "discover",
+      "text": "Variants multiply. Three colours and four sizes is twelve things to track."
+    },
+    {
+      "id": "pod-tradeoff",
+      "kind": "know",
+      "where": "discover",
+      "text": "Print-on-demand costs more per unit, nothing up front. Being wrong stays cheap."
+    },
+    {
+      "id": "price-your-time",
+      "kind": "know",
+      "where": "discover",
+      "text": "Materials plus hours at a rate you would actually work for. Then check the market."
+    },
+    {
+      "id": "wholesale-half",
+      "kind": "know",
+      "where": "discover",
+      "level": 2,
+      "text": "Wholesale is about half of retail. Your price has to survive being halved."
+    },
+    {
+      "id": "read-before-posting",
+      "kind": "know",
+      "where": "grow",
+      "text": "Read a community for a week first. Every group has a rule you would trip over."
+    },
+    {
+      "id": "showing-not-selling",
+      "kind": "know",
+      "where": "grow",
+      "text": "Most groups ban selling but allow showing work. The line is naming a price."
+    },
+    {
+      "id": "rules-page",
+      "kind": "know",
+      "where": "grow",
+      "text": "The rules page is the real ad policy, not the pinned welcome post. Read that one first."
+    },
+    {
+      "id": "comment-before-dm",
+      "kind": "know",
+      "where": "grow",
+      "text": "A message from a stranger reads as spam. Comment for a while, then message."
+    },
+    {
+      "id": "answer-questions",
+      "kind": "know",
+      "where": "grow",
+      "text": "Answer questions in your niche for a month. People buy from whoever helped."
+    },
+    {
+      "id": "pinterest-is-search",
+      "kind": "know",
+      "where": "grow",
+      "text": "Pinterest is a search engine, not a feed. A pin still works months later."
+    },
+    {
+      "id": "one-community-first",
+      "kind": "know",
+      "where": "grow",
+      "level": 3,
+      "text": "One community you are known in beats five you have posted to once."
+    },
+    {
+      "id": "separate-the-money",
+      "kind": "know",
+      "where": "shop",
+      "text": "Give the business its own account from the first sale. It costs nothing now."
+    },
+    {
+      "id": "keep-receipts",
+      "kind": "know",
+      "where": "shop",
+      "text": "Keep receipts from day one, including the small ones. You cannot recreate them."
+    },
+    {
+      "id": "where-they-came-from",
+      "kind": "know",
+      "where": "shop",
+      "text": "Write down where each customer came from. After ten it stops being a guess."
+    },
+    {
+      "id": "repeat-customers",
+      "kind": "know",
+      "where": "shop",
+      "level": 4,
+      "text": "The people who already bought are the cheapest to sell to. Follow up instead."
+    },
+    {
+      "id": "titles-are-searched",
+      "kind": "know",
+      "where": "shop",
+      "level": 3,
+      "text": "Titles are searched, not read. Lead with the words somebody would actually type."
+    },
+    {
+      "id": "three-listings",
+      "kind": "know",
+      "where": "shop",
+      "level": 3,
+      "text": "A shop with three listings reads as abandoned. It has to look open, not big."
+    },
+    {
+      "id": "local-tax-rules",
+      "kind": "know",
+      "where": "shop",
+      "level": 3,
+      "text": "What you register and charge depends on where you live. Look up your own rule."
+    },
+    {
+      "id": "packaging-counts",
+      "kind": "know",
+      "where": "shop",
+      "level": 4,
+      "text": "Packaging is part of the product. It is the one thing every customer touches."
+    },
+    {
+      "id": "profile-link",
+      "kind": "know",
+      "where": "you",
+      "text": "One link somebody can tap has to lead to the thing. First sales die there."
+    },
+    {
+      "id": "same-name",
+      "kind": "know",
+      "where": "you",
+      "text": "Use the same name everywhere. Being findable is worth more than being clever."
+    },
+    {
+      "id": "history",
+      "kind": "lift",
+      "where": "any",
+      "text": "Nobody's first shop was good. That is not encouragement, that is just history."
+    },
+    {
+      "id": "talk-about-doing",
+      "kind": "lift",
+      "where": "any",
+      "text": "You are doing the part that most people only talk about doing."
+    },
+    {
+      "id": "somebody-out-there",
+      "kind": "lift",
+      "where": "any",
+      "text": "Somewhere there is a person who will be delighted by exactly your thing."
+    },
+    {
+      "id": "scroll-is-research",
+      "kind": "lift",
+      "where": "discover",
+      "text": "This counts as research. That is the story we are going with and we are sticking to it."
+    },
+    {
+      "id": "perfectionism",
+      "kind": "lift",
+      "where": "any",
+      "text": "Perfectionism is procrastination in a nicer outfit."
+    },
+    {
+      "id": "empty-orders-page",
+      "kind": "lift",
+      "where": "any",
+      "text": "Every large shop was once one person refreshing an empty orders page."
+    },
+    {
+      "id": "allowed-to-start",
+      "kind": "lift",
+      "where": "any",
+      "text": "You are legally allowed to start before you feel ready. We checked."
+    },
+    {
+      "id": "competitors",
+      "kind": "lift",
+      "where": "any",
+      "text": "Your competitors also have no idea what they are doing. Comforting, isn't it?"
+    },
+    {
+      "id": "business-is-just",
+      "kind": "lift",
+      "where": "any",
+      "text": "A business is a thing you sell plus a person who wants it. Everything else is admin."
+    },
+    {
+      "id": "nobody-clapped",
+      "kind": "lift",
+      "where": "any",
+      "text": "Today's small step still counts, even though nobody clapped."
+    },
+    {
+      "id": "first-sale-feels-illegal",
+      "kind": "lift",
+      "where": "any",
+      "level": 4,
+      "text": "The first sale feels vaguely illegal. It isn't. Take the money."
+    },
+    {
+      "id": "second-best-time",
+      "kind": "lift",
+      "where": "any",
+      "text": "The best time to start was last year. The second best is roughly now."
+    },
+    {
+      "id": "being-new",
+      "kind": "lift",
+      "where": "any",
+      "text": "Being new is temporary. Being interesting is harder, and you already are."
+    },
+    {
+      "id": "nobody-watching",
+      "kind": "lift",
+      "where": "any",
+      "text": "Nobody is watching as closely as you think they are. Post the thing."
+    },
+    {
+      "id": "doubt",
+      "kind": "lift",
+      "where": "any",
+      "text": "Doubt is normal. Doubt is not information."
+    },
+    {
+      "id": "slow-progress",
+      "kind": "lift",
+      "where": "any",
+      "text": "Slow progress is the only kind there is. The other kind is a montage."
+    },
+    {
+      "id": "go-outside",
+      "kind": "lift",
+      "where": "any",
+      "text": "Go outside at some point today. The products will still be here."
+    },
+    {
+      "id": "take-the-win",
+      "kind": "lift",
+      "where": "shop",
+      "level": 2,
+      "text": "Take the win. It is yours, it is small, and it counts."
+    },
+    {
+      "id": "more-products-than-most",
+      "kind": "lift",
+      "where": "discover",
+      "text": "You have seen more products than most people see in a year. Technically a skill."
+    },
+    {
+      "id": "lurking-is-fine",
+      "kind": "lift",
+      "where": "grow",
+      "text": "Lurking is a legitimate strategy. Right up until the moment it isn't."
+    }
+  ]
+}

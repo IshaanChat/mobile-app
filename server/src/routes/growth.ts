@@ -1,5 +1,7 @@
-// The Growth feed (paid tier): coached community posts — where a business's
-// next customers already gather, written up blog-post deep.
+// The Growth feed: coached community posts — where a business's next
+// customers already gather, written up blog-post deep. Free, like everything
+// else; there is no billing and nothing here checks entitlement. (It was once
+// planned as a $5/month tier — see mobile/DESIGN.md for why that is gone.)
 //
 // Same content model as trends: posts are global curator-owned rows
 // (`npm run growth:import`); the API only reads. Unlike Discover, Growth is
