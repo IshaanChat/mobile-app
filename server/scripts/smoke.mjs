@@ -269,15 +269,21 @@ const run = async () => {
   // Cards are global curated content; only the caller's reactions are
   // per-user. If no content has been imported the reaction checks skip.
   let trendCardId = null;
+  // `products`, not `cards`. The payload was renamed when the catalog landed
+  // and this file was not updated, so both of these failed against any
+  // populated database — and because trendCardId then stayed null, every
+  // saved-shelf check below was silently SKIPPED rather than failing. A
+  // stale key in an assertion is worse than a broken feature: it turns off
+  // the tests that would have caught the next one.
   await check('trends feed responds for a business owner', async () => {
     const { status, body } = await api('GET', `/trends?businessId=${businessId}`);
-    assert(status === 200 && Array.isArray(body.cards), `got ${status} ${JSON.stringify(body)}`);
-    trendCardId = body.cards[0]?.id ?? null;
+    assert(status === 200 && Array.isArray(body.products), `got ${status} keys=${Object.keys(body ?? {})}`);
+    trendCardId = body.products[0]?.id ?? null;
   });
 
   await check('trends feed responds for an explorer (interests only)', async () => {
     const { status, body } = await api('GET', '/trends?interests=jewelry,handmade');
-    assert(status === 200 && Array.isArray(body.cards), `got ${status}`);
+    assert(status === 200 && Array.isArray(body.products), `got ${status} keys=${Object.keys(body ?? {})}`);
   });
 
   if (trendCardId) {
