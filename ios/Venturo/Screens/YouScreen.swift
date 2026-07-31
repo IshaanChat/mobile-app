@@ -1,3 +1,4 @@
+import ClerkKit
 import SwiftUI
 
 /// You: who you are, and where people can find you.
@@ -341,6 +342,7 @@ private struct SettingsSection: View {
     @Environment(AppState.self) private var app
 
     @State private var coolingOff = Preferences.coolingOffDays
+    @State private var showSignOutConfirm = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -373,6 +375,38 @@ private struct SettingsSection: View {
             // App Store requirements rather than niceties, so they are wired
             // in the settings screen rather than buried.
             AccountSection()
+
+            signOut
+        }
+    }
+
+    private var signOut: some View {
+        Button { showSignOutConfirm = true } label: {
+            Text("Sign out")
+                .font(.custom(Typeface.sansSemiBold, size: 14))
+                .foregroundStyle(theme.scheme.textSecondary)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 13)
+                .background(theme.scheme.backgroundElement, in: RoundedRectangle(cornerRadius: Radius.inset, style: .continuous))
+                .overlay {
+                    RoundedRectangle(cornerRadius: Radius.inset, style: .continuous)
+                        .strokeBorder(theme.scheme.border, lineWidth: 1)
+                }
+        }
+        .buttonStyle(.plain)
+        .confirmationDialog("Sign out of Venturo?", isPresented: $showSignOutConfirm, titleVisibility: .visible) {
+            Button("Sign out", role: .destructive) {
+                Task {
+                    // Clerk first, then local state. The other order would
+                    // briefly show a signed-out app that still held the last
+                    // account's data.
+                    try? await Clerk.shared.auth.signOut()
+                    app.signedOut()
+                }
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("Your data stays where it is. Signing back in brings it all back.")
         }
     }
 }

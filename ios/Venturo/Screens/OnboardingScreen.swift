@@ -486,10 +486,14 @@ struct OnboardingScreen: View {
             let profile = try await app.api.createProfile(
                 CreateProfile(
                     name: trimmedName,
-                    // Clerk owns the email. Until it is wired there is nothing
-                    // to read, and the server requires something shaped like an
-                    // address — so this is a placeholder that is obviously one.
-                    email: app.profile?.email ?? "\(UUID().uuidString)@pending.venturo.app",
+                    // Read from Clerk rather than asked for: the user has
+                    // already proved this address, and asking again invites a
+                    // different one being typed. The fallback should be
+                    // unreachable — there is no way to get here without a
+                    // session — but the server requires something
+                    // address-shaped, and a placeholder that is obviously one
+                    // beats a crash.
+                    email: AccountEmail.current ?? "\(UUID().uuidString)@pending.venturo.app",
                     age: ageValue,
                     gender: "",
                     experienceLevel: isNew ? "FIRST_TIME" : "EXPERIENCED"
