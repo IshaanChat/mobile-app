@@ -69,7 +69,10 @@ struct TrendsPayload: Codable, Equatable {
     /// Empty when sorting by trend. `productIds` index into `products` — the
     /// server sends each product once and references it, so do not duplicate.
     let sections: [TrendSection]
-    let products: [DiscoverProduct]
+    /// `var` so an optimistic save can flip one row in place. Everything else
+    /// here stays `let`: this is the only field the client is allowed to change
+    /// without the server having said so.
+    var products: [DiscoverProduct]
 }
 
 struct TrendSection: Codable, Equatable {
@@ -104,7 +107,9 @@ struct DiscoverProduct: Codable, Identifiable, Equatable {
     let hotness: Int
     /// Null unless something was actually measured. Empty is honest here.
     let evidence: DiscoverEvidence?
-    let saved: Bool
+    /// `var` for the optimistic heart — the only field the client flips before
+    /// the server confirms it.
+    var saved: Bool
     /// Only present on the saved shelf.
     let savedAt: Date?
 }
