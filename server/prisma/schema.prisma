@@ -27,10 +27,11 @@ model User {
   email      String?
   createdAt  DateTime @default(now())
 
-  businesses     Business[]
-  profile        UserProfile?
-  settings       AppSetting[]
-  trendReactions SavedTrend[]
+  businesses           Business[]
+  profile              UserProfile?
+  settings             AppSetting[]
+  trendReactions       SavedTrend[]
+  milestoneCompletions MilestoneCompletion[]
 }
 
 model Business {
@@ -515,4 +516,89 @@ model Tip {
   updatedAt DateTime @updatedAt
 
   @@index([status, tab, level])
+}
+
+/// A named stage of the journey — Explorer, Founder, Builder, Connector, Seller.
+///
+/// Levels gate sequentially: you cannot start level 3 with level 2 unfinished.
+/// That is the whole point of them. The older mission system used a 100-level
+/// XP curve, which measures activity rather than progress — you could be level
+/// 12 without ever having named a business.
+model JourneyLevel {
+  id    String @id @default(cuid())
+  level Int    @unique
+  /// "Explorer"
+  name  String
+  /// "Find your direction"
+  title String
+
+  milestones Milestone[]
+}
+
+/// One step between an idea and a first sale.
+///
+/// Curator content, imported from content/missions.json. Thirty-four of them
+/// across five levels.
+model Milestone {
+  id   String @id @default(cuid())
+  /// Curator-chosen, stable, and what completions reference — "open-discover".
+  slug String @unique
+
+  title    String
+  detail   String
+  /// "in-app" or "outside".
+  ///
+  /// Fifteen of these happen away from Venturo entirely: pricing competitors on
+  /// Etsy, ordering a sample, taking photographs. Those cannot be detected and
+  /// are marked done by the person who did them. Treating them as untrackable
+  /// and leaving them out would remove most of what actually makes a business.
+  where    String
+  /// The in-app action that completes this, e.g. "bookmark-product". Null for
+  /// outside work.
+  trigger  String?
+  /// Which tab to send someone to.
+  tab      String?
+  xp       Int     @default(10)
+  /// Position within the level, preserving the order the file lists them in.
+  position Int     @default(0)
+
+  levelId      String
+  journeyLevel JourneyLevel @relation(fields: [levelId], references: [id], onDelete: Cascade)
+
+  @@index([levelId, position])
+}
+
+/// The same milestones, grouped by strategy rather than by level.
+///
+/// Levels answer "what is next". Playbooks answer "why these, in this order" —
+/// a beginner following levels reaches the shop-setup steps without ever being
+/// told that launching with fifty products is the commonest first mistake.
+model Playbook {
+  id       String @id @default(cuid())
+  slug     String @unique
+  name     String
+  blurb    String
+  /// Milestone slugs, comma-separated, in playbook order. Not a relation: a
+  /// milestone belongs to exactly one level but appears in several playbooks,
+  /// and the ordering differs in each.
+  steps    String
+  position Int    @default(0)
+}
+
+/// A milestone somebody has finished.
+///
+/// Keyed to the **user**, not the business. The journey is personal — an
+/// explorer has no business at all, and someone running two ventures has not
+/// walked the path twice.
+model MilestoneCompletion {
+  id            String   @id @default(cuid())
+  milestoneSlug String
+  xpAwarded     Int
+  completedAt   DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, milestoneSlug])
+  @@index([userId])
 }

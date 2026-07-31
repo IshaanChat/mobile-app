@@ -206,6 +206,87 @@ struct GrowthPost: Codable, Identifiable, Equatable {
     let approach: String
 }
 
+// MARK: - Journey
+
+/// The five-level journey, from `/api/journey`.
+///
+/// Distinct from `MissionsPayload` below, which is the older cadence-based
+/// board on a 100-level XP curve. Levels here gate sequentially, so the level
+/// name means something: a Builder has actually set up shop rather than merely
+/// been busy.
+struct JourneyPayload: Codable, Equatable {
+    let levels: [JourneyLevel]
+    let playbooks: [Playbook]
+    let summary: JourneySummary
+    /// Milestones the server proved and awarded while answering this request.
+    let justCompleted: [String]
+}
+
+struct JourneyLevel: Codable, Equatable, Identifiable {
+    let level: Int
+    let name: String
+    let title: String
+    /// The previous level is finished. Level 1 always is.
+    let unlocked: Bool
+    let complete: Bool
+    let completedCount: Int
+    let total: Int
+    let milestones: [Milestone2]
+
+    var id: Int { level }
+}
+
+/// Named `Milestone2` only because `Mission` already exists for the older
+/// board. Renaming that one can wait until nothing calls `/api/missions`.
+struct Milestone2: Codable, Equatable, Identifiable {
+    let slug: String
+    let title: String
+    let detail: String
+    /// "in-app" or "outside".
+    ///
+    /// Fifteen of the thirty-four happen away from the app — pricing
+    /// competitors, ordering a sample — and are marked done by the person who
+    /// did them. The UI has to say which is which, or self-declaring feels like
+    /// cheating rather than reporting.
+    let she: String
+    let trigger: String?
+    let tab: String?
+    let xp: Int
+    let completed: Bool
+    /// The server proved this rather than the user declaring it, so it has no
+    /// "mark done" control.
+    let automatic: Bool
+
+    var id: String { slug }
+    var isOutside: Bool { she == "outside" }
+
+    private enum CodingKeys: String, CodingKey {
+        // `where` is a Swift keyword; the wire name stays as it is.
+        case slug, title, detail, trigger, tab, xp, completed, automatic
+        case she = "where"
+    }
+}
+
+struct Playbook: Codable, Equatable, Identifiable {
+    let slug: String
+    let name: String
+    let blurb: String
+    /// Milestone slugs, in playbook order.
+    let steps: [String]
+
+    var id: String { slug }
+}
+
+struct JourneySummary: Codable, Equatable {
+    let xp: Int
+    let completed: Int
+    let total: Int
+    let level: Int
+    let levelName: String
+    /// Every level finished.
+    let levelComplete: Bool
+}
+
 // MARK: - Missions
 
 struct MissionsPayload: Codable, Equatable {

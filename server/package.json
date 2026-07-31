@@ -27,9 +27,10 @@
     "communities": "tsx scripts/communities.ts",
     "communities:verify": "tsx scripts/verify-communities.ts",
     "tips:import": "tsx scripts/import-tips.ts",
-    "content:sync": "npm run catalog:import && npm run growth:import && npm run tips:import",
-    "content:check": "npm run growth:import -- --dry-run && npm run tips:import -- --dry-run",
-    "verify:deletion": "node scripts/verify-account-deletion.mjs"
+    "content:sync": "npm run catalog:import && npm run growth:import && npm run tips:import && npm run journey:import",
+    "content:check": "npm run growth:import -- --dry-run && npm run tips:import -- --dry-run && npm run journey:import -- --dry-run",
+    "verify:deletion": "node scripts/verify-account-deletion.mjs",
+    "journey:import": "tsx scripts/import-journey.ts"
   },
   "dependencies": {
     "@clerk/backend": "^3.12.0",

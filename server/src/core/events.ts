@@ -17,6 +17,10 @@ export type AppEventType =
   | 'interaction.logged'
   | 'payment.recorded'
   | 'mission.completed'
+  // The five-level journey. Deliberately distinct from `mission.completed`,
+  // which belongs to the older cadence-based board — the two count different
+  // things, and merging them would make either number meaningless.
+  | 'milestone.completed'
   | 'discover.generated'
   | 'socials.saved'
   | 'product.created'

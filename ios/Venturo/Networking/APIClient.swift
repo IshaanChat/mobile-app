@@ -315,6 +315,27 @@ actor APIClient {
         )
     }
 
+    // MARK: - Journey
+
+    /// The five-level board.
+    ///
+    /// Like `/api/missions` this awards on read — but only what the database
+    /// can prove, such as a business existing. Asking somebody to tick "name
+    /// your business" when the business is right there is the kind of small
+    /// insult that makes an app feel like paperwork.
+    func getJourney() async throws -> JourneyPayload {
+        try decode(JourneyPayload.self, from: try await request("GET", "journey"))
+    }
+
+    /// Marks a milestone done. Used for the fifteen that happen away from the
+    /// app and can only be self-declared, and for in-app triggers.
+    ///
+    /// Returns 409 if an earlier level is unfinished — the sequence is the
+    /// point, so the last step cannot be ticked on day one.
+    func completeMilestone(slug: String) async throws {
+        _ = try await request("POST", "journey/\(slug)/complete")
+    }
+
     // MARK: - Missions
 
     /// ⚠️ This GET has write side-effects: the server awards newly-completed

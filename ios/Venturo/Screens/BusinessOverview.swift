@@ -14,7 +14,7 @@ struct BusinessOverview: View {
     @State private var payments: PaymentsPayload?
     @State private var shelf: ProductsPayload?
     @State private var feed: [FeedInteraction] = []
-    @State private var missions: MissionsPayload?
+    @State private var journey: JourneyPayload?
     @State private var hasLoaded = false
 
     var body: some View {
@@ -49,8 +49,8 @@ struct BusinessOverview: View {
             )
             StatCard(value: "\(shelf?.summary.count ?? 0)", label: "listings on the shelf")
             StatCard(
-                value: "\(missions?.summary.level ?? 1)",
-                label: missions?.summary.levelName ?? "Explorer"
+                value: "\(journey?.summary.level ?? 1)",
+                label: journey?.summary.levelName ?? "Explorer"
             )
         }
     }
@@ -173,13 +173,16 @@ struct BusinessOverview: View {
         async let paymentsResult = try? app.api.getPayments(businessId: id)
         async let shelfResult = try? app.api.getShelf(businessId: id)
         async let feedResult = try? app.api.getActivityFeed(businessId: id, limit: 3)
-        async let missionsResult = try? app.api.getMissions(businessId: id)
+        // The journey is per-user rather than per-business, so this is the one
+        // call here that does not take an id — and the one that works for an
+        // explorer who has no business at all.
+        async let journeyResult = try? app.api.getJourney()
 
         contacts = (await graph)?.contacts ?? []
         payments = await paymentsResult
         shelf = await shelfResult
         feed = (await feedResult) ?? []
-        missions = await missionsResult
+        journey = await journeyResult
     }
 }
 
