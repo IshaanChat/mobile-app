@@ -80,8 +80,30 @@ struct DiscoverScreen: View {
                 }
             }
             .padding(.top, 12)
+
+            matchBanner
         }
         .padding(.bottom, 4)
+    }
+
+    /// Says how many products were highlighted, so the accent borders read as a
+    /// deliberate answer to what the user typed rather than as decoration.
+    ///
+    /// Shown only once there is something to have matched against — somebody
+    /// who skipped the question is not told that nothing matched.
+    @ViewBuilder private var matchBanner: some View {
+        if payload != nil, !wants.isEmpty {
+            let count = matchCount
+            Text(
+                count > 0
+                    ? "Highlighted \(count) products from what you said you're into"
+                    : "Nothing matched exactly — browse everything, something will click"
+            )
+            .font(.custom(Typeface.sansMedium, size: 12))
+            .foregroundStyle(theme.scheme.textSecondary)
+            .fixedSize(horizontal: false, vertical: true)
+            .padding(.top, 10)
+        }
     }
 
     private func label(for option: Filter) -> String {
@@ -108,6 +130,7 @@ struct DiscoverScreen: View {
                         ProductCard(
                             product: product,
                             hotFloor: hotFloor,
+                            matched: Relevance.matches(product, wants: wants),
                             onToggleSave: { toggleSave(product) },
                             // Offered only to explorers. Somebody who already
                             // has a business is browsing, not founding.
@@ -220,7 +243,7 @@ struct DiscoverScreen: View {
         // Saved is a flat shelf. Domain headings over a handful of hand-picked
         // rows read as filing rather than browsing.
         if filter == .saved || payload.sections.isEmpty {
-            return visible.isEmpty ? [] : [Shelf(title: "", products: visible)]
+            return visible.isEmpty ? [] : [Shelf(title: "", products: ordered(visible))]
         }
 
         let byId = Dictionary(uniqueKeysWithValues: visible.map { ($0.id, $0) })
@@ -228,8 +251,55 @@ struct DiscoverScreen: View {
             let products = section.productIds.compactMap { byId[$0] }
             // A shelf whose products were all filtered out should not leave its
             // heading stranded over empty space.
-            return products.isEmpty ? nil : Shelf(title: section.title, products: products)
+            return products.isEmpty ? nil : Shelf(title: section.title, products: ordered(products))
         }
+    }
+
+    /// Sorts within a shelf, never across shelves.
+    ///
+    /// The server decides which domain you land on — section order comes from
+    /// each domain's best product, so the shelf that matches you is already
+    /// first. This only decides what leads inside one of them, which is the
+    /// part that depends on the filter and on what the user typed, and neither
+    /// of those is worth a round trip.
+    private func ordered(_ products: [DiscoverProduct]) -> [DiscoverProduct] {
+        let floor = hotFloor
+        let sellerFilter = filter == .seller
+        // Hoisted: `wants` tokenizes free text, and reading it inside the map
+        // would redo that once per card.
+        let want = wants
+        return products
+            .map { product -> (product: DiscoverProduct, group: Int) in
+                (
+                    product,
+                    Relevance.group(
+                        isHot: product.hotness >= floor,
+                        isMatch: Relevance.matches(product, wants: want),
+                        sellerFilter: sellerFilter
+                    )
+                )
+            }
+            // Stable within a group by falling back to heat, so a shelf does not
+            // reshuffle on every redraw the way an unstable comparator would.
+            .sorted { a, b in
+                a.group == b.group
+                    ? a.product.hotness > b.product.hotness
+                    : a.group < b.group
+            }
+            .map(\.product)
+    }
+
+    // MARK: - Relevance
+
+    /// What the user is into, tokenized once per redraw rather than per card.
+    private var wants: [String] {
+        Relevance.wants(business: app.activeBusiness, interests: Preferences.interests)
+    }
+
+    private var matchCount: Int {
+        guard let products = payload?.products, !wants.isEmpty else { return 0 }
+        let want = wants
+        return products.filter { Relevance.matches($0, wants: want) }.count
     }
 
     // MARK: - Loading and saving
