@@ -21,7 +21,7 @@ struct BusinessClients: View {
             if app.activeBusiness == nil {
                 ExplorerEmpty(
                     title: "No book yet",
-                    body_: "Your client book opens once you have a business to attach people to."
+                    body_: "Open a product in Discover and build a business around it. Your client book opens with it."
                 )
             } else {
                 VStack(alignment: .leading, spacing: 12) {

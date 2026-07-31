@@ -18,7 +18,7 @@ struct BusinessMoney: View {
             if app.activeBusiness == nil {
                 ExplorerEmpty(
                     title: "No money yet, and that is fine",
-                    body_: "This fills in from your first sale. Everything before that is preparation."
+                    body_: "Build a business around something in Discover first. This fills in from your first sale — everything before that is preparation."
                 )
             } else {
                 VStack(alignment: .leading, spacing: 12) {

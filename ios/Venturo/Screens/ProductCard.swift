@@ -17,6 +17,9 @@ struct ProductCard: View {
     /// Highlighted because it matches what the user said they were into.
     var matched: Bool = false
     let onToggleSave: () -> Void
+    /// Nil once a business exists. Only an explorer is offered this — somebody
+    /// who already has one is not looking for a second on a product card.
+    var onCommit: (() -> Void)? = nil
 
     @State private var isExpanded = false
 
@@ -204,6 +207,16 @@ struct ProductCard: View {
             if let raw = product.sourcingUrl, let url = URL(string: raw) {
                 GhostButton(label: "Source it") { openURL(url) }
                     .padding(.top, 12)
+            }
+
+            // The way out of explorer mode, and the only one there is.
+            //
+            // It sits below "Source it" on purpose: looking at where a thing
+            // comes from is the smaller commitment, and offering the bigger one
+            // first would make browsing feel like being sold to.
+            if let onCommit {
+                PrimaryButton(label: "Build a business around this", action: onCommit)
+                    .padding(.top, 10)
             }
         }
         .padding(.horizontal, 16)

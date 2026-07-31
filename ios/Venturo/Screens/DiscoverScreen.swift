@@ -7,11 +7,17 @@ import SwiftUI
 /// you browse when you do not yet know what you want.
 struct DiscoverScreen: View {
     @Environment(\.theme) private var theme
+    // A sheet is a new environment, so the palette has to be reinstalled on it
+    // — otherwise the commit sheet renders in the default light scheme over a
+    // dark app.
+    @Environment(\.colorScheme) private var colorScheme
     @Environment(AppState.self) private var app
 
     @State private var payload: TrendsPayload?
     @State private var filter: Filter?
     @State private var errorMessage: String?
+    /// The product an explorer is turning into a business, if any.
+    @State private var committing: DiscoverProduct?
 
     enum Filter: String, CaseIterable {
         case seller, maker, saved
@@ -37,6 +43,11 @@ struct DiscoverScreen: View {
         .background(theme.scheme.background)
         .refreshable { await load() }
         .task { if payload == nil { await load() } }
+        .sheet(item: $committing) { product in
+            CommitSheet(product: product)
+                .venturoTheme(colorScheme)
+                .environment(app)
+        }
     }
 
     // MARK: - Header
@@ -97,7 +108,12 @@ struct DiscoverScreen: View {
                         ProductCard(
                             product: product,
                             hotFloor: hotFloor,
-                            onToggleSave: { toggleSave(product) }
+                            onToggleSave: { toggleSave(product) },
+                            // Offered only to explorers. Somebody who already
+                            // has a business is browsing, not founding.
+                            onCommit: app.activeBusiness == nil
+                                ? { committing = product }
+                                : nil
                         )
                         .padding(.bottom, 16)
                     }
