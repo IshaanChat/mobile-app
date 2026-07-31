@@ -1,143 +1,254 @@
-# Shipping Venturo
+# Shipping Venturo — Mac mini to App Review
 
-The app currently runs on `localhost` with SQLite and no authentication. That
-is fine for a prototype and impossible to ship. This document records the
-decisions and the concrete steps.
+The path from a Mac that has never seen this project to an app sitting in
+Apple's review queue. Written to be worked through in order.
 
-Nothing here is built yet — it is the plan, written down so the decisions
-don't get re-litigated every session.
+*(This document replaced an earlier one that planned the hosting and auth work.
+All of that is done. If you find a copy recommending Railway, or saying to
+build the client in React Native rather than Swift, it is the old version —
+both decisions were reversed.)*
 
 ---
 
-## Why this has to happen before almost anything else
+## What is already done
 
-Three things people will ask for are all blocked on the same work:
+Don't redo any of this.
 
-| Wanted | Blocked on |
+- Server is live on Render at `https://sales-mechanic-api.onrender.com`, with
+  Postgres on Neon and four migrations applied.
+- Clerk auth is wired end to end — email, Apple and Google.
+- Account export and deletion work in-app and are proven by
+  `npm run verify:deletion`.
+- Privacy policy is **live and public** at
+  `https://sales-mechanic-api.onrender.com/privacy`. Verified 2026-07-31.
+- Support page is live at `/support` — **after the redeploy in Phase 3.**
+- Bundle id `com.ishaanchaturvedi.salesmechanic` is registered with Apple,
+  carries the distribution certificate created 2026-07-29, and has Sign in with
+  Apple enabled at Apple's end.
+- Apple Developer Program membership is paid.
+- ~7,000 lines of SwiftUI in `ios/`, feature-complete against the prototype.
+
+## What is not
+
+- **The iOS app has never been compiled.** No `.xcodeproj` exists.
+- No App Store Connect app record.
+- Clerk is on a **development** instance.
+- No screenshots, description, or demo account for the reviewer.
+
+---
+
+## Phase 0 — The Mac mini
+
+Start the Xcode download first. It is many gigabytes and everything else here
+is faster than it.
+
+1. **Xcode 26 or newer**, from the App Store. Not optional and not negotiable:
+   Clerk's Swift SDK is built with swift-tools-version 6.2 and will not resolve
+   on an older toolchain. Check with `xcodebuild -version`.
+2. **Command line tools**: `xcode-select --install`.
+3. **Node 22** — `brew install node@22`, or nvm if you prefer.
+4. **Claude Code**:
+   ```bash
+   npm install -g @anthropic-ai/claude-code
+   ```
+   Then `claude` in the repo directory. The desktop app works too; the CLI is
+   what the repo's `CLAUDE.md` is written for.
+5. **Clone the working remote**, not `origin`:
+   ```bash
+   git clone https://github.com/IshaanChat/mobile-app.git sales-mechanic
+   ```
+6. **Recreate `server/.env`.** It is not in git and nothing that touches the
+   database or the prototype's content pipeline runs without it. Five values:
+
+   | key | where to get it |
+   |---|---|
+   | `DATABASE_URL` | Neon dashboard — the **direct**, non-pooled URL |
+   | `CLERK_SECRET_KEY` | Clerk dashboard → API keys |
+   | `PEXELS_API_KEY` | Pexels account |
+   | `ALIEXPRESS_APP_KEY` | AliExpress open platform |
+   | `ALIEXPRESS_APP_SECRET` | same |
+
+   Copying the file across from the Windows machine is faster than five
+   dashboards. Everything except `DATABASE_URL` is only needed by the content
+   scripts, so a partial `.env` is enough to start.
+
+7. **Check the toolchain works** before touching Xcode:
+   ```bash
+   cd server && npm ci && npm test
+   ```
+   173 tests, about half a second. If they pass, Node and the repo are fine and
+   anything that breaks later is Xcode's.
+
+## Phase 1 — Create the Xcode project
+
+`ios/SETUP.md` is the authority and is written step by step. It covers the
+project itself, the Clerk package, the Clerk dashboard's *Native applications*
+entry, the Sign in with Apple capability, the seven fonts and the app icon.
+
+Two of those steps fail **silently** rather than with an error, which is why
+they are called out there and repeated here:
+
+- **The Clerk dashboard native-app entry.** Without it, Sign in with Apple
+  hangs forever with no message. Bundle id plus the App ID Prefix `G7K94LKBQH`.
+- **The font registration.** A wrong or missing `UIAppFonts` entry falls back
+  to the system font, which reads as "the design looks slightly off" rather
+  than as a failure. `Theme.swift` has a **Fonts** preview whose rows must all
+  show ✓. Check it once and you never wonder again.
+
+## Phase 2 — The first build
+
+Nothing in `ios/` has been through a compiler. Expect real errors. They will be
+ordinary ones — this is a first build, not a broken codebase.
+
+**Set the Swift Language Version to 5, not 6, for now.** Swift 6 turns strict
+concurrency checking into errors, and an `@Observable` app state called from
+`async` view tasks will produce dozens of actor-isolation complaints that have
+nothing to do with whether the app works. Ship on 5; migrate later if ever.
+
+Work through it with Claude on the Mac — it has the whole repo and `CLAUDE.md`
+loads the context automatically. Build, paste the errors, fix, repeat. The
+useful instruction is *"fix the compile errors without changing behaviour"*,
+because the temptation at this stage is to redesign things that are merely
+unfamiliar.
+
+Then, in the simulator, walk the whole path once: sign up → onboarding →
+Discover → save something → Business → Saved → commit to a product → Journey →
+complete a milestone. That covers every screen and every one of the five app
+states.
+
+## Phase 3 — Before it can be reviewed
+
+Four things. The first two are hard blockers.
+
+### 1. A production Clerk instance
+
+The key in `ClerkAuth.swift` is `pk_test_…`, a development instance. Clerk warns
+about it at launch and development instances carry strict limits. Production is
+**a different key and a different user pool** — every test account you made
+disappears — so switch early enough to test with it rather than on submission
+day. The server's `CLERK_SECRET_KEY` on Render has to move at the same time, or
+the app and the API will disagree about who is signed in.
+
+### 2. Deploy the support page
+
+App Store Connect requires a **Support URL** and will not let you submit
+without one. `server/content/legal/support.md` exists and is registered, but is
+not deployed and **still contains a placeholder email address**:
+
+```
+REPLACE-BEFORE-SUBMITTING@example.com
+```
+
+Put a real address in, then deploy — which means pushing `origin`, the only
+thing that triggers Render. Verify afterwards:
+
+```bash
+curl -s -o /dev/null -w "%{http_code}\n" https://sales-mechanic-api.onrender.com/support
+```
+
+### 3. The cold start — the biggest review risk
+
+Measured from cold on 2026-07-31: **20 seconds to first response.** The free
+Render tier sleeps after inactivity. A reviewer opens the app, sees a spinner
+for twenty seconds, and files it under Guideline 2.1 as broken.
+
+The app does the right thing already — it shows *"Warming up — the server naps
+when nobody is using it"* — but a reviewer is not obliged to read it, and the
+first impression of a twenty-second wait is a broken app rather than a polite
+one.
+
+**Recommendation: upgrade the Render service to the paid tier (~$7/month)
+before submitting.** It is the cheapest possible insurance against a rejection
+that costs a week of round-trip. Downgrade again after approval if you want.
+
+### 4. Set the encryption declaration
+
+Add to the target's `Info.plist`:
+
+```xml
+<key>ITSAppUsesNonExemptEncryption</key>
+<false/>
+```
+
+The app uses HTTPS and nothing else, which is exempt. Without the key, App
+Store Connect asks the export-compliance question on **every single upload**.
+
+## Phase 4 — App Store Connect
+
+Create the app record. The answers that are already decided:
+
+| field | value |
 |---|---|
-| iOS app | a hosted API — a phone cannot reach `localhost:4000` |
-| Etsy / Stripe integrations | a public HTTPS URL for OAuth callbacks and webhooks |
-| Letting a second person try it | authentication and per-user data isolation |
+| Bundle ID | `com.ishaanchaturvedi.salesmechanic` |
+| Privacy Policy URL | `https://sales-mechanic-api.onrender.com/privacy` |
+| Support URL | `https://sales-mechanic-api.onrender.com/support` |
+| Name | Venturo — **see the trademark note below** |
+| Category | Business |
+| Age rating | 13+, matching the age gate the app already enforces |
 
-So: **host it, add auth, then everything else becomes possible.**
+**The name has never been checked.** `TODO.md` item 10 — a trademark and domain
+search for "Venturo" — is still open, and App Store Connect will simply refuse
+a name another developer holds. Do this before writing any marketing copy, not
+after.
 
----
+### App Privacy — answer it from the code, not from memory
 
-## 1. Hosting
+The privacy policy is accurate; make the questionnaire match it. Collected and
+**linked to identity**:
 
-**Recommendation: Railway** for the server + Postgres, at ~$5/month Hobby.
+- **Contact info** — name, email address; phone number if the user supplies one
+- **User content** — business details, contacts, notes, sales
+- **Identifiers** — the account id
+- **Other data** — age (collected only to check 13+), and optionally gender,
+  location, bio
 
-Reasoning:
+Nothing is used for tracking or advertising, and there are no third-party
+analytics SDKs in the app.
 
-- Railway's one-click Postgres alongside the app is the least-friction path,
-  and everything is metered per second on top of a small plan fee.
-- **Render** has the only real free tier left, but the free plan spins down
-  after 15 minutes of inactivity with a ~1 minute cold start, and its free
-  Postgres *hard-expires 30 days after creation and is then deleted*. That is
-  actively dangerous for a database holding a user's business data. Render's
-  paid tier is fine (~$7 web + $7 Postgres) if you prefer fixed pricing and
-  want PITR backups.
-- **Fly.io** is pure pay-as-you-go with no base fee, cheapest at very small
-  scale, but more infrastructure to reason about than you want right now.
+### The demo account — do not skip this
 
-Verify current pricing before committing — these change often.
+The app is entirely behind sign-in, so **Apple must be given working
+credentials** in App Review Information or it is rejected on sight. Create one
+on the *production* Clerk instance, run it through onboarding so it lands on a
+populated Discover feed rather than an empty state, and paste the email and
+password into the review notes.
 
-Client hosting: **Vercel or Netlify**, free tier is genuinely fine for a Vite
-static build. Point it at the API with an env var.
+Worth adding to the notes as well: that first launch may take ~20 seconds while
+the server wakes, and that Discover content is served from the API.
 
-## 2. SQLite → Postgres
+### Screenshots
 
-Prisma makes this mostly a provider swap, and the codebase is already
-compatible because of an early constraint: **SQLite has no enums, so every
-enum-like field is already a validated string**. There is no enum migration to
-do.
+Capture from the simulator on the largest current iPhone; App Store Connect
+lists the exact sizes it wants and will reject the wrong ones, so read them
+there rather than trusting any list written down here. Five or six covering
+Discover, a product card expanded, Grow, Business and the Journey sheet.
 
-Steps:
+## Phase 5 — Upload and submit
 
-1. `datasource db { provider = "postgresql" }` in `schema.prisma`.
-2. Delete `prisma/migrations/` and re-run `prisma migrate dev --name init`
-   against a local Postgres. The existing migration history is SQLite-specific
-   SQL and cannot be replayed on Postgres. This is safe — no production data
-   exists yet. **Do this once, before there are real users, and never again.**
-3. Set `DATABASE_URL` to the Railway connection string in production.
-4. Run `npx prisma migrate deploy` on deploy (add it to the start command).
-5. Run `npm run smoke` against the deployed URL:
-   `SMOKE_BASE_URL=https://your-app.up.railway.app/api npm run smoke`
+1. Xcode → **Product → Archive** (Any iOS Device, not a simulator).
+2. **Distribute App → App Store Connect → Upload.**
+3. Wait for processing, then put the build on **TestFlight** and install it on
+   your own phone. Do this even though it costs a day — the simulator does not
+   catch Sign in with Apple problems, and Sign in with Apple is the one thing
+   here that fails silently.
+4. Attach the build to the app record, fill in description, keywords and
+   promotional text, and **Submit for Review**.
 
-Things to check after the move, because SQLite was lenient about them:
-
-- `Float` for money becomes `double precision`. Consider `Decimal` for
-  `Payment.amount` and `Product.price` before real money is involved.
-- Case-sensitivity in text filters differs; the Discover keyword matching
-  lowercases everything already, so it should be unaffected.
-- Concurrent writes actually work now, which makes the `MissionCompletion`
-  unique constraint more important, not less. It is already correct.
-
-## 3. Authentication
-
-**Recommendation: Clerk**, unless you object to a third party holding user
-identities.
-
-Reasoning: it is the fastest path from zero to working auth with a decent free
-tier, handles email verification, password reset, and social login — all of
-which are weeks of work to build properly and are a security liability if
-built badly. Auth.js is the self-hosted alternative if you want to own it.
-
-**The bigger job is not the login box — it is multi-tenancy.** Right now every
-query trusts a `businessId` from the client. The moment there are two users,
-every route needs to verify the requesting user owns that business, or user A
-can read user B's client book by guessing an ID.
-
-Concretely:
-
-- Add a `User` model; `Business.userId` and `UserProfile.userId`.
-- Add middleware that resolves the session to a user id.
-- Every route that takes `businessId` must check ownership. The smoke test
-  should grow a case that asserts a second user gets a 403.
-- `AppSetting` (which holds the LLM config) is currently global; it becomes
-  per-user.
-
-This is the single largest piece of remaining work and should not be
-underestimated — plan for days, not hours.
-
-## 4. Before real users touch it
-
-- [ ] Privacy policy published (see `PRIVACY.md` — it is a draft, have a
-      human review it before publishing)
-- [ ] Rate limiting on the API (`express-rate-limit`)
-- [ ] `helmet` for security headers
-- [ ] CORS locked to the known client origin instead of the current `cors()`
-      which allows everything
-- [ ] Database backups configured and *restored once* to prove they work
-- [ ] An error tracker (Sentry free tier) — you cannot fix what you cannot see
-- [ ] Delete-my-account and export-my-data paths, which are both a GDPR
-      requirement and a trust feature worth advertising
-
-## 5. Only then: iOS
-
-Use **React Native with Expo**, not Swift. The API layer and all the types
-carry over, and much of the logic in `client/src` is portable. A Swift rewrite
-means maintaining two clients for a solo developer.
-
-Expo also gives over-the-air updates, which matter when iterating quickly with
-early testers.
+First review is typically a day or two. A rejection is not a verdict — it is
+usually one specific fixable thing, and the reply is a normal part of it.
 
 ---
 
-## Suggested order
+## Ranked risks
 
-1. Postgres migration locally, smoke test green
-2. Deploy server to Railway, smoke test green against the deployed URL
-3. Deploy client to Vercel pointing at it
-4. Auth + multi-tenancy (the big one)
-5. Rate limiting, helmet, CORS, Sentry, backups
-6. Privacy policy, account deletion, data export
-7. Etsy Commercial Access application (free, review takes an unknown amount
-   of time — apply as soon as the privacy policy is live)
-8. CSV import — the highest-value manual-entry killer, and it needs none of
-   the above
-9. iOS via Expo
+1. **Cold start read as a broken app.** Twenty seconds, measured. $7 fixes it.
+2. **No demo account.** An automatic rejection, and an avoidable one.
+3. **Name collision on "Venturo".** Unchecked. Cheap to check, expensive late.
+4. **Sign in with Apple hanging** because of the missing Clerk dashboard entry.
+   Silent, and it will look like an app bug.
+5. **Privacy answers not matching the policy.** Both exist; make them agree.
 
-Sources consulted for hosting: [Render vs Railway vs Fly.io pricing 2026 (HOSTIM)](https://hostim.dev/blog/render-vs-railway-vs-fly-pricing/),
-[Render vs Railway vs Fly.io 2026 (ExpressTech)](https://expresstech.io/render-vs-railway-vs-fly-io-2026-pricing-showdown/),
-[Railway vs Render vs Fly.io for solo developers (DevToolPicks)](https://devtoolpicks.com/blog/railway-vs-render-vs-fly-io-solo-developers-2026)
+Not risks, despite being common ones: there is **no in-app purchase or paywall
+anywhere in this build** — Growth's upgrade screen was never ported — so
+Guideline 3.1.1 does not apply. Account deletion is in-app, which 5.1.1(v)
+requires. Sign in with Apple is offered alongside Google, which 4.8 requires.

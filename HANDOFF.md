@@ -8,6 +8,10 @@ client — Home / Clients / Sales / Missions tabs. That app still exists in
 `client/` but is no longer where the work happens. This file is the current
 one.)*
 
+Two companions to this file: **`SHIPPING.md`** is the ordered runbook from a
+fresh Mac to a submitted app, and **`CLAUDE.md`** is the short version an agent
+loads automatically.
+
 ---
 
 ## What the app is
@@ -235,6 +239,9 @@ curated Pexels → 1200:627, community → 4:3.
 - **95 staged communities have blank write-ups** and are invisible until written.
 - **The Clerk key is a development instance.** Different key *and* different
   user pool in production, so switch early enough to test it.
+- **The support page is written but not deployed**, and still carries a
+  placeholder email. App Store Connect requires a Support URL. Deploying it
+  means pushing `origin`.
 - **~20 dead exports** in `criteria.ts`, `printful.ts` and `ebay.ts` — helpers
   exported "for testability" that nothing imports. `npx knip` lists them.
 - **`preview-app.ts` at ~2,730 lines**, most of it inside one template literal.

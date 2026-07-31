@@ -21,8 +21,11 @@ import { Router } from 'express';
 
 export const legalRouter = Router();
 
+// App Store Connect requires both of these as public URLs before an app can be
+// submitted, and both must stay reachable while it is listed.
 const DOCS: Record<string, { file: string; title: string }> = {
   privacy: { file: 'privacy.md', title: 'Privacy Policy' },
+  support: { file: 'support.md', title: 'Support' },
 };
 
 /**
