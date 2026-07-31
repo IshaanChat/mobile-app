@@ -150,6 +150,31 @@ struct DiscoverEvidence: Codable, Equatable {
     let polledAt: Date?
 }
 
+// MARK: - Tips
+
+/// The two things a mission cannot carry: a small practical detail nobody
+/// thought to mention, and a line that exists purely to be on your side.
+///
+/// `id` here is the server's `slug` — the stable curator-chosen identity, not
+/// the database row id — because which tips somebody has seen is tracked on the
+/// device and has to survive the row being re-imported.
+struct Tip: Codable, Identifiable, Equatable {
+    let id: String
+    let slug: String
+    /// "know" — practical. "lift" — encouragement, or a joke.
+    let kind: String
+    let text: String
+    /// discover | grow | shop | you | any
+    let tab: String
+    let level: Int
+
+    var isLift: Bool { kind == "lift" }
+}
+
+struct TipsPayload: Codable, Equatable {
+    let tips: [Tip]
+}
+
 // MARK: - Growth
 
 struct GrowthPayload: Codable, Equatable {

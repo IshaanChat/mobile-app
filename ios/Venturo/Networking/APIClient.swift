@@ -261,6 +261,42 @@ actor APIClient {
         _ = try await request("DELETE", "trends/\(id)/save")
     }
 
+    // MARK: - Account
+
+    /// Everything held about this account, as JSON.
+    ///
+    /// Returned as raw `Data` rather than a decoded type deliberately: the
+    /// point is to hand the user their own file, and re-encoding it through a
+    /// Swift model would risk quietly dropping any field this build does not
+    /// know about — which is exactly the data somebody asking for an export
+    /// most wants to see.
+    func exportAccount() async throws -> Data {
+        try await request("GET", "account/export")
+    }
+
+    /// Irreversible. Removes every row, then the login at Clerk.
+    func deleteAccount() async throws {
+        _ = try await request("DELETE", "account")
+    }
+
+    // MARK: - Tips
+
+    /// The whole eligible set in one call, not one tip at a time.
+    ///
+    /// It is a few KB, and the bubble changes on tap — fetching per tip would
+    /// put a network round trip between a tap and a sentence. Rotation is the
+    /// client's job precisely so it can be instant.
+    ///
+    /// `level` is a floor rather than a ceiling: omitting it returns the
+    /// level-1 set, so a client that forgets to send it gets the beginner-safe
+    /// tips rather than advice that assumes a shop already exists.
+    func getTips(tab: String, level: Int) async throws -> [Tip] {
+        let data = try await request(
+            "GET", "tips", query: ["tab": tab, "level": String(level)]
+        )
+        return try decode(TipsPayload.self, from: data).tips
+    }
+
     // MARK: - Growth
 
     func getGrowth(businessId: String) async throws -> GrowthPayload {
