@@ -251,6 +251,18 @@ actor APIClient {
         return try decode(TrendsPayload.self, from: try await request("GET", "trends", query: query))
     }
 
+    /// The saved shelf, newest first — and a different list from the hearts in
+    /// the feed, not a filter over them.
+    ///
+    /// `GET /trends` returns the top 50 ranked products, so a product saved
+    /// last week can rank out of the feed entirely and take its own heart with
+    /// it. This endpoint is the only complete answer, and it deliberately
+    /// includes archived cards: a shelf entry vanishing because the curator
+    /// rotated stock would read as data loss.
+    func getSavedTrends() async throws -> [DiscoverProduct] {
+        try decode([DiscoverProduct].self, from: try await request("GET", "trends/saved"))
+    }
+
     func saveTrend(id: String) async throws {
         _ = try await request("POST", "trends/\(id)/save")
     }

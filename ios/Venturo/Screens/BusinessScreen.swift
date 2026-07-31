@@ -2,23 +2,31 @@ import SwiftUI
 
 /// Business: how the business is actually doing.
 ///
-/// A shell over three panes. Sub-tabs rather than separate tabs because these
-/// are three views of one thing — the bottom bar is for changing what you are
+/// A shell over four panes. Sub-tabs rather than separate tabs because these
+/// are four views of one thing — the bottom bar is for changing what you are
 /// doing, not for changing which column you are reading.
 struct BusinessScreen: View {
     @Environment(\.theme) private var theme
     @Environment(AppState.self) private var app
 
+    /// Sends somebody back to Discover from the empty shelf. Owned by the root,
+    /// which is the only thing that knows what a tab is.
+    var onOpenDiscover: (() -> Void)? = nil
+
     @State private var pane: Pane = .overview
+    /// Nil until the Saved pane has loaded once. The subtab shows a bare
+    /// "Saved" until then rather than claiming a count it has not counted.
+    @State private var savedCount: Int?
 
     enum Pane: String, CaseIterable {
-        case overview, clients, money
+        case overview, clients, money, saved
 
         var label: String {
             switch self {
             case .overview: return "Overview"
             case .clients: return "Clients"
             case .money: return "Money"
+            case .saved: return "Saved"
             }
         }
 
@@ -27,6 +35,7 @@ struct BusinessScreen: View {
             case .overview: return .chart
             case .clients: return .book
             case .money: return .note
+            case .saved: return .heart
             }
         }
     }
@@ -40,6 +49,7 @@ struct BusinessScreen: View {
                 case .overview: BusinessOverview()
                 case .clients: BusinessClients()
                 case .money: BusinessMoney()
+                case .saved: BusinessSaved(count: $savedCount, onOpenDiscover: onOpenDiscover)
                 }
             }
             .padding(.horizontal, 16)
@@ -82,7 +92,7 @@ struct BusinessScreen: View {
                                 name: option.icon, size: 16,
                                 color: isOn ? theme.scheme.text : theme.scheme.textSecondary
                             )
-                            Text(option.label)
+                            Text(label(for: option))
                                 .font(.custom(isOn ? Typeface.sansBold : Typeface.sansMedium, size: 13))
                                 .foregroundStyle(isOn ? theme.scheme.text : theme.scheme.textSecondary)
                         }
@@ -99,6 +109,14 @@ struct BusinessScreen: View {
         }
         .padding(.top, 12)
         .padding(.bottom, 4)
+    }
+
+    /// The count rides on the subtab, matching the Saved chip in Discover, so
+    /// the size of the shelf is readable without opening it. Only once it has
+    /// actually been counted — see `savedCount`.
+    private func label(for option: Pane) -> String {
+        guard option == .saved, let savedCount, savedCount > 0 else { return option.label }
+        return "Saved · \(savedCount)"
     }
 }
 

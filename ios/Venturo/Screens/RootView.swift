@@ -139,7 +139,7 @@ struct RootView: View {
         switch tab {
         case .discover: DiscoverScreen()
         case .grow: GrowScreen()
-        case .business: BusinessScreen()
+        case .business: BusinessScreen(onOpenDiscover: { tab = .discover })
         case .you: YouScreen()
         }
     }
