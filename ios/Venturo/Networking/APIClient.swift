@@ -261,6 +261,15 @@ actor APIClient {
         _ = try await request("DELETE", "trends/\(id)/save")
     }
 
+    // MARK: - Onboarding
+
+    /// The onboarding script. Content, so it comes from the server rather than
+    /// from this binary — the first screens anybody sees can then be reworded
+    /// without a release.
+    func getOnboardingScript() async throws -> OnboardingScript {
+        try decode(OnboardingScript.self, from: try await request("GET", "onboarding"))
+    }
+
     // MARK: - Account
 
     /// Everything held about this account, as JSON.

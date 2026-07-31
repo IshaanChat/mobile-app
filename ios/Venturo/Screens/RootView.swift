@@ -42,7 +42,7 @@ struct RootView: View {
             case .error(let message):
                 LoadFailure(message: message) { Task { await app.load() } }
             case .onboarding:
-                OnboardingPlaceholder()
+                OnboardingScreen()
             case .explorer, .active:
                 shell
             }
@@ -183,25 +183,3 @@ struct LoadFailure: View {
     }
 }
 
-/// Onboarding is not built yet. This is a marker rather than a screen — it
-/// exists so the mode machine has somewhere to route while the real flow is
-/// written, and so a fresh account does not land on a blank window.
-struct OnboardingPlaceholder: View {
-    @Environment(\.colorScheme) private var colorScheme
-
-    var body: some View {
-        let theme = Theme(colorScheme)
-        VStack(spacing: Space.three) {
-            Text("Onboarding goes here")
-                .font(.custom(Typeface.display, size: 22))
-                .foregroundStyle(theme.scheme.text)
-            Text("Not built yet — the four shared questions, then the fork.")
-                .font(.custom(Typeface.sansMedium, size: 14))
-                .foregroundStyle(theme.scheme.textSecondary)
-                .multilineTextAlignment(.center)
-        }
-        .padding(32)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(theme.scheme.background)
-    }
-}
