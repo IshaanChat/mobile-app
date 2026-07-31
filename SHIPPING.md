@@ -129,22 +129,25 @@ disappears — so switch early enough to test with it rather than on submission
 day. The server's `CLERK_SECRET_KEY` on Render has to move at the same time, or
 the app and the API will disagree about who is signed in.
 
-### 2. Deploy the support page
+### 2. Put a real address on the support page
 
-App Store Connect requires a **Support URL** and will not let you submit
-without one. `server/content/legal/support.md` exists and is registered, but is
-not deployed and **still contains a placeholder email address**:
+App Store Connect requires a **Support URL**. The page is deployed and live at
+`https://sales-mechanic-api.onrender.com/support`, but
+`server/content/legal/support.md` **still contains a placeholder**:
 
 ```
 REPLACE-BEFORE-SUBMITTING@example.com
 ```
 
-Put a real address in, then deploy — which means pushing `origin`, the only
-thing that triggers Render. Verify afterwards:
+A dedicated address rather than a personal one — it is public on the listing
+for as long as the app is, and a separate inbox is trivially handed off.
+Replace the line, push `origin`, then verify:
 
 ```bash
-curl -s -o /dev/null -w "%{http_code}\n" https://sales-mechanic-api.onrender.com/support
+curl -s https://sales-mechanic-api.onrender.com/support | grep -c REPLACE
 ```
+
+Zero is what you want.
 
 ### 3. The cold start — the biggest review risk
 
