@@ -236,13 +236,14 @@ curated Pexels → 1200:627, community → 4:3.
   no curated product can ever earn the `Hot` badge, and the reseller heat floor
   of 40 cuts 75% of curated reseller rows while being inert on sourced ones.
 - **698 sourced products are unsorted**, sitting in `sourced-unsorted`.
-- **`tier` never leaves the content files.** 698 sourced products carry
-  `tier` (528 `proven`, 170 `upside`), and the prototype's `High upside` badge
-  and its strongest feed shelf — cards that are Hot *and* upside — are built on
-  it. The field is in neither `schema.prisma` nor `toDiscoverProduct`, so the
-  iOS app cannot see it and orders Discover on heat alone. Closing it is a
-  schema field, an importer line, a serializer line, a Swift badge, and a
-  migration — which means a Render deploy.
+- **`tier` is carried through in code but not yet in the database.** 698
+  sourced products carry `tier` (528 `proven`, 170 `upside`), which drives the
+  `High upside` badge and the feed's strongest shelf — cards that are Hot *and*
+  upside. Schema, migration, importer, serializer and the Swift badge are all
+  written. Two steps remain, in order: **deploy `origin`** so
+  `prisma migrate deploy` adds the column, then **run
+  `npm run catalog:import`** to fill it. Until both happen every product
+  serializes `tier: null` and Discover orders on heat alone.
 - **95 staged communities have blank write-ups** and are invisible until written.
 - **The Clerk key is a development instance.** Different key *and* different
   user pool in production, so switch early enough to test it.
