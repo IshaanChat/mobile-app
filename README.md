@@ -1,160 +1,100 @@
 # Venturo
 
-A relationship-first sales and marketing app for solo sellers and first-time
-founders — people running Etsy shops, home businesses, coaching practices.
+Walks somebody from "I want to start a business" to their first sale. It finds
+them a product worth selling, shows where to source it, shows the communities
+where their customers already are, and tracks the journey.
 
-Big companies have sales teams. This is meant to be the alternative: a coach
-that tells you who needs a follow-up, where to find people who'd love what you
-make, and what to do next — structured as missions you complete rather than a
-spreadsheet you maintain.
+The audience is first-time founders — people who have not done this before and
+feel out of their depth. Big companies have sales teams; this is meant to be
+the alternative.
 
-> **This README describes the original React web client in `client/`, which is
-> now a design reference rather than where the work happens.** The current
-> surface is a localhost HTML prototype on port 4300, and the product catalog
-> and community database have both grown well past what is described below.
-> See **[HANDOFF.md](HANDOFF.md)** for the project as it actually stands.
+> Called **Sales Mechanic** until July 2026. The rename covers display text,
+> docs and user-agents — not the Render service name, the bundle identifier,
+> the package names or the repo, which are addresses.
 
-> Status: working prototype, local-first, single user. Not yet deployed and
-> has no authentication — see [TODO.md](TODO.md) for the path to shipping.
+**Start here: [HANDOFF.md](HANDOFF.md)** — the project as it actually stands.
+This file is only how to run it.
 
-## What it does
+## The four surfaces
 
-- **Home** — a command centre: network pulse, money, stock, who's going quiet,
-  recent activity, strongest relationships.
-- **Clients** — a client book scored by relationship strength (recency,
-  frequency, value). Paste someone's profile or shop link and the channel they
-  came from is detected automatically.
-- **Sales** — product catalog with optional stock tracking, plus payments.
-  Recording a sale against a product decrements inventory automatically.
-- **Discover** — finds real communities where a business's customers already
-  gather. Uses a self-hosted LLM if one is configured, otherwise a curated
-  built-in engine. Never scrapes anything.
-- **Missions & Wisdom** — daily, weekly, monthly and one-time missions that
-  teach how to grow a business, across a 100-level mastery ladder.
-- **My Business** — profile, business details, socials, and settings.
+| directory | what it is | status |
+|---|---|---|
+| `server/` | Express API, Prisma/Postgres, the content database, every script | live on Render |
+| `ios/` | native SwiftUI client | **what ships** — never yet compiled |
+| `server/scripts/preview-app.ts` | the HTML prototype | the design source of truth |
+| `mobile/` | Expo / React Native | parked; kept as the API-contract spec |
+| `client/` | the original React web app | superseded |
 
-## Stack
-
-| | |
-|---|---|
-| Client | React 18, TypeScript, Vite |
-| Server | Express 4, TypeScript, run with tsx |
-| Database | PostgreSQL via Prisma (Neon) |
-| Auth | Clerk in production; header-based stub in dev |
-| Tests | vitest (unit), a Node script (smoke) |
-
-No UI framework or component library — styling is plain CSS with custom
-properties and two themes.
+`ios/` is a complete Swift rewrite of `mobile/`. When it and the prototype
+disagree, the prototype is right.
 
 ## Running it
 
-Requires Node 20+ (developed on 24).
+Node 22. Everything below is from `server/`.
 
 ```bash
-# 1. Server
-cd server
-npm install
-cp .env.example .env          # then paste your Neon connection string
-npx prisma migrate deploy     # applies the schema
-npm run seed                  # optional: realistic demo data
-npm run dev                   # http://localhost:4000
-
-# 2. Client, in a second terminal
-cd client
-npm install
-npm run dev                   # http://localhost:5173
+cd server && npm install
 ```
 
-Open http://localhost:5173. On first run you'll be walked through creating a
-profile and a business.
+`server/.env` is **not in git** and nothing that touches the database works
+without it. One required key, `DATABASE_URL` — a [Neon](https://neon.tech)
+**direct** connection string, with *Connection pooling* off. `PEXELS_API_KEY`,
+`ALIEXPRESS_APP_KEY`, `ALIEXPRESS_APP_SECRET` and `CLERK_SECRET_KEY` are only
+needed by the content scripts and by production auth.
 
-The Vite dev server proxies `/api` to port 4000, so the client is always
-talking to the local server.
+```bash
+npm run app:preview   # the prototype — http://localhost:4300
+npm run dev           # the API — http://localhost:4000
+```
 
-You need a Postgres database. [Neon](https://neon.tech)'s free tier is what
-this is developed against — create a project, copy the **direct** connection
-string (turn *Connection pooling* off), and put it in `server/.env`.
+The prototype is the fastest way to see the product. It reads the content JSON
+directly, holds all its state in `localStorage`, and needs no database.
 
-### Signing in
+With no `CLERK_SECRET_KEY` set, the API signs every request in as the same
+development account, so there is nothing to configure locally.
 
-Locally you are signed in automatically: with no `CLERK_SECRET_KEY` set, the
-API treats every request as the same development account. Nothing to
-configure. In production, Clerk session tokens are verified instead.
+For the iOS app, see **[ios/SETUP.md](ios/SETUP.md)** — it needs a Mac, Xcode 26
+and a one-time project generation.
 
-### Windows gotcha
+### Two things that will catch you
 
-Prisma cannot regenerate its client while the dev server is running — Windows
-holds a lock on the query engine DLL and you'll get an `EPERM` rename error.
-**Stop the server before running any migration**, then restart it.
+- **`tsx` does not hot-reload.** Restart after every prototype change or you
+  are looking at stale code.
+- **Windows: stop the dev server before any Prisma migration.** Windows holds a
+  lock on the query engine DLL and you get an opaque `EPERM` rename error.
 
 ## Testing
 
 ```bash
-cd server
-npm test          # unit tests: scoring profiles, mission period keys, levels
-npm run smoke     # end-to-end: needs `npm run dev` running in another terminal
+npm test          # 173 unit tests, well under a second
+npm run smoke     # 56 endpoint checks; needs `npm run dev` in another terminal
 ```
 
-`npm run smoke` creates a scratch business named "SMOKE TEST — safe to
-delete", exercises every endpoint including the full sale-and-stock loop, and
-deletes it again. It is safe to run against a database with real data.
+`npm run smoke` creates a scratch business, exercises every endpoint including
+the sale-and-stock loop and cross-account isolation, then deletes it. Safe to
+run against a database with real data.
 
-## Connecting your own AI (optional)
+`npm run verify:deletion` proves account deletion removes everything.
 
-Discover works out of the box with a built-in recommendation engine. To get
-recommendations tailored to a specific business, point it at any
-OpenAI-compatible server you run yourself — Ollama, LM Studio, vLLM,
-llama.cpp.
+## Content
 
-Easiest: **My Business → Settings → Your AI**, fill in the server URL and
-model name, and press *Test connection*. Those values are stored in the
-database and take precedence over the environment.
+`server/content/` is the source of truth for everything the feeds show — 886
+products, 166 communities, 48 niches, 34 journey milestones, 50 tips — edited
+as JSON, then pushed to Postgres with `npm run content:sync`.
 
-Alternatively set them in `server/.env`:
+Two rules it is built on: **nothing is invented** (an empty field beats a number
+nobody can stand behind, which is why many products ship with empty evidence
+blocks), and **nothing is scraped** — official APIs and manual research only.
 
-```
-LLM_BASE_URL=http://localhost:11434/v1
-LLM_MODEL=qwen2.5:7b
-LLM_API_KEY=            # only if your server requires one
-```
-
-If the model is unreachable or returns something unparseable, Discover falls
-back to the built-in engine rather than failing.
-
-## Project layout
-
-```
-client/src/
-  components/     one or more components per feature area
-  api/client.ts   the single typed API surface
-  types/          shared types
-server/src/
-  core/           event bus, HTTP error handling
-  routes/         one file per feature
-  modules/        cross-cutting subscribers (analytics)
-  discover/       recommendation engines
-  missions/       mission definitions and the Wisdom curve
-  scoring.ts      relationship scoring profiles
-server/prisma/    schema and migrations
-```
-
-Feature areas are deliberately decoupled: they talk to each other only through
-the HTTP API and an internal event bus, never by importing each other's
-internals. See [ARCHITECTURE.md](ARCHITECTURE.md).
-
-## Data and privacy
-
-Data lives in your own Postgres database. Analytics are recorded there too —
-they exist so the app can show you your own history, not to report anywhere.
-If you configure an LLM, business context is sent to whichever server you
-point at, which is why self-hosting is the default assumption.
-
-Every account only ever sees its own data; see the isolation rules in
-[ARCHITECTURE.md](ARCHITECTURE.md).
-
-`.env` and any local database files are git-ignored. Do not commit them.
+Files prefixed with `_` are staging, not content. Loaders and importers skip
+them.
 
 ## Docs
 
-- [ARCHITECTURE.md](ARCHITECTURE.md) — module boundaries and the event bus
-- [TODO.md](TODO.md) — the plan for hardening and shipping
+- **[HANDOFF.md](HANDOFF.md)** — what the project is, current and maintained
+- **[SHIPPING.md](SHIPPING.md)** — Mac mini to App Store review, in order
+- **[CLAUDE.md](CLAUDE.md)** — the short version an agent loads automatically
+- [ios/SETUP.md](ios/SETUP.md) — the Xcode and dashboard steps
+- [PRIVACY.md](PRIVACY.md) — published at `/privacy` on the live API
+
+`ARCHITECTURE.md` and `TODO.md` predate the iOS app and describe `client/`.
