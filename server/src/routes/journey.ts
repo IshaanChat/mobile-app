@@ -34,6 +34,13 @@ export const journeyRouter = Router();
  *
  * Each returns true when the thing has demonstrably happened. They only ever
  * award; nothing here can un-complete a milestone.
+ *
+ * These deliberately ignore level gating, unlike the POST route. Gating exists
+ * to stop somebody *claiming* a step out of order — but a proven fact is not a
+ * claim, and refusing to record that a business exists because an earlier level
+ * is unfinished would make the app argue with reality. The visible effect is
+ * that a locked level can already show progress, which reads as a head start
+ * rather than a bug.
  */
 const PROVABLE: Record<string, (userId: string) => Promise<boolean>> = {
   'name-business': async (userId) =>
@@ -143,7 +150,11 @@ journeyRouter.get(
     });
 
     const all = shaped.flatMap((l) => l.milestones);
-    const xp = completions.reduce((sum, c) => sum + c.xpAwarded, 0);
+    // Summed from what is completed *now*, not from the completions row set —
+    // that was read before the auto-awards above ran, so anything just proved
+    // would not be counted and the XP would lag a request behind the ticks
+    // beside it. Every milestone carries its own xp, so this needs no reread.
+    const xp = all.filter((m) => m.completed).reduce((sum, m) => sum + m.xp, 0);
     // The current level is the first unfinished one — not the highest reached,
     // which would let a single skipped step read as further along than it is.
     const current = shaped.find((l) => !l.complete);
