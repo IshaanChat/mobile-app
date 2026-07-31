@@ -146,6 +146,7 @@ adminRouter.post(
         approach: raw.approach.trim(),
         tags: raw.tags.trim(),
         imageUrl: raw.imageUrl?.trim() || null,
+        imageCredit: raw.imageCredit?.trim() || null,
         memberCount: raw.memberCount ?? null,
         hotness: raw.hotness ?? 50,
         status: 'ACTIVE',

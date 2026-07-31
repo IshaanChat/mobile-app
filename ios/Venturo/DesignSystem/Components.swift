@@ -135,6 +135,39 @@ struct EvidenceChip: View {
     }
 }
 
+// MARK: - Attribution
+
+/// The photographer's credit, over the bottom of an image.
+///
+/// Every curated photograph in the app is somebody's work, and the name was
+/// captured when the image was fetched. Pexels does not legally require the
+/// credit be shown — but holding a name and choosing not to print it is a
+/// decision, not an oversight, and this is the cheap side of that decision.
+///
+/// Deliberately quiet: small, low-contrast, and at the very bottom edge, so it
+/// reads as a footnote on the photograph rather than as a label competing with
+/// the card's own content. It is there for the person who looks, not for
+/// everyone else.
+///
+/// Supplier product shots carry no credit and get nothing — those arrive with
+/// the affiliate arrangement rather than from a photographer.
+struct ImageAttribution: View {
+    let credit: String?
+
+    var body: some View {
+        if let credit, !credit.trimmingCharacters(in: .whitespaces).isEmpty {
+            Text(credit)
+                .font(.custom(Typeface.sansMedium, size: 9.5))
+                .foregroundStyle(.white.opacity(0.72))
+                .lineLimit(1)
+                .padding(.horizontal, 6)
+                .padding(.vertical, 2)
+                .background(Color.black.opacity(0.32), in: Capsule())
+                .accessibilityLabel("Photograph by \(credit)")
+        }
+    }
+}
+
 // MARK: - Section heading
 
 /// The shelf label above each group in the feed.

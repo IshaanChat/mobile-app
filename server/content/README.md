@@ -62,6 +62,13 @@ to prevent.
 can stand behind is not. That is why some products ship with empty `research`
 and `signals` blocks rather than estimates.
 
+**Photographs carry their photographer.** `npm run growth:images` writes an
+`imageCredit` alongside every `imageUrl` it fetches, in the form
+`"Yaroslav Shuraev / Pexels"`, and the app prints it on the image. Pexels does
+not legally require the credit, but the name is captured either way and
+withholding one you already hold is a decision rather than an oversight. If you
+add an image by hand, add the credit with it.
+
 ## Adding one thing
 
 - **A product** — append to the right file in `products/`. `nicheSlug` must

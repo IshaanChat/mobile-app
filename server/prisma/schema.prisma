@@ -422,6 +422,13 @@ model CommunityPost {
   tags String
 
   imageUrl    String?
+  /// Who took the photograph, e.g. "Yaroslav Shuraev / Pexels".
+  ///
+  /// TrendProduct has had this since the catalogue landed; CommunityPost did
+  /// not, so `growth:images` wrote a credit into the JSON for all 166
+  /// communities and the importer dropped every one of them on the floor. The
+  /// names were on disk the whole time with nowhere to go.
+  imageCredit String?
   // Filled by the enricher where an official API provides it.
   memberCount Int?
   // Curator-set 0–100 editorial priority.

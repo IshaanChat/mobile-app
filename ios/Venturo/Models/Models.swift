@@ -192,6 +192,8 @@ struct GrowthPost: Codable, Identifiable, Equatable {
     let tagline: String
     let audience: String
     let imageUrl: String?
+    /// Who took the photograph. Optional because older rows predate the column.
+    let imageCredit: String?
     let memberCount: Int?
     let hotness: Int
     /// Paragraphs, separated by blank lines.

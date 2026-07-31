@@ -45,6 +45,7 @@ interface PostInput {
   approach: string;
   tags: string;
   imageUrl?: string;
+  imageCredit?: string;
   memberCount?: number;
   hotness?: number;
 }
@@ -170,6 +171,8 @@ async function run() {
       approach: post.approach.trim(),
       tags: post.tags.trim(),
       imageUrl: post.imageUrl?.trim() || null,
+      // Written by growth:images and, until now, dropped here.
+      imageCredit: post.imageCredit?.trim() || null,
       memberCount: post.memberCount ?? null,
       hotness: post.hotness ?? 50,
       status: 'ACTIVE',

@@ -88,7 +88,15 @@ struct ProductCard: View {
             .padding(14)
         }
         .overlay(alignment: .bottomTrailing) {
-            evidenceStrip.padding(14)
+            // Evidence first, attribution under it. Both are bottom-right
+            // because the left is already carrying the audience and sourcing
+            // chips, and stacking keeps the credit subordinate to the measured
+            // fact rather than competing with it.
+            VStack(alignment: .trailing, spacing: 4) {
+                evidenceStrip
+                ImageAttribution(credit: product.imageCredit)
+            }
+            .padding(14)
         }
         .contentShape(Rectangle())
         .onTapGesture { withAnimation(.easeInOut(duration: 0.18)) { isExpanded.toggle() } }

@@ -173,6 +173,9 @@ struct CommunityCard: View {
             }
             .padding(14)
         }
+        .overlay(alignment: .bottomTrailing) {
+            ImageAttribution(credit: post.imageCredit).padding(14)
+        }
         .contentShape(Rectangle())
         .onTapGesture(perform: onToggle)
     }

@@ -47,6 +47,7 @@ interface PostRow {
   rules: string;
   approach: string;
   imageUrl: string | null;
+  imageCredit: string | null;
   memberCount: number | null;
   hotness: number;
 }
@@ -61,6 +62,10 @@ function toFullPost(p: PostRow) {
     tagline: p.tagline,
     audience: p.audience,
     imageUrl: p.imageUrl,
+    // Sent so the client can attribute the photographer. Pexels does not
+    // legally require it, but the name was captured and withholding a credit
+    // you already hold is a choice rather than an oversight.
+    imageCredit: p.imageCredit,
     memberCount: p.memberCount,
     hotness: p.hotness,
     overview: p.overview,
