@@ -13,6 +13,9 @@ struct RootView: View {
 
     @State private var tab: Tab = .discover
     @State private var showJourney = false
+    /// Owns the win, the level-up and the nudge, which share one strip and
+    /// therefore have to be sequenced somewhere above all three.
+    @State private var celebrations = Celebrations()
 
     enum Tab: String, CaseIterable {
         case discover, grow, business, you
@@ -57,11 +60,14 @@ struct RootView: View {
             }
         }
         .venturoTheme(colorScheme)
+        .environment(celebrations)
         // Keyed on the user id rather than run once: signing out and back in as
         // somebody else has to reload, and a plain `.task` would keep the first
         // account's profile on screen.
         .task(id: clerk.user?.id) {
             guard clerk.user != nil else { return }
+            // A new account must not inherit a muted nudge from the last one.
+            celebrations.reset()
             await app.load()
         }
     }
@@ -74,10 +80,47 @@ struct RootView: View {
         }
         .background(Theme(colorScheme).scheme.background)
         .ignoresSafeArea(.keyboard, edges: .bottom)
+        // The win and the nudge share one strip below the top bar, which is why
+        // only one can be on screen: `Celebrations` queues them rather than
+        // letting them stack.
+        .overlay(alignment: .top) { momentStrip }
+        .overlay {
+            if let levelUp = celebrations.levelUp {
+                LevelUpOverlay(levelUp: levelUp) { celebrations.dismissLevelUp() }
+                    .transition(.opacity)
+            }
+        }
+        .animation(.spring(response: 0.32, dampingFraction: 0.8), value: celebrations.win)
+        .animation(.spring(response: 0.32, dampingFraction: 0.8), value: celebrations.nudge)
+        .animation(.easeInOut(duration: 0.22), value: celebrations.levelUp)
         .sheet(isPresented: $showJourney) {
             JourneySheet()
                 .venturoTheme(colorScheme)
                 .environment(app)
+                .environment(celebrations)
+        }
+    }
+
+    @ViewBuilder private var momentStrip: some View {
+        if let win = celebrations.win {
+            WinBanner(win: win)
+                .padding(.horizontal, 12)
+                .padding(.top, 6)
+                .transition(.move(edge: .top).combined(with: .opacity))
+        } else if let nudge = celebrations.nudge {
+            NudgeBanner(
+                nudge: nudge,
+                onGo: {
+                    if let target = nudge.tab { tab = target }
+                    celebrations.dismissNudge(mute: false)
+                },
+                // Dismissing mutes for the session. A prompt that survives being
+                // dismissed is a prompt people learn to hate.
+                onDismiss: { celebrations.dismissNudge(mute: true) }
+            )
+            .padding(.horizontal, 12)
+            .padding(.top, 6)
+            .transition(.move(edge: .top).combined(with: .opacity))
         }
     }
 

@@ -11,6 +11,7 @@ import SwiftUI
 struct JourneySheet: View {
     @Environment(\.theme) private var theme
     @Environment(AppState.self) private var app
+    @Environment(Celebrations.self) private var celebrations
     @Environment(\.dismiss) private var dismiss
 
     @State private var data: JourneyPayload?
@@ -343,15 +344,64 @@ struct JourneySheet: View {
     private func complete(_ milestone: Milestone2) async {
         busySlug = milestone.slug
         defer { busySlug = nil }
+
+        // Which levels were finished *before* this, so the reload can be
+        // compared against it. Asking "is this level complete now" is not
+        // enough — it would re-fire the level-up every time the sheet reloads.
+        let completeBefore = Set((data?.levels ?? []).filter(\.complete).map(\.level))
+
         do {
             try await app.api.completeMilestone(slug: milestone.slug)
             // Reloaded rather than patched locally: completing the last step of
-            // a level unlocks the next one, and the server is what decides that.
+            // a level unlocks the next one, and the server decides that.
             await load()
+
+            guard let fresh = data else { return }
+            let newlyComplete = fresh.levels.first { $0.complete && !completeBefore.contains($0.level) }
+
+            if let level = newlyComplete {
+                // A level-up outranks the win. Finishing the last step of a
+                // level would otherwise fire both, and the smaller moment is
+                // not worth sitting through.
+                celebrations.levelCompleted(name: level.name, title: level.title)
+            } else {
+                celebrations.completed(
+                    title: milestone.title,
+                    xp: milestone.xp,
+                    totalXp: fresh.summary.xp,
+                    next: nextNudge(fresh)
+                )
+            }
         } catch let error as APIError {
             errorMessage = error.message
         } catch {
             errorMessage = error.localizedDescription
+        }
+    }
+
+    /// The step after this one, if there is one worth pointing at.
+    ///
+    /// Only for in-app milestones — sending somebody to a tab to do something
+    /// that happens on Etsy would be worse than saying nothing.
+    private func nextNudge(_ data: JourneyPayload) -> Celebrations.Nudge? {
+        guard let level = data.levels.first(where: { $0.unlocked && !$0.complete }),
+              let next = level.milestones.first(where: { !$0.completed })
+        else { return nil }
+
+        return Celebrations.Nudge(
+            title: next.title,
+            tab: next.isOutside ? nil : tabFor(next.tab)
+        )
+    }
+
+    private func tabFor(_ name: String?) -> RootView.Tab? {
+        switch name {
+        case "discover": return .discover
+        case "grow": return .grow
+        // The content files call the Business tab "shop".
+        case "shop", "business": return .business
+        case "you": return .you
+        default: return nil
         }
     }
 }
