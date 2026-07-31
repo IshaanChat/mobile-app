@@ -90,6 +90,8 @@ interface ProductInput {
   sourceCost?: string;
   typicalResale?: string;
   hotness?: number;
+  /** 'proven' | 'upside'. Absent on hand-curated products, which aren't tiered. */
+  tier?: string;
   imageQuery?: string;
   imageUrl?: string;
   imageCredit?: string;
@@ -99,6 +101,7 @@ interface ProductInput {
 
 const SOURCING = new Set(['DROPSHIP', 'WHOLESALE', 'PRINT_ON_DEMAND', 'MATERIALS', 'MAKE_YOUR_OWN']);
 const AUDIENCES = new Set(['maker', 'reseller', 'both']);
+const TIERS = new Set(['proven', 'upside']);
 
 function fail(message: string): never {
   console.error(`\x1b[31m${message}\x1b[0m`);
@@ -174,6 +177,12 @@ const products = rawProducts.map(({ file, index, raw }) => {
   }
   if (raw?.hotness !== undefined && (typeof raw.hotness !== 'number' || raw.hotness < 0 || raw.hotness > 100)) {
     problems.push(`${where}: hotness must be a number 0-100`);
+  }
+  // Validated rather than passed through, because the badge and the feed's top
+  // shelf both switch on the exact string. A typo would not error anywhere —
+  // it would just quietly stop a product ever being marked high-upside.
+  if (raw?.tier !== undefined && !TIERS.has(raw.tier)) {
+    problems.push(`${where}: tier must be one of ${[...TIERS].join(', ')}`);
   }
   // A nicheSlug with no niche is a hard error. The prototype silently drops
   // these (`.filter(p => p.niche)`), which hides typos — a product vanishes
@@ -340,6 +349,9 @@ async function run() {
       imageCredit: p.imageCredit?.trim() || null,
       // The curator's number. Ingest writes `heat`; these never collide.
       hotness: p.hotness ?? 50,
+      // Null, not 'proven', when absent — the hand-curated products are not
+      // tiered, and saying they were proven would be inventing an assessment.
+      tier: p.tier?.trim() || null,
       status: 'ACTIVE',
       origin: 'CATALOG',
     };

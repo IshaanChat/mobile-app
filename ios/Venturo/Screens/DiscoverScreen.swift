@@ -274,6 +274,7 @@ struct DiscoverScreen: View {
                     product,
                     Relevance.group(
                         isHot: product.hotness >= floor,
+                        isUpside: product.isUpside,
                         isMatch: Relevance.matches(product, wants: want),
                         sellerFilter: sellerFilter
                     )

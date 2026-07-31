@@ -84,6 +84,9 @@ export function toDiscoverProduct(p: TrendProductWithNiche, saved: boolean) {
     imageUrl: p.imageUrl,
     imageCredit: p.imageCredit,
     hotness: p.hotness,
+    // 'proven' | 'upside' | null. Null means not tiered rather than not good —
+    // the hand-curated products are never assessed this way.
+    tier: p.tier,
     evidence: measured
       ? ({
           heat: p.heat,

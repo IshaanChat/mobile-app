@@ -74,16 +74,18 @@ enum Relevance {
     /// no craft to be matched against and wants the strongest bet on the shelf,
     /// which is what the badges mark. Lower group sorts first; heat breaks ties.
     ///
-    /// **`upside` is missing here.** The prototype's strongest shelf is a card
-    /// carrying Hot *and* High upside together — 170 of the 698 sourced
-    /// products are tier `upside` in the content files, but `tier` exists in
-    /// neither the Prisma schema nor `toDiscoverProduct`, so the app cannot
-    /// see it. Until that is carried through, `hot` alone stands in for both
-    /// badges and this ordering is the prototype's with one of its two signals
-    /// unavailable.
-    static func group(isHot: Bool, isMatch: Bool, sellerFilter: Bool) -> Int {
-        if sellerFilter { return isHot ? 0 : 1 }
-        if isMatch { return isHot ? 0 : 1 }
-        return isHot ? 2 : 3
+    /// **Both badges together is the strongest thing the feed can say about a
+    /// product** — settled-enough demand to be scoring in the top fifth, *and*
+    /// the early-with-margin-intact profile. It gets its own group rather than
+    /// being lumped in with single-badge cards, which buried it.
+    static func group(isHot: Bool, isUpside: Bool, isMatch: Bool, sellerFilter: Bool) -> Int {
+        let top = isHot && isUpside
+        let either = isHot || isUpside
+
+        if sellerFilter { return top ? 0 : either ? 1 : 2 }
+        // A maker still leads with relevance, but a double-badged match beats
+        // a plain one.
+        if isMatch { return top ? 0 : 1 }
+        return top ? 2 : either ? 3 : 4
     }
 }

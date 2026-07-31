@@ -105,6 +105,40 @@ struct HotBadge: View {
     }
 }
 
+/// The High upside badge: early demand with the margin still intact.
+///
+/// A different claim from a high score, and from Hot. Hot means the product is
+/// already moving; upside means it is early and the margin has not been
+/// competed away yet. `sourcing.ts` picks the two tiers separately so a
+/// strong-but-late product cannot crowd out an early one, and a card can
+/// legitimately carry both badges — which is the strongest thing the feed can
+/// say about a product.
+///
+/// Purple rather than the accent, because in dark mode the accent *is* a
+/// lavender and the badge would disappear into the brand instead of reading as
+/// a mark on the card.
+struct UpsideBadge: View {
+    var body: some View {
+        HStack(spacing: 4) {
+            Icon(name: .spark, size: 12, color: .white)
+            Text("High upside")
+                .font(.custom(Typeface.sansBold, size: 11))
+                .tracking(0.33)
+                .foregroundStyle(.white)
+        }
+        .padding(.horizontal, 9)
+        .padding(.vertical, 4)
+        .background(
+            LinearGradient(
+                colors: [Color(hex: 0x6F6BD8), Color(hex: 0x8F5FD6)],
+                startPoint: .topLeading, endPoint: .bottomTrailing
+            ),
+            in: Capsule()
+        )
+        .shadow(color: Color(hex: 0x6F6BD8, alpha: 0.36), radius: 4, y: 2)
+    }
+}
+
 /// An evidence chip — the card's only piece of hard measured data.
 ///
 /// Sits bottom-right of the hero on a near-opaque white pill so it stays

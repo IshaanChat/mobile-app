@@ -311,6 +311,17 @@ model TrendProduct {
   // THIS. It is the editorial judgement the machine gets measured against.
   hotness Int @default(50)
 
+  // 'proven' | 'upside' — which shelf a sourced product earned. `upside` is
+  // early demand with the margin still intact, and it is a different claim
+  // from a high score: `sourcing.ts` picks the two tiers separately so a
+  // strong-but-late product cannot crowd out an early one.
+  //
+  // Null for hand-curated products, which are not tiered at all. That is why
+  // it is nullable rather than defaulted — "not assessed" and "proven" are
+  // different states, and a default would quietly turn 188 of one into the
+  // other.
+  tier String?
+
   // --- machine ------------------------------------------------------------
   // 0–100 from real signals. Null until a source reports on this product,
   // which on day one is all of them.

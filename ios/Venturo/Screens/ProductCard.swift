@@ -72,8 +72,16 @@ struct ProductCard: View {
         .aspectRatio(aspectRatio, contentMode: .fit)
         .frame(maxWidth: .infinity)
         .clipped()
+        // Stacked rather than placed, because a card can carry both and the
+        // prototype drops the upside badge below the hot one when it does.
+        // A VStack keeps that relationship without a hardcoded offset that
+        // would be wrong the moment either badge changes height.
         .overlay(alignment: .topLeading) {
-            if isHot { HotBadge().padding(14) }
+            VStack(alignment: .leading, spacing: 6) {
+                if isHot { HotBadge() }
+                if product.isUpside { UpsideBadge() }
+            }
+            .padding(14)
         }
         .overlay(alignment: .topTrailing) {
             saveButton.padding(14)

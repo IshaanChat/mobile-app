@@ -105,6 +105,11 @@ struct DiscoverProduct: Codable, Identifiable, Equatable {
     /// a criteria-fit score (roughly 78–97). That is why "Hot" is a percentile
     /// of the loaded feed rather than a fixed threshold — see DiscoverFeed.
     let hotness: Int
+    /// `proven` | `upside`, or null. Null means **not tiered** rather than not
+    /// good — only sourced products are assessed this way, so all 188
+    /// hand-curated ones are null and must not be treated as the lesser tier.
+    let tier: String?
+    var isUpside: Bool { tier == "upside" }
     /// Null unless something was actually measured. Empty is honest here.
     let evidence: DiscoverEvidence?
     /// `var` for the optimistic heart — the only field the client flips before
