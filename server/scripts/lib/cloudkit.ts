@@ -114,6 +114,36 @@ function basePath(config: CloudKitConfig): string {
   return `/database/1/${config.container}/${config.environment}/public`;
 }
 
+/**
+ * Reads every record of a type back, following continuation markers.
+ *
+ * Exists to prove a push landed, and to catch the index mistake early: a type
+ * whose `___recordID` is not QUERYABLE cannot be listed at all, and that shows
+ * up here rather than as a runtime failure in the app.
+ */
+export async function queryRecords(
+  config: CloudKitConfig,
+  recordType: string
+): Promise<Array<{ recordName: string; fields: Record<string, any> }>> {
+  const path = `${basePath(config)}/records/query`;
+  const out: Array<{ recordName: string; fields: Record<string, any> }> = [];
+  let marker: string | undefined;
+
+  do {
+    const page: any = await send(config, path, {
+      query: { recordType },
+      resultsLimit: MAX_OPERATIONS,
+      ...(marker ? { continuationMarker: marker } : {}),
+    });
+    for (const record of page.records ?? []) {
+      out.push({ recordName: record.recordName, fields: record.fields ?? {} });
+    }
+    marker = page.continuationMarker;
+  } while (marker);
+
+  return out;
+}
+
 /** Drops null and undefined, and wraps the rest in CloudKit's `{ value }` shape. */
 function encodeFields(fields: CloudKitRecord['fields']): Record<string, { value: FieldValue }> {
   const out: Record<string, { value: FieldValue }> = {};

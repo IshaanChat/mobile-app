@@ -125,11 +125,19 @@ export const SCHEMA: Record<string, RecordSchema> = {
 /**
  * Emits a `.ckdb` schema file for CloudKit Console → Schema → Import Schema.
  *
- * The security block is the point of the exercise as much as the fields are:
- * `_world` reads, and nothing else writes. CloudKit's default lets any
- * authenticated user create records in a public database, which would let
- * anyone with a debugger add products to the feed. The server-to-server key
- * writes as the container owner and is unaffected by these grants.
+ * The grants are CloudKit's defaults, arrived at the hard way. Granting only
+ * READ TO "_world" — the tighter posture, and the one worth wanting — fails
+ * the push with `ACCESS_DENIED CREATE operation not permitted`: a
+ * server-to-server key is **not** exempt from these roles the way container
+ * ownership would suggest. Something has to be granted CREATE, and `_icloud`
+ * is the only role the key satisfies.
+ *
+ * What that costs: any authenticated user can, in principle, create records in
+ * these public types. WRITE is limited to `_creator`, so nobody can alter the
+ * curated rows — the exposure is additions, not edits, and the app reads a
+ * fixed set of slugs. The durable fix is for the client to ignore records whose
+ * creator is not the push key, which is worth doing before the catalogue is
+ * worth polluting.
  */
 export function toCKDB(): string {
   const system = [
@@ -149,6 +157,8 @@ export function toCKDB(): string {
         const attrs = [spec.type, ...(spec.index ?? [])].join(' ');
         return `        ${name.padEnd(24)} ${attrs}`;
       }),
+      '        GRANT WRITE TO "_creator"',
+      '        GRANT CREATE TO "_icloud"',
       '        GRANT READ TO "_world"',
     ];
     return `    RECORD TYPE ${type} (\n${lines.join(',\n')}\n    );`;

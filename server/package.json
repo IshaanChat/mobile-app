@@ -33,7 +33,8 @@
     "journey:import": "tsx scripts/import-journey.ts",
     "cloudkit:keygen": "node scripts/cloudkit-keygen.mjs",
     "cloudkit:push": "tsx --env-file=.env scripts/cloudkit-push.ts",
-    "cloudkit:schema": "tsx scripts/cloudkit-schema.ts"
+    "cloudkit:schema": "tsx scripts/cloudkit-schema.ts",
+    "cloudkit:verify": "tsx --env-file=.env scripts/cloudkit-verify.ts"
   },
   "dependencies": {
     "@clerk/backend": "^3.12.0",
