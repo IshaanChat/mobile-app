@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Sign in with Apple is kept until the Clerk removal lands in phase 4.
+	     Removing it before the CloudKit read path works would leave no way in
+	     at all. -->
+	<key>com.apple.developer.applesignin</key>
+	<array>
+		<string>Default</string>
+	</array>
+
+	<key>com.apple.developer.icloud-container-identifiers</key>
+	<array>
+		<string>iCloud.com.ishaanchaturvedi.salesmechanic</string>
+	</array>
+	<key>com.apple.developer.icloud-services</key>
+	<array>
+		<string>CloudKit</string>
+	</array>
+
+	<!-- The Release half of the pair. TestFlight and the App Store both run
+	     against Apple's production push environment; a build shipped with
+	     "development" here does not error, it just never receives a
+	     subscription push again. -->
+	<key>aps-environment</key>
+	<string>production</string>
+</dict>
+</plist>
