@@ -42,8 +42,9 @@ the App Privacy answers derived from the code. Nothing is submitted yet.
 
 ## Working on this Mac
 
-`xcode-select` points at the Command Line Tools and the account is not an
-admin, so **every Xcode command needs `DEVELOPER_DIR`**:
+`xcode-select` now points at Xcode — an admin ran it mid-session, so
+`DEVELOPER_DIR` is no longer required and tap injection in the simulator
+works. Signing identities are installed (Apple Distribution, team G7K94LKBQH).
 
 ```bash
 export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer
