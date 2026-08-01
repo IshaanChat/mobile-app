@@ -66,7 +66,7 @@ struct AccountSection: View {
             Button("Cancel", role: .cancel) {}
             Button("Delete everything", role: .destructive) { Task { await deleteAccount() } }
         } message: {
-            Text("This removes your profile, businesses, clients, sales, products and progress, and your login. It happens immediately and cannot be undone.")
+            Text("This removes your profile, businesses, clients, sales, products and progress from your iCloud. It happens immediately, and there is no copy anywhere for us to restore.")
         }
     }
 

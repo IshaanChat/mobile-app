@@ -208,7 +208,7 @@ struct OnboardingScreen: View {
                     .padding(.bottom, 10)
             }
 
-            PrimaryButton(label: isSubmitting ? "Setting up…" : ctaLabel(all)) {
+            PrimaryButton(label: isSubmitting ? "Setting up…" : ctaLabel(all, script: script)) {
                 advance(all, script: script)
             }
             .disabled(!canAdvance(current) || isSubmitting)
@@ -733,8 +733,15 @@ struct OnboardingScreen: View {
         }
     }
 
-    private func ctaLabel(_ all: [Question]) -> String {
-        stepIndex >= all.count - 1 ? "Let's go" : "Continue"
+    private func ctaLabel(_ all: [Question], script: OnboardingScript) -> String {
+        // The reveal has its own words. "Show me" after the first, "One more"
+        // after the second — written to carry the moment, and until now
+        // overwritten by a generic Continue.
+        if case let .reveal(index) = all[min(stepIndex, all.count - 1)],
+           let reveal = script.reveal {
+            if let words = index == 0 ? reveal.ctaSecond : reveal.cta { return words }
+        }
+        return stepIndex >= all.count - 1 ? "Let's go" : "Continue"
     }
 
     private func advance(_ all: [Question], script: OnboardingScript) {
