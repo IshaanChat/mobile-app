@@ -10,6 +10,9 @@ struct BusinessOverview: View {
     @Environment(\.theme) private var theme
     @Environment(AppState.self) private var app
 
+    /// Handed down so the explorer empty state can offer a way out.
+    var onOpenDiscover: (() -> Void)? = nil
+
     @State private var contacts: [Contact] = []
     @State private var payments: PaymentsPayload?
     @State private var shelf: ProductsPayload?
@@ -22,7 +25,8 @@ struct BusinessOverview: View {
             if app.activeBusiness == nil {
                 ExplorerEmpty(
                     title: "Nothing to measure yet",
-                    body_: "Once you commit to a product and start your business, this is where the numbers land."
+                    body_: "Once you commit to a product and start your business, this is where the numbers land.",
+                    onOpenDiscover: onOpenDiscover
                 )
             } else {
                 VStack(alignment: .leading, spacing: 12) {

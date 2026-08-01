@@ -5,6 +5,9 @@ struct BusinessMoney: View {
     @Environment(\.theme) private var theme
     @Environment(AppState.self) private var app
 
+    /// Handed down so the explorer empty state can offer a way out.
+    var onOpenDiscover: (() -> Void)? = nil
+
     @State private var payments: PaymentsPayload?
     @State private var shelf: ProductsPayload?
     @State private var isRecording = false
@@ -18,7 +21,8 @@ struct BusinessMoney: View {
             if app.activeBusiness == nil {
                 ExplorerEmpty(
                     title: "No money yet, and that is fine",
-                    body_: "Build a business around something in Discover first. This fills in from your first sale — everything before that is preparation."
+                    body_: "Build a business around something in Discover first. This fills in from your first sale — everything before that is preparation.",
+                    onOpenDiscover: onOpenDiscover
                 )
             } else {
                 VStack(alignment: .leading, spacing: 12) {

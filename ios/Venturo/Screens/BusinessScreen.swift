@@ -46,9 +46,9 @@ struct BusinessScreen: View {
                 header
                 subtabs
                 switch pane {
-                case .overview: BusinessOverview()
-                case .clients: BusinessClients()
-                case .money: BusinessMoney()
+                case .overview: BusinessOverview(onOpenDiscover: onOpenDiscover)
+                case .clients: BusinessClients(onOpenDiscover: onOpenDiscover)
+                case .money: BusinessMoney(onOpenDiscover: onOpenDiscover)
                 case .saved: BusinessSaved(count: $savedCount, onOpenDiscover: onOpenDiscover)
                 }
             }
@@ -195,10 +195,17 @@ struct PanelCard<Content: View>: View {
 }
 
 /// Shown wherever a pane has nothing to say because no business exists yet.
+///
+/// Carries the way out. Every one of these tells the reader to go and find a
+/// product, and without a button that is an instruction with no door attached —
+/// the tab reads as dead rather than as locked, which is the difference between
+/// "not yet" and "broken".
 struct ExplorerEmpty: View {
     @Environment(\.theme) private var theme
     let title: String
     let body_: String
+    /// Nil only where there is genuinely nowhere to send them.
+    var onOpenDiscover: (() -> Void)? = nil
 
     var body: some View {
         VStack(spacing: Space.two) {
@@ -210,6 +217,18 @@ struct ExplorerEmpty: View {
                 .foregroundStyle(theme.scheme.textSecondary)
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
+            if let onOpenDiscover {
+                Button(action: onOpenDiscover) {
+                    Text("Find a product →")
+                        .font(.custom(Typeface.sansSemiBold, size: 14))
+                        .foregroundStyle(theme.scheme.accentText)
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 11)
+                        .background(theme.scheme.accent, in: Capsule())
+                }
+                .buttonStyle(.plain)
+                .padding(.top, 4)
+            }
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 48)

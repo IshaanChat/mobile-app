@@ -9,6 +9,9 @@ struct BusinessClients: View {
     @Environment(\.theme) private var theme
     @Environment(AppState.self) private var app
 
+    /// Handed down so the explorer empty state can offer a way out.
+    var onOpenDiscover: (() -> Void)? = nil
+
     @State private var contacts: [Contact]?
     @State private var isAdding = false
     @State private var newName = ""
@@ -21,7 +24,8 @@ struct BusinessClients: View {
             if app.activeBusiness == nil {
                 ExplorerEmpty(
                     title: "No book yet",
-                    body_: "Open a product in Discover and build a business around it. Your client book opens with it."
+                    body_: "Open a product in Discover and build a business around it. Your client book opens with it.",
+                    onOpenDiscover: onOpenDiscover
                 )
             } else {
                 VStack(alignment: .leading, spacing: 12) {
