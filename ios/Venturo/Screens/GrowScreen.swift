@@ -27,6 +27,7 @@ struct GrowScreen: View {
         .background(theme.scheme.background)
         .refreshable { await load() }
         .task { if posts == nil { await load() } }
+        .milestone(Trigger.openGrow)
     }
 
     private var header: some View {

@@ -12,6 +12,7 @@ struct DiscoverScreen: View {
     // dark app.
     @Environment(\.colorScheme) private var colorScheme
     @Environment(AppState.self) private var app
+    @Environment(Celebrations.self) private var celebrations
 
     @State private var payload: TrendsPayload?
     @State private var filter: Filter?
@@ -43,6 +44,7 @@ struct DiscoverScreen: View {
         .background(theme.scheme.background)
         .refreshable { await load() }
         .task { if payload == nil { await load() } }
+        .milestone(Trigger.openDiscover)
         .sheet(item: $committing) { product in
             CommitSheet(product: product)
                 .venturoTheme(colorScheme)
@@ -76,6 +78,9 @@ struct DiscoverScreen: View {
                         // toggle and there is always a way back to the whole
                         // feed without an "All" that does not exist.
                         filter = filter == option ? nil : option
+                        // Only the two that are actually "Maker and Seller" —
+                        // Saved is a shelf, not a lens on the catalogue.
+                        if option != .saved { Task { await fireFilter() } }
                     }
                 }
             }
@@ -112,6 +117,12 @@ struct DiscoverScreen: View {
     private func label(for option: Filter) -> String {
         guard option == .saved, savedCount > 0 else { return option.label }
         return "Saved · \(savedCount)"
+    }
+
+    private func fireFilter() async {
+        guard let milestone = await app.fire(Trigger.tryFilter) else { return }
+        celebrations.completed(title: milestone.title, xp: milestone.xp,
+                               totalXp: app.awardedXP, next: nil)
     }
 
     private var savedCount: Int {
@@ -371,6 +382,16 @@ struct DiscoverScreen: View {
     /// time the request comes back.
     private func toggleSave(_ product: DiscoverProduct) {
         let wasSaved = product.saved
+        // Fired on the way in, not on the way back: the write below is
+        // optimistic and the milestone should follow the user's intent, not
+        // the round trip.
+        if !wasSaved {
+            Task {
+                guard let m = await app.fire(Trigger.bookmarkProduct) else { return }
+                celebrations.completed(title: m.title, xp: m.xp,
+                                       totalXp: app.awardedXP, next: nil)
+            }
+        }
         setSaved(!wasSaved, id: product.id)
 
         Task {

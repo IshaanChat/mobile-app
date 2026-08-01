@@ -121,6 +121,89 @@ final class AppState {
         mode = businesses.isEmpty ? .explorer : .active
     }
 
+    // MARK: - Milestones
+    //
+    // Nineteen of the thirty-four milestones are `automatic` — the server used
+    // to watch for them and award them, and the Journey sheet deliberately
+    // gives them no tick box because asking the user to confirm something the
+    // app can see would be noise.
+    //
+    // Removing the server removed the thing that watched. Every automatic
+    // milestone became unreachable: untickable by design and unawarded in
+    // fact, which froze the whole Journey at 0/34 and meant level two never
+    // unlocked. This is the replacement, and it lives on the client now
+    // because there is nowhere else for it to live.
+
+    private(set) var completedMilestones: Set<String> = []
+
+    /// trigger → the milestone it awards. Built once from the journey content.
+    private var byTrigger: [String: Milestone2] = [:]
+
+    func loadMilestones() async {
+        async let doneTask = try? await store.completedMilestones()
+        async let journeyTask = try? await content.getJourney()
+
+        let (done, journey) = await (doneTask, journeyTask)
+        completedMilestones = done ?? []
+
+        guard let journey else { return }
+        byTrigger = Dictionary(
+            journey.levels
+                .flatMap(\.milestones)
+                .compactMap { milestone in milestone.trigger.map { ($0, milestone) } },
+            // A trigger naming two milestones is a content mistake; take the
+            // first rather than crashing on it.
+            uniquingKeysWith: { first, _ in first }
+        )
+    }
+
+    /// Records that the user did the thing, and says whether that was news.
+    ///
+    /// Returns the milestone only when this call is what completed it, so the
+    /// caller can celebrate exactly once. Opening Discover for the fiftieth
+    /// time returns nil.
+    @discardableResult
+    func fire(_ trigger: String) async -> Milestone2? {
+        guard mode.canPersist else { return nil }
+
+        // Loads the index if it is not there yet rather than giving up. The
+        // first screen's `.task` and the root's run concurrently, and Discover
+        // reliably wins — so relying on the root to have finished meant the
+        // very first milestone anybody could earn was the one that never
+        // fired.
+        if byTrigger.isEmpty { await loadMilestones() }
+
+        guard let milestone = byTrigger[trigger] else { return nil }
+        guard !completedMilestones.contains(milestone.slug) else { return nil }
+
+        // Inserted before the write, not after. Two views can fire the same
+        // trigger in the same frame — Discover appearing and its task running —
+        // and the second must not get as far as a duplicate celebration.
+        completedMilestones.insert(milestone.slug)
+
+        do {
+            try await store.completeMilestone(slug: milestone.slug, xp: milestone.xp)
+            return milestone
+        } catch {
+            completedMilestones.remove(milestone.slug)
+            return nil
+        }
+    }
+
+    /// For the Journey sheet's own tick boxes, which award manually.
+    func milestoneCompleted(_ slug: String) {
+        completedMilestones.insert(slug)
+    }
+
+    /// XP for everything awarded so far, from the milestones this app knows
+    /// about. Only counts triggered ones — the Journey sheet has the full
+    /// picture and uses its own.
+    var awardedXP: Int {
+        byTrigger.values
+            .filter { completedMilestones.contains($0.slug) }
+            .reduce(0) { $0 + $1.xp }
+    }
+
     // MARK: - Mutation
     //
     // These patch local state rather than refetching. Two reasons: the server

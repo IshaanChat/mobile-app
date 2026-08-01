@@ -61,6 +61,7 @@ struct JourneySheet: View {
             }
         }
         .task { await load() }
+        .milestone(Trigger.openJourney)
     }
 
     // MARK: - Header

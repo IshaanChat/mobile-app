@@ -59,6 +59,10 @@ struct RootView: View {
         .task {
             celebrations.reset()
             await app.load()
+            // After load, because which milestones are already done is a
+            // private-database read and there is no point asking before we
+            // know whether there is an account to ask about.
+            await app.loadMilestones()
         }
     }
 
