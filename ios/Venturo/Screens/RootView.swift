@@ -177,11 +177,11 @@ struct TabBar: View {
     }
 }
 
-/// Shown while the first two requests are in flight.
+/// Shown while the first reads are in flight.
 ///
-/// Names the cold start rather than spinning silently. On the free tier this
-/// can take half a minute, and a bare spinner for thirty seconds reads as a
-/// hang — saying why costs one line and changes it from broken to slow.
+/// Says what it is doing rather than spinning silently. It used to name a
+/// half-minute cold start on the free tier; there is no tier and no server, so
+/// the wait is now a network round trip and the copy says so.
 struct LaunchState: View {
     @Environment(\.colorScheme) private var colorScheme
 
@@ -193,7 +193,7 @@ struct LaunchState: View {
                 .frame(width: 56, height: 56)
                 .overlay { Icon(name: .spark, size: 28, color: theme.scheme.accentText) }
             ProgressView().tint(theme.scheme.accent)
-            Text("Warming up — the server naps when nobody is using it.")
+            Text("Fetching the catalogue.")
                 .font(.custom(Typeface.sansMedium, size: 13))
                 .foregroundStyle(theme.scheme.textSecondary)
                 .multilineTextAlignment(.center)

@@ -152,9 +152,10 @@ struct DiscoverScreen: View {
     private var loading: some View {
         VStack(spacing: Space.three) {
             ProgressView().tint(theme.scheme.accent)
-            // The free tier sleeps when idle, so a slow first load is normal
-            // rather than broken — and saying so costs nothing.
-            Text("Warming up — the server naps when nobody is using it.")
+            // No server to wake any more, so this is a network wait rather
+            // than a cold start. Said plainly, because the old line promised a
+            // 30-second nap that cannot happen.
+            Text("Fetching the catalogue.")
                 .font(.custom(Typeface.sansMedium, size: 13))
                 .foregroundStyle(theme.scheme.textSecondary)
                 .multilineTextAlignment(.center)
