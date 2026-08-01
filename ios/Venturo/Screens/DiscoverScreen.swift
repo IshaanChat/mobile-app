@@ -92,7 +92,10 @@ struct DiscoverScreen: View {
     /// Shown only once there is something to have matched against — somebody
     /// who skipped the question is not told that nothing matched.
     @ViewBuilder private var matchBanner: some View {
-        if payload != nil, !wants.isEmpty {
+        // Suppressed on an empty catalogue: "nothing matched what you're into"
+        // is a claim about the user's answers, and it is not true when there
+        // was nothing to match against in the first place.
+        if payload != nil, !wants.isEmpty, !catalogueIsEmpty {
             let count = matchCount
             Text(
                 count > 0
@@ -184,17 +187,44 @@ struct DiscoverScreen: View {
         .padding(.vertical, 56)
     }
 
-    private var emptyState: some View {
-        Text(
-            filter == .saved
-                ? "Nothing saved yet — tap the heart on a product and it lands here."
-                : "Nothing matched exactly — browse everything, something will click."
-        )
-        .font(.custom(Typeface.sansMedium, size: 14))
-        .foregroundStyle(theme.scheme.textSecondary)
-        .multilineTextAlignment(.center)
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 56)
+    /// Three different nothings, and they are not interchangeable.
+    ///
+    /// A filter that matched nothing is the user's doing and recoverable by
+    /// them. An empty catalogue is ours, and telling somebody to "browse
+    /// everything" when there is nothing to browse reads as the app blaming
+    /// them for its own failure — which is exactly what a tester would report,
+    /// and report as confusing rather than as broken.
+    @ViewBuilder private var emptyState: some View {
+        if catalogueIsEmpty {
+            VStack(spacing: 8) {
+                Text("Nothing to show yet.")
+                    .font(.custom(Typeface.sansBold, size: 15))
+                    .foregroundStyle(theme.scheme.text)
+                Text("That's on us, not you. Pull down to try again.")
+                    .font(.custom(Typeface.sansMedium, size: 14))
+                    .foregroundStyle(theme.scheme.textSecondary)
+                    .multilineTextAlignment(.center)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 56)
+        } else {
+            Text(
+                filter == .saved
+                    ? "Nothing saved yet — tap the heart on a product and it lands here."
+                    : "Nothing matched exactly — browse everything, something will click."
+            )
+            .font(.custom(Typeface.sansMedium, size: 14))
+            .foregroundStyle(theme.scheme.textSecondary)
+            .multilineTextAlignment(.center)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 56)
+        }
+    }
+
+    /// The load succeeded and returned nothing — which is a different thing
+    /// from still loading, and from a filter hiding everything.
+    private var catalogueIsEmpty: Bool {
+        payload?.products.isEmpty == true
     }
 
     // MARK: - The two rules that decide how the feed feels
