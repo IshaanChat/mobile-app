@@ -30,7 +30,9 @@
     "content:sync": "npm run catalog:import && npm run growth:import && npm run tips:import && npm run journey:import",
     "content:check": "npm run growth:import -- --dry-run && npm run tips:import -- --dry-run && npm run journey:import -- --dry-run",
     "verify:deletion": "node scripts/verify-account-deletion.mjs",
-    "journey:import": "tsx scripts/import-journey.ts"
+    "journey:import": "tsx scripts/import-journey.ts",
+    "cloudkit:keygen": "node scripts/cloudkit-keygen.mjs",
+    "cloudkit:push": "tsx scripts/cloudkit-push.ts"
   },
   "dependencies": {
     "@clerk/backend": "^3.12.0",

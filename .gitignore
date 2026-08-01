@@ -34,3 +34,7 @@ ios/**/*.xcworkspace/xcuserdata/
 ios/build/
 ios/DerivedData/
 .DS_Store
+
+# CloudKit server-to-server private key — never commit
+server/cloudkit-key.pem
+cloudkit-key.pem

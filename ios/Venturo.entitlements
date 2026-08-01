@@ -2,9 +2,28 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<!-- Sign in with Apple is kept until the Clerk removal lands in phase 4.
+	     Removing it before the CloudKit read path works would leave no way in
+	     at all. -->
 	<key>com.apple.developer.applesignin</key>
 	<array>
 		<string>Default</string>
 	</array>
+
+	<key>com.apple.developer.icloud-container-identifiers</key>
+	<array>
+		<string>iCloud.com.ishaanchaturvedi.salesmechanic</string>
+	</array>
+	<key>com.apple.developer.icloud-services</key>
+	<array>
+		<string>CloudKit</string>
+	</array>
+
+	<!-- CloudKit subscriptions arrive as silent pushes. Development here; the
+	     Release build needs "production" or subscriptions go quiet on
+	     TestFlight, which fails silently in exactly the way the Clerk native
+	     app entry did. -->
+	<key>aps-environment</key>
+	<string>development</string>
 </dict>
 </plist>

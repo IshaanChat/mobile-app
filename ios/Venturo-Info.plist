@@ -19,5 +19,11 @@
 	     export-compliance question on every single upload. -->
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<!-- CloudKit subscription pushes arrive silently and are delivered to a
+	     backgrounded app only with this mode set. -->
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
 </dict>
 </plist>
