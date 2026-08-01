@@ -27,6 +27,31 @@ and directory names — those are addresses, and changing them breaks live
 things. `render.yaml` still reads `sales-mechanic-api`, which is the actual
 host both `.env` files point at.
 
+## The shape of the business
+
+Decided in July 2026 and not re-litigated. Recorded here because none of it is
+derivable from the code.
+
+- **Discover is free to everyone.** It is both the hook and the tutorial — the
+  thing that has to work before anybody has a business, an account worth
+  anything, or a reason to stay.
+- **Growth was intended as the paid tier**, ~$5/month: the community and
+  customer-finding engine. **The shipping build does not implement this.** Grow
+  is fully open, there is no upgrade screen and no billing code anywhere in
+  `ios/`. That is deliberate for v1 — prove demand before charging — and it is
+  also why App Store Guideline 3.1.1 does not apply to this submission.
+- **Explorer mode is the new-founder path**: a profile and no business, browse
+  first. The only way out is committing to a product in Discover, which is what
+  the commit sheet does.
+- **The feel is closer to Instagram than to a productivity app** — visual
+  cards, a feed you scroll, moments that celebrate. Not a dashboard.
+- **Onboarding is Hinge-shaped**: full screen, one question at a time, warm.
+  The early fork — already running a business versus trying to start one —
+  shapes the feed, the journey and what Business shows.
+
+Superseded from the same period, so it does not get rebuilt by mistake: the
+five-tab bar (now four plus the Journey sheet), and Expo as the client.
+
 ## The four codebases
 
 Knowing which is which saves the most time of anything in this file.
