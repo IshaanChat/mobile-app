@@ -147,33 +147,37 @@ struct TipBubble: View {
 
     var body: some View {
         Button(action: onTap) {
-            HStack(spacing: 10) {
+            HStack(alignment: .top, spacing: 10) {
                 // The icon is the only signal of which kind this is — there is
                 // no label. Sage for warmth, the accent for advice.
-                RoundedRectangle(cornerRadius: 8, style: .continuous)
-                    .fill(tip.isLift ? theme.scheme.customer.opacity(0.12) : theme.scheme.accentSoft)
-                    .frame(width: 26, height: 26)
-                    .overlay {
-                        Icon(
-                            name: tip.isLift ? .spark : .chart,
-                            size: 15,
-                            color: tip.isLift ? theme.scheme.customer : theme.scheme.accent
-                        )
-                    }
+                //
+                // A bare glyph rather than a filled tile: the tile was a 26pt
+                // block of colour next to two lines of small grey text, which
+                // made the decoration louder than the sentence. Dropping it
+                // gives the line back about 16pt and lets the type grow.
+                Icon(
+                    name: tip.isLift ? .spark : .chart,
+                    size: 17,
+                    color: tip.isLift ? theme.scheme.customer : theme.scheme.accent
+                )
+                .padding(.top, 1)
 
                 Text(tip.text)
-                    .font(.custom(Typeface.sansMedium, size: 12.5))
+                    .font(.custom(Typeface.sansMedium, size: 14))
+                    .lineSpacing(2)
                     .foregroundStyle(theme.scheme.text)
                     .multilineTextAlignment(.leading)
-                    // Two lines, clipped. Tips are written to fit; one long one
-                    // should shorten itself rather than push the feed down.
-                    .lineLimit(2)
+                    // Three lines now rather than two. The longest tips were
+                    // being clipped mid-sentence, which is worse than a bar one
+                    // line taller.
+                    .lineLimit(3)
                     .frame(maxWidth: .infinity, alignment: .leading)
 
                 Icon(name: .chev, size: 16, color: theme.scheme.textSecondary, rotate: -90)
+                    .padding(.top, 1)
             }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 9)
+            .padding(.horizontal, 13)
+            .padding(.vertical, 11)
             .background(theme.scheme.backgroundElement, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
             .overlay {
                 RoundedRectangle(cornerRadius: 14, style: .continuous)
