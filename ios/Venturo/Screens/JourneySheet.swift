@@ -333,7 +333,7 @@ struct JourneySheet: View {
     private func load() async {
         errorMessage = nil
         do {
-            data = try await app.api.getJourney()
+            data = try await app.content.getJourney()
         } catch let error as APIError {
             if data == nil { errorMessage = error.message }
         } catch {

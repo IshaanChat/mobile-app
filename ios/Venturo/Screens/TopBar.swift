@@ -103,7 +103,7 @@ struct TopBar: View {
 
     private func loadTips() async {
         let level = 1 // raised once the journey model lands
-        guard let loaded = try? await app.api.getTips(tab: tab, level: level) else { return }
+        guard let loaded = try? await app.content.getTips(tab: tab, level: level) else { return }
         tips = loaded
         if current == nil { advance() }
     }

@@ -117,7 +117,7 @@ struct GrowScreen: View {
         guard let business = app.activeBusiness else { return }
         errorMessage = nil
         do {
-            posts = try await app.api.getGrowth(businessId: business.id).posts
+            posts = try await app.content.getGrowth(businessId: business.id).posts
         } catch let error as APIError {
             if posts == nil { errorMessage = error.message }
         } catch {

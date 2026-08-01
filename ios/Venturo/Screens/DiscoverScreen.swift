@@ -316,7 +316,7 @@ struct DiscoverScreen: View {
             // Explorers have no business to rank against, so the interests they
             // gave during onboarding stand in. Discover is their home screen —
             // it has to work before anything else exists.
-            payload = try await app.api.getTrends(
+            payload = try await app.content.getTrends(
                 businessId: app.activeBusiness?.id,
                 interests: app.activeBusiness == nil ? Preferences.interests : []
             )

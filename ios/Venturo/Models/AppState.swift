@@ -41,10 +41,18 @@ final class AppState {
     private var activeBusinessId: String?
     private var hasLoaded = false
 
+    /// User data — profile, businesses, contacts, sales. Moves to CloudKit's
+    /// private database in phase 4; until then it is still the Express API.
     let api: APIClient
 
-    init(api: APIClient) {
+    /// The curated content database, read straight from CloudKit's public
+    /// database. Needs no account, which is what lets Discover be the front
+    /// door rather than something behind a sign-up wall.
+    let content: CloudKitContent
+
+    init(api: APIClient, content: CloudKitContent = CloudKitContent()) {
         self.api = api
+        self.content = content
         self.activeBusinessId = Preferences.activeBusinessId
     }
 

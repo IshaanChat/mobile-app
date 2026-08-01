@@ -46,7 +46,7 @@ struct OnboardingScreen: View {
                 ProgressView().tint(theme.scheme.accent)
             }
         }
-        .task { script = try? await app.api.getOnboardingScript() }
+        .task { script = try? await app.content.getOnboardingScript() }
     }
 
     // MARK: - Welcome

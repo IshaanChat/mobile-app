@@ -125,10 +125,21 @@ becomes anonymised writes to a public `Event` type, which is also the only way
 `CKContainer.accountStatus()` replaces sign-in outright. `userRecordID` is the
 identity. There is no sign-up, no password, no OAuth.
 
-This adds a **sixth app state**: no iCloud account. `AppState` currently has
-five (loading, error, onboarding, explorer, active). A user signed out of
-iCloud can do nothing, and the empty state has to say so plainly rather than
-looking broken.
+**Discover does not require an account at all.** Decided 2026-07-31. The public
+database is readable without an iCloud login, so the feed, Grow, the tips and
+the journey definitions all load for somebody who has never signed in to
+anything. That makes the front door genuinely open — which is the argument for
+CloudKit rather than a consolation for it, given the audience is people who
+"feel out of their depth" and currently meet a sign-up wall on screen one.
+
+An account becomes necessary only where private records do: saving a product,
+committing to one, logging a contact, completing a milestone. Those prompt at
+the point of use rather than at launch.
+
+So the mode machine gains a state *below* onboarding rather than beside it —
+browsing with no identity at all. `AppState`'s five (loading, error,
+onboarding, explorer, active) become six, and the new one is the default
+first-run experience rather than an error case.
 
 Account deletion still has to exist in-app — App Store Guideline 5.1.1(v)
 requires it and `npm run verify:deletion` currently proves it. Deleting the
