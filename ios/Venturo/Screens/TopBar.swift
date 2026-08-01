@@ -148,20 +148,11 @@ struct TipBubble: View {
     var body: some View {
         Button(action: onTap) {
             HStack(alignment: .top, spacing: 10) {
-                // The icon is the only signal of which kind this is — there is
-                // no label. Sage for warmth, the accent for advice.
-                //
-                // A bare glyph rather than a filled tile: the tile was a 26pt
-                // block of colour next to two lines of small grey text, which
-                // made the decoration louder than the sentence. Dropping it
-                // gives the line back about 16pt and lets the type grow.
-                Icon(
-                    name: tip.isLift ? .spark : .chart,
-                    size: 17,
-                    color: tip.isLift ? theme.scheme.customer : theme.scheme.accent
-                )
-                .padding(.top, 1)
-
+                // No icon. It signalled which kind of tip this was — advice
+                // versus encouragement — but that is a distinction the reader
+                // never asked for and the sentence already carries. Removing it
+                // gives the line back roughly 27pt, which is what pays for the
+                // larger type.
                 Text(tip.text)
                     .font(.custom(Typeface.sansMedium, size: 14))
                     .lineSpacing(2)
@@ -178,12 +169,26 @@ struct TipBubble: View {
             }
             .padding(.horizontal, 13)
             .padding(.vertical, 11)
-            .background(theme.scheme.backgroundElement, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+            // Tinted rather than the panel colour. It sits between the wordmark
+            // and the feed, so on a blush background a white card reads as
+            // another surface to scroll past. A wash of the accent makes it the
+            // one warm thing above the fold — and it is the only place the app
+            // speaks in its own voice rather than describing a product.
+            //
+            // Soft, not solid: the Journey button next to it is solid accent,
+            // and two of those would be an argument rather than a hierarchy.
+            .background(
+                LinearGradient(
+                    colors: [theme.scheme.accent.opacity(0.16), theme.scheme.accent.opacity(0.07)],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                ),
+                in: RoundedRectangle(cornerRadius: 14, style: .continuous)
+            )
             .overlay {
                 RoundedRectangle(cornerRadius: 14, style: .continuous)
-                    .strokeBorder(theme.scheme.border, lineWidth: 1)
+                    .strokeBorder(theme.scheme.accent.opacity(0.22), lineWidth: 1)
             }
-            .cardElevation(theme)
         }
         .buttonStyle(.plain)
         .accessibilityLabel(tip.text)
