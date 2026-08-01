@@ -88,6 +88,13 @@ struct RootView: View {
                 .venturoTheme(colorScheme)
                 .environment(app)
                 .environment(celebrations)
+                // Most of the way up, draggable to full. Journey is something
+                // you check on rather than move into — leaving the feed visible
+                // behind it says "you are still where you were", which a
+                // full-screen sheet does not.
+                .presentationDetents([.fraction(0.88), .large])
+                .presentationDragIndicator(.visible)
+                .presentationBackground(Theme(colorScheme).scheme.background)
         }
     }
 

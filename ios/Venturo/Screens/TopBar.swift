@@ -79,15 +79,20 @@ struct TopBar: View {
         .accessibilityLabel("\(streak) day streak")
     }
 
+    /// Filled with the accent rather than outlined.
+    ///
+    /// It was a bordered capsule in the panel colour, which in dark mode is a
+    /// dark shape on a dark bar — legible, but it reads as chrome. This is the
+    /// only way into the Journey and there is nothing else competing with it up
+    /// here, so it can afford to be the one solid thing in the bar.
     private var journeyButton: some View {
         Button(action: onOpenJourney) {
             Text("Journey")
                 .font(.custom(Typeface.sansSemiBold, size: 13.5))
-                .foregroundStyle(theme.scheme.text)
+                .foregroundStyle(theme.scheme.accentText)
                 .padding(.horizontal, 15)
                 .padding(.vertical, 9)
-                .background(theme.scheme.backgroundElement, in: Capsule())
-                .overlay { Capsule().strokeBorder(theme.scheme.border, lineWidth: 1) }
+                .background(theme.scheme.accent, in: Capsule())
         }
         .buttonStyle(.plain)
     }
