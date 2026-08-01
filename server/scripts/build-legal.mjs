@@ -192,3 +192,16 @@ writeFileSync(
 `
 );
 console.log('  docs/_headers');
+
+// Clean URLs. Written here rather than left as a stray file so a rebuild
+// cannot quietly drop it.
+writeFileSync(
+  join(OUT, '_redirects'),
+  `# Clean URLs, so the App Store listing carries /privacy rather than
+# /privacy.html. 200 rather than 301: the path is the canonical one and a
+# redirect chain on a legal page is a needless extra hop.
+/privacy   /privacy.html   200
+/support   /support.html   200
+`
+);
+console.log('  docs/_redirects');
