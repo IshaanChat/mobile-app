@@ -58,8 +58,20 @@ Pages would need Pro:
 2. Framework preset **None**, **build command empty**, output directory
    **`docs`**. The HTML is committed, so there is nothing to build on their
    side and nothing to break when their Node version moves.
-3. Deploy. The URLs are `https://<project>.pages.dev/privacy.html` and
-   `/support.html`.
+3. Deploy. **Live and verified 1 August 2026:**
+
+   ```
+   https://mobile-app-bf6.pages.dev/privacy
+   https://mobile-app-bf6.pages.dev/support
+   ```
+
+   Those are the two URLs App Store Connect asks for. No `.html` — Cloudflare
+   serves clean paths natively, and adding a `_redirects` rule to "help" makes
+   it fight its own redirect and loop until the client gives up.
+
+   Note a **second, stale Pages project** owns `mobile-app.pages.dev` and
+   serves the superseded React web app. Worth deleting: it is public, it is not
+   the product, and it took the obvious subdomain.
 
 Put both into App Store Connect, and re-run `npm run legal:build` whenever the
 markdown changes — the HTML is generated, not hand-edited.

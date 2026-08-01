@@ -100,12 +100,12 @@ function render(md) {
 // The app's own palette, so the pages do not read as somebody else's site.
 // Dark mode included: a policy page that blinds you at night is a small
 // discourtesy that costs nothing to avoid.
-const shell = (title, body) => `<!doctype html>
+const shell = (title, body, bare = false) => `<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${title} · Venturo</title>
+<title>${bare ? title : `${title} · Venturo`}</title>
 <style>
   :root {
     --bg: #fbf4f0; --panel: #fff; --text: #2b1f26; --muted: #7b6a72;
@@ -175,7 +175,7 @@ for (const [file, title] of [['privacy', 'Privacy Policy'], ['support', 'Support
 // An index, so the Pages root is not a 404 for anyone who trims the URL.
 writeFileSync(
   join(OUT, 'index.html'),
-  shell('Venturo', '<h1>Venturo</h1><p>Walks somebody from "I want to start a business" to their first sale.</p><p><a href="./privacy.html">Privacy Policy</a> · <a href="./support.html">Support</a></p>')
+  shell('Venturo', '<h1>Venturo</h1><p>Walks somebody from "I want to start a business" to their first sale.</p><p><a href="./privacy.html">Privacy Policy</a> · <a href="./support.html">Support</a></p>', true)
 );
 console.log('  docs/index.html');
 
