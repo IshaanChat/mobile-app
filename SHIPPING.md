@@ -35,11 +35,12 @@ What remains: the **name**, and the two **legal URLs** below.
 
 ## What is not
 
-- **The privacy and support pages are served by the dying Express app.** See
-  below; this is the one hard blocker left.
-- The private database has never run against a real iCloud account.
 - `trends/rank.ts` is not ported, so feed ordering is provisional.
-- No App Store Connect record.
+- The reveal stage exists in the prototype and not in the app.
+
+Everything else on this list is done: the legal pages are live on Cloudflare,
+the App Store Connect record exists under **Venturo: Start Your Venture**, and
+build 1.0 (1) is on TestFlight with production CloudKit fully populated.
 
 ---
 
@@ -149,19 +150,6 @@ Discover, a product card expanded, Grow, Business, the Journey sheet.
 ---
 
 ## Ranked risks, current
-
-0. **Production CloudKit is empty and cannot be filled.** The server-to-server
-   key returns `AUTHENTICATION_FAILED` against production on both reads and
-   writes, while authenticating fine against development. Established by test:
-   the key is valid, keys are container-wide rather than per-environment, and
-   a TestFlight build cannot be pointed at the development database — the App
-   Store profile overrides `icloud-container-environment`.
-
-   **Testers will see an empty Discover with no error explaining it.** Upload
-   anyway — production access may be gated until an app has actually run
-   against the container, which makes the upload the test. If the push still
-   fails afterwards, it is a Developer Support question rather than a
-   configuration one.
 
 1. **The legal URLs die with Render.** Ordering problem, not a hard one — but
    it makes the app unsubmittable if done in the wrong order.

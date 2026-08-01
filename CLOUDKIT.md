@@ -48,11 +48,19 @@ promotion is the classic way to ship an app that works everywhere except the
 App Store build — a TestFlight tester opens it to an empty catalogue and
 nothing errors.
 
-**Server-to-server keys are per environment too.** The same public key
-registered against Production gets a *different* key id, and using the
-development one there fails `AUTHENTICATION_FAILED` rather than saying which
-of the two is wrong. Hence `CLOUDKIT_KEY_ID` and `CLOUDKIT_KEY_ID_PRODUCTION`;
-the private half is shared.
+**Server-to-server keys are per environment**, and this cost hours. Each
+environment keeps its own list, a key registered in one is invisible to the
+other, and using the wrong one returns `AUTHENTICATION_FAILED` — which reads
+like a broken signature rather than a missing registration.
+
+Two things made it worse. The Console refuses to register the same public key
+twice in a container, and that rejection looks like evidence the keys are
+shared when it is really evidence you are pointed at the wrong environment. So
+production needs its **own key pair** (`npm run cloudkit:keygen -- --production`),
+registered while the Console is showing **Production**.
+
+The check that settles it in one step: open Production → Tokens & Keys and
+count what is actually listed. An empty list is the whole answer.
 
 **The schema has to exist before the first push, and Web Services will not
 create it.** Saving a record of an unknown type from the *native SDK* creates
