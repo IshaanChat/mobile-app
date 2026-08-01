@@ -118,8 +118,6 @@ struct GrowScreen: View {
         errorMessage = nil
         do {
             posts = try await app.content.getGrowth(businessId: business.id).posts
-        } catch let error as APIError {
-            if posts == nil { errorMessage = error.message }
         } catch {
             if posts == nil { errorMessage = error.localizedDescription }
         }

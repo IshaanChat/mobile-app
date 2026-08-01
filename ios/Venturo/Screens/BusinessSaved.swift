@@ -77,11 +77,22 @@ struct BusinessSaved: View {
     private func load() async {
         errorMessage = nil
         do {
-            let shelf = try await app.api.getSavedTrends()
+            // Two databases now: which slugs are saved is private, and what
+            // those products *are* is public. The join happens here because
+            // CloudKit cannot reference across databases.
+            async let slugTask = app.store.savedSlugs()
+            async let catalogTask = app.content.getTrends(businessId: nil)
+            let (slugs, catalog) = try await (slugTask, catalogTask)
+
+            let shelf = catalog.products
+                .filter { slugs.contains($0.slug) }
+                .map { product -> DiscoverProduct in
+                    var saved = product
+                    saved.saved = true
+                    return saved
+                }
             products = shelf
             count = shelf.count
-        } catch let error as APIError {
-            errorMessage = error.message
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -100,7 +111,7 @@ struct BusinessSaved: View {
 
         Task {
             do {
-                try await app.api.unsaveTrend(id: product.id)
+                try await app.store.unsaveTrend(slug: product.id)
             } catch {
                 // Built as a whole list and assigned, rather than mutating in
                 // place — `products?.insert(_:at:)` with a bound read of

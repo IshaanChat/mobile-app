@@ -169,10 +169,10 @@ struct BusinessOverview: View {
 
         // Each result is optional on its own. `async let` starts all five at
         // once; `try?` means one failure costs one card rather than the page.
-        async let graph = try? app.api.getGraph(businessId: id)
-        async let paymentsResult = try? app.api.getPayments(businessId: id)
-        async let shelfResult = try? app.api.getShelf(businessId: id)
-        async let feedResult = try? app.api.getActivityFeed(businessId: id, limit: 3)
+        async let graph = try? app.store.getGraph(businessId: id)
+        async let paymentsResult = try? app.store.getPayments(businessId: id)
+        async let shelfResult = try? app.store.getShelf(businessId: id)
+        async let feedResult = try? app.store.getActivityFeed(businessId: id, limit: 3)
         // The journey is per-user rather than per-business, so this is the one
         // call here that does not take an id — and the one that works for an
         // explorer who has no business at all.

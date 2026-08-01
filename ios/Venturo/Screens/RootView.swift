@@ -1,4 +1,3 @@
-import ClerkKit
 import SwiftUI
 
 /// The app shell: the tab bar, the top bar, and the routing between them.
@@ -9,7 +8,6 @@ import SwiftUI
 struct RootView: View {
     @Environment(\.colorScheme) private var colorScheme
     @Environment(AppState.self) private var app
-    @Environment(Clerk.self) private var clerk
 
     @State private var tab: Tab = .discover
     @State private var showJourney = false
@@ -41,32 +39,24 @@ struct RootView: View {
 
     var body: some View {
         Group {
-            // Auth comes before everything. Until Clerk has a user there is no
-            // token, so every request would 401 — routing on `mode` first would
-            // just show a load failure to somebody who is simply signed out.
-            if clerk.user == nil {
-                SignInScreen()
-            } else {
-                switch app.mode {
-                case .loading:
-                    LaunchState()
-                case .error(let message):
-                    LoadFailure(message: message) { Task { await app.load() } }
-                case .onboarding:
-                    OnboardingScreen()
-                case .explorer, .active:
-                    shell
-                }
+            // No sign-in gate. The content database reads without an iCloud
+            // account, so somebody who has never signed in to anything still
+            // gets the whole of Discover — which is the point of the front
+            // door being a front door.
+            switch app.mode {
+            case .loading:
+                LaunchState()
+            case .error(let message):
+                LoadFailure(message: message) { Task { await app.load() } }
+            case .onboarding:
+                OnboardingScreen()
+            case .browsing, .explorer, .active:
+                shell
             }
         }
         .venturoTheme(colorScheme)
         .environment(celebrations)
-        // Keyed on the user id rather than run once: signing out and back in as
-        // somebody else has to reload, and a plain `.task` would keep the first
-        // account's profile on screen.
-        .task(id: clerk.user?.id) {
-            guard clerk.user != nil else { return }
-            // A new account must not inherit a muted nudge from the last one.
+        .task {
             celebrations.reset()
             await app.load()
         }

@@ -320,8 +320,6 @@ struct DiscoverScreen: View {
                 businessId: app.activeBusiness?.id,
                 interests: app.activeBusiness == nil ? Preferences.interests : []
             )
-        } catch let error as APIError {
-            if payload == nil { errorMessage = error.message }
         } catch {
             if payload == nil { errorMessage = error.localizedDescription }
         }
@@ -341,9 +339,9 @@ struct DiscoverScreen: View {
         Task {
             do {
                 if wasSaved {
-                    try await app.api.unsaveTrend(id: product.id)
+                    try await app.store.unsaveTrend(slug: product.id)
                 } else {
-                    try await app.api.saveTrend(id: product.id)
+                    try await app.store.saveTrend(slug: product.id)
                 }
             } catch {
                 setSaved(wasSaved, id: product.id)

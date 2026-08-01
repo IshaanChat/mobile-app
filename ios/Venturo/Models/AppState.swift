@@ -8,19 +8,36 @@ import Observation
 /// that matter (is there a profile, is there a business) is what stops the app
 /// disagreeing with itself about who is signed in.
 enum AppMode: Equatable {
-    /// Still asking. Distinct from `error` so a slow cold start is not
-    /// mistaken for a failure — this backend routinely takes 30 seconds.
+    /// Still asking. Distinct from `error` so a slow first load is not mistaken
+    /// for a failure.
     case loading
     /// The first load failed and there is nothing to show. Recoverable: the
     /// user can retry.
     case error(String)
-    /// Signed in, but no profile row exists yet.
+    /// **No iCloud account, and that is fine.** The content database reads
+    /// without one, so Discover, Grow and the journey all work — nothing can be
+    /// *kept*, which is a limitation to explain where it bites rather than a
+    /// wall to put in front of the app.
+    ///
+    /// The carried string is why, for the cases that are not simply "signed
+    /// out": restricted by device management, or CloudKit unreachable.
+    case browsing(String?)
+    /// Has an account, no profile yet.
     case onboarding
-    /// Has a profile, has no business. **The primary new-user path** — someone
-    /// exploring before committing to an idea. Discover is their home.
+    /// Has a profile, has no business. Someone exploring before committing to
+    /// an idea. Discover is their home.
     case explorer
     /// Has at least one business. The full app.
     case active
+
+    /// Whether anything can be written. Every save, commit and logged
+    /// interaction asks this before offering itself.
+    var canPersist: Bool {
+        switch self {
+        case .browsing, .loading, .error: return false
+        case .onboarding, .explorer, .active: return true
+        }
+    }
 }
 
 @Observable
@@ -41,18 +58,17 @@ final class AppState {
     private var activeBusinessId: String?
     private var hasLoaded = false
 
-    /// User data — profile, businesses, contacts, sales. Moves to CloudKit's
-    /// private database in phase 4; until then it is still the Express API.
-    let api: APIClient
-
-    /// The curated content database, read straight from CloudKit's public
-    /// database. Needs no account, which is what lets Discover be the front
-    /// door rather than something behind a sign-up wall.
+    /// The curated content database, read from CloudKit's public database.
+    /// Needs no account, which is what lets Discover be the front door rather
+    /// than something behind a sign-up wall.
     let content: CloudKitContent
 
-    init(api: APIClient, content: CloudKitContent = CloudKitContent()) {
-        self.api = api
+    /// The user's own records, in CloudKit's private database.
+    let store: CloudKitPrivate
+
+    init(content: CloudKitContent = CloudKitContent(), store: CloudKitPrivate = CloudKitPrivate()) {
         self.content = content
+        self.store = store
         self.activeBusinessId = Preferences.activeBusinessId
     }
 
@@ -67,8 +83,21 @@ final class AppState {
     func load() async {
         if !hasLoaded { mode = .loading }
 
-        async let profileTask = api.getProfile()
-        async let businessesTask = api.getBusinesses()
+        // Asked first, and cheap. Without an account there is nothing to fetch
+        // and no failure to report — just a smaller app.
+        switch await store.availability() {
+        case .noAccount:
+            mode = .browsing(nil)
+            return
+        case .unavailable(let reason):
+            mode = .browsing(reason)
+            return
+        case .available:
+            break
+        }
+
+        async let profileTask = store.getProfile()
+        async let businessesTask = store.getBusinesses()
 
         do {
             let (profile, businesses) = try await (profileTask, businessesTask)
@@ -76,12 +105,9 @@ final class AppState {
             self.businesses = businesses
             self.hasLoaded = true
             recomputeMode()
-        } catch let error as APIError {
+        } catch {
             // Keep whatever is already on screen if this was a refresh — a
             // failed reload should not blank an app that is working.
-            if hasLoaded { return }
-            mode = .error(error.message)
-        } catch {
             if hasLoaded { return }
             mode = .error(error.localizedDescription)
         }
@@ -133,9 +159,12 @@ final class AppState {
         Preferences.activeBusinessId = id
     }
 
-    /// Clears everything on sign-out. Local only — nothing server-side is
-    /// touched, so signing back in restores the same account.
-    func signedOut() {
+    /// Clears local state after the account's records have been deleted.
+    ///
+    /// There is no sign-out any more — identity is the device's iCloud account,
+    /// and leaving is done in Settings rather than here. This runs once, after
+    /// the private zone has actually been removed.
+    func accountDeleted() {
         profile = nil
         businesses = []
         activeBusinessId = nil

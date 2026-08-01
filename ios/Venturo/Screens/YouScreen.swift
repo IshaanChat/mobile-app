@@ -1,4 +1,3 @@
-import ClerkKit
 import SwiftUI
 
 /// You: who you are, and where people can find you.
@@ -160,14 +159,12 @@ private struct BusinessSection: View {
         defer { isSaving = false }
         do {
             // An empty string clears the link server-side; nil would leave it.
-            let updated = try await app.api.updateBusiness(
+            let updated = try await app.store.updateBusiness(
                 id: business.id,
                 UpdateBusiness(name: name, niche: niche, description: description, pageUrl: pageUrl)
             )
             app.businessUpdated(updated)
             savedAt = Date()
-        } catch let error as APIError {
-            errorMessage = error.message
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -223,10 +220,9 @@ private struct ProfileSection: View {
         errorMessage = nil
         defer { isSaving = false }
         do {
-            // age and gender are re-sent unchanged: the server patches only what
+            // age and gender are re-sent unchanged: the write patches only what
             // it receives, so omitting them would not preserve them.
-            let updated = try await app.api.updateProfile(
-                id: profile.id,
+            let updated = try await app.store.updateProfile(
                 UpdateProfile(
                     name: name, email: email, age: profile.age, gender: profile.gender,
                     location: location.isEmpty ? nil : location,
@@ -235,8 +231,6 @@ private struct ProfileSection: View {
                 )
             )
             app.profileUpdated(updated)
-        } catch let error as APIError {
-            errorMessage = error.message
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -309,7 +303,7 @@ private struct SocialsSection: View {
     }
 
     private func load(_ business: Business) async {
-        guard let existing = try? await app.api.getSocials(businessId: business.id) else { return }
+        guard let existing = try? await app.store.getSocials(businessId: business.id) else { return }
         var next: [String: String] = [:]
         for link in existing { next[link.platform] = link.url }
         links = next
@@ -326,9 +320,7 @@ private struct SocialsSection: View {
             SocialLinkInput(platform: key, url: links[key] ?? "")
         }
         do {
-            _ = try await app.api.saveSocials(businessId: business.id, links: payload)
-        } catch let error as APIError {
-            errorMessage = error.message
+            _ = try await app.store.saveSocials(businessId: business.id, links: payload)
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -342,7 +334,6 @@ private struct SettingsSection: View {
     @Environment(AppState.self) private var app
 
     @State private var coolingOff = Preferences.coolingOffDays
-    @State private var showSignOutConfirm = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -375,38 +366,7 @@ private struct SettingsSection: View {
             // App Store requirements rather than niceties, so they are wired
             // in the settings screen rather than buried.
             AccountSection()
-
-            signOut
         }
     }
 
-    private var signOut: some View {
-        Button { showSignOutConfirm = true } label: {
-            Text("Sign out")
-                .font(.custom(Typeface.sansSemiBold, size: 14))
-                .foregroundStyle(theme.scheme.textSecondary)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 13)
-                .background(theme.scheme.backgroundElement, in: RoundedRectangle(cornerRadius: Radius.inset, style: .continuous))
-                .overlay {
-                    RoundedRectangle(cornerRadius: Radius.inset, style: .continuous)
-                        .strokeBorder(theme.scheme.border, lineWidth: 1)
-                }
-        }
-        .buttonStyle(.plain)
-        .confirmationDialog("Sign out of Venturo?", isPresented: $showSignOutConfirm, titleVisibility: .visible) {
-            Button("Sign out", role: .destructive) {
-                Task {
-                    // Clerk first, then local state. The other order would
-                    // briefly show a signed-out app that still held the last
-                    // account's data.
-                    try? await Clerk.shared.auth.signOut()
-                    app.signedOut()
-                }
-            }
-            Button("Cancel", role: .cancel) {}
-        } message: {
-            Text("Your data stays where it is. Signing back in brings it all back.")
-        }
-    }
 }

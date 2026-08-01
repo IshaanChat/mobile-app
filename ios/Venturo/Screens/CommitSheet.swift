@@ -140,7 +140,7 @@ struct CommitSheet: View {
         defer { isSaving = false }
 
         do {
-            let business = try await app.api.createBusiness(
+            let business = try await app.store.createBusiness(
                 CreateBusiness(
                     name: trimmedName,
                     // Seeded from the product rather than asked for. Both are
@@ -155,8 +155,6 @@ struct CommitSheet: View {
             // the rest of Journey all open up on this one call.
             app.businessCreated(business)
             dismiss()
-        } catch let error as APIError {
-            errorMessage = error.message
         } catch {
             errorMessage = error.localizedDescription
         }

@@ -75,13 +75,11 @@ struct AccountSection: View {
         errorMessage = nil
         defer { isExporting = false }
         do {
-            let data = try await app.api.exportAccount()
+            let data = try await app.store.exportAccount()
             let name = "venturo-export-\(Self.stamp()).json"
             let url = FileManager.default.temporaryDirectory.appendingPathComponent(name)
             try data.write(to: url, options: .atomic)
             exportedFile = url
-        } catch let error as APIError {
-            errorMessage = error.message
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -92,12 +90,10 @@ struct AccountSection: View {
         errorMessage = nil
         defer { isDeleting = false }
         do {
-            try await app.api.deleteAccount()
+            try await app.store.deleteEverything()
             // Local state goes too. The server rows are gone, so anything still
             // cached here would be a ghost of an account that no longer exists.
-            app.signedOut()
-        } catch let error as APIError {
-            errorMessage = error.message
+            app.accountDeleted()
         } catch {
             errorMessage = error.localizedDescription
         }

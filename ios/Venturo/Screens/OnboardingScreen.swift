@@ -500,17 +500,16 @@ struct OnboardingScreen: View {
         let isNew = path == "new"
 
         do {
-            let profile = try await app.api.createProfile(
+            let profile = try await app.store.createProfile(
                 CreateProfile(
                     name: trimmedName,
-                    // Read from Clerk rather than asked for: the user has
-                    // already proved this address, and asking again invites a
-                    // different one being typed. The fallback should be
-                    // unreachable — there is no way to get here without a
-                    // session — but the server requires something
-                    // address-shaped, and a placeholder that is obviously one
-                    // beats a crash.
-                    email: AccountEmail.current ?? "\(UUID().uuidString)@pending.venturo.app",
+                    // Empty, and deliberately. There is no sign-in to read an
+                    // address from any more, and inventing one would break the
+                    // rule that an empty field beats a number nobody can stand
+                    // behind. It is editable in You → About you for anyone who
+                    // wants to give it — which also means the app now collects
+                    // less than the privacy policy allows for, not more.
+                    email: "",
                     age: ageValue,
                     gender: "",
                     experienceLevel: isNew ? "FIRST_TIME" : "EXPERIENCED"
@@ -526,7 +525,7 @@ struct OnboardingScreen: View {
                 // flickering through an intermediate state.
                 app.profileCreated(profile)
             } else {
-                let business = try await app.api.createBusiness(
+                let business = try await app.store.createBusiness(
                     CreateBusiness(
                         name: forkFields["bizName"] ?? trimmedName,
                         niche: forkFields["bizNiche"] ?? "",
@@ -542,8 +541,6 @@ struct OnboardingScreen: View {
             }
 
             withAnimation { stage = .finish }
-        } catch let error as APIError {
-            errorMessage = error.message
         } catch {
             errorMessage = error.localizedDescription
         }

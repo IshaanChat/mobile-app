@@ -334,8 +334,6 @@ struct JourneySheet: View {
         errorMessage = nil
         do {
             data = try await app.content.getJourney()
-        } catch let error as APIError {
-            if data == nil { errorMessage = error.message }
         } catch {
             if data == nil { errorMessage = error.localizedDescription }
         }
@@ -351,7 +349,7 @@ struct JourneySheet: View {
         let completeBefore = Set((data?.levels ?? []).filter(\.complete).map(\.level))
 
         do {
-            try await app.api.completeMilestone(slug: milestone.slug)
+            try await app.store.completeMilestone(slug: milestone.slug, xp: milestone.xp)
             // Reloaded rather than patched locally: completing the last step of
             // a level unlocks the next one, and the server decides that.
             await load()
@@ -372,8 +370,6 @@ struct JourneySheet: View {
                     next: nextNudge(fresh)
                 )
             }
-        } catch let error as APIError {
-            errorMessage = error.message
         } catch {
             errorMessage = error.localizedDescription
         }

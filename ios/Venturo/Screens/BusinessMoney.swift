@@ -169,8 +169,8 @@ struct BusinessMoney: View {
 
     private func load() async {
         guard let business = app.activeBusiness else { return }
-        async let paymentsResult = try? app.api.getPayments(businessId: business.id)
-        async let shelfResult = try? app.api.getShelf(businessId: business.id)
+        async let paymentsResult = try? app.store.getPayments(businessId: business.id)
+        async let shelfResult = try? app.store.getShelf(businessId: business.id)
         payments = await paymentsResult
         shelf = await shelfResult
     }
@@ -193,7 +193,7 @@ struct BusinessMoney: View {
 
         let trimmedNote = note.trimmingCharacters(in: .whitespaces)
         do {
-            _ = try await app.api.createPayment(
+            _ = try await app.store.createPayment(
                 CreatePayment(
                     businessId: business.id,
                     amount: value,
@@ -204,8 +204,6 @@ struct BusinessMoney: View {
             note = ""
             withAnimation { isRecording = false }
             await load()
-        } catch let error as APIError {
-            errorMessage = error.message
         } catch {
             errorMessage = error.localizedDescription
         }

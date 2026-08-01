@@ -168,7 +168,7 @@ struct BusinessClients: View {
 
     private func load() async {
         guard let business = app.activeBusiness else { return }
-        contacts = (try? await app.api.getGraph(businessId: business.id))?.contacts ?? []
+        contacts = (try? await app.store.getGraph(businessId: business.id))?.contacts ?? []
     }
 
     private func add() async {
@@ -189,20 +189,25 @@ struct BusinessClients: View {
             : CreateContact.fromLink(businessId: business.id, name: name, url: source)
 
         do {
-            _ = try await app.api.createContact(body)
+            _ = try await app.store.createContact(body)
             newName = ""
             newSource = ""
             withAnimation { isAdding = false }
             await load()
-        } catch let error as APIError {
-            errorMessage = error.message
         } catch {
             errorMessage = error.localizedDescription
         }
     }
 
     private func logTouch(_ contact: Contact) async {
-        _ = try? await app.api.logInteraction(contactId: contact.id)
+        // The business type tunes the scoring weights, so it has to travel with
+        // the interaction — a service business and a product seller read the
+        // same touch differently.
+        _ = try? await app.store.logInteraction(
+            contactId: contact.id,
+            type: "MESSAGE",
+            businessType: app.activeBusiness?.businessType
+        )
         await load()
     }
 }
