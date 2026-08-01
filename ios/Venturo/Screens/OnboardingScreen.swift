@@ -23,6 +23,17 @@ struct OnboardingScreen: View {
     @State private var promptAnswers: [PromptAnswer] = []
     @State private var forkFields: [String: String] = [:]
 
+    /// Loaded once, for the reveal. Onboarding is the only place the app shows
+    /// a product before the user has ever seen the feed.
+    @State private var catalogue: [DiscoverProduct] = []
+    /// The sourcing type the first reveal used, so the second avoids it.
+    @State private var firstModel: String?
+
+    /// Created, written, and deliberately not announced until the closing
+    /// sequence has played. See `submit`.
+    @State private var pendingProfile: UserProfile?
+    @State private var pendingBusiness: Business?
+
     @State private var isSubmitting = false
     @State private var errorMessage: String?
 
@@ -40,13 +51,26 @@ struct OnboardingScreen: View {
                 switch stage {
                 case .welcome: welcome(script.welcome)
                 case .questions: questions(script)
-                case .finish: finish(script)
+                case .finish:
+                    ReadySequence(name: firstName, closer: script.finish.copy(forPath: path).cta) {
+                        // Handing over is what moves the app on: the mode
+                        // recomputes, RootView swaps onboarding for the shell,
+                        // and the fade lands on Discover.
+                        if let pendingProfile { app.profileCreated(pendingProfile) }
+                        if let pendingBusiness { app.businessCreated(pendingBusiness) }
+                    }
                 }
             } else {
                 ProgressView().tint(theme.scheme.accent)
             }
         }
-        .task { script = try? await app.content.getOnboardingScript() }
+        .task {
+            script = try? await app.content.getOnboardingScript()
+            // Fetched here rather than on the reveal step so the product is
+            // already in hand when they finish typing — a spinner between a
+            // question and its answer would undo the moment.
+            catalogue = (try? await app.content.getTrends(businessId: nil))?.products ?? []
+        }
     }
 
     // MARK: - Welcome
@@ -115,9 +139,16 @@ struct OnboardingScreen: View {
         guard let path else { return out }
 
         if path == "new" {
-            // Two prompts, asked one at a time.
+            // Prompt, then the answer to it, then the next prompt. The reveal
+            // is the point of asking — a question with no answer is a form.
             out.append(.prompt(index: 0))
-            if promptAnswers.count >= 1 { out.append(.prompt(index: 1)) }
+            if promptAnswers.count >= 1 {
+                if script.reveal != nil { out.append(.reveal(index: 0)) }
+                out.append(.prompt(index: 1))
+            }
+            if promptAnswers.count >= 2, script.reveal != nil {
+                out.append(.reveal(index: 1))
+            }
         } else if let forkSteps = script.forks[path] {
             for step in forkSteps {
                 out.append(.text(step: step))
@@ -133,6 +164,7 @@ struct OnboardingScreen: View {
         case age
         case fork(step: OnboardingScript.Step)
         case prompt(index: Int)
+        case reveal(index: Int)
     }
 
     private func questions(_ script: OnboardingScript) -> some View {
@@ -153,6 +185,8 @@ struct OnboardingScreen: View {
                         forkQuestion(step)
                     case let .prompt(index):
                         promptQuestion(script, index: index)
+                    case let .reveal(index):
+                        revealStep(script, index: index)
                     }
                 }
                 .padding(.top, 20)
@@ -449,6 +483,142 @@ struct OnboardingScreen: View {
         name.split(separator: " ").first.map(String.init) ?? name
     }
 
+    // MARK: - Reveal
+
+    /// The app's turn. They answered a question in their own words; this comes
+    /// back with a real product, what it costs, what it sells for, and what
+    /// that business actually asks of them.
+    ///
+    /// Everything here is content: the chapter heading and closer come from the
+    /// prompt's mode, the model sentence from the product's sourcing type, the
+    /// arithmetic from a template. Nothing is invented — where the catalogue
+    /// had no match, the copy says so rather than implying this was chosen.
+    @ViewBuilder private func revealStep(_ script: OnboardingScript, index: Int) -> some View {
+        if let reveal = script.reveal,
+           index < promptAnswers.count,
+           let answer = promptAnswers.indices.contains(index) ? promptAnswers[index] : nil,
+           let option = script.prompts.options.first(where: { $0.id == answer.promptId }),
+           let match = RevealMatch.pick(
+               for: answer.text,
+               mode: option.mode ?? "product",
+               from: catalogue,
+               excluding: index == 1 ? firstModel : nil
+           ) {
+            let mode = reveal.modes[option.mode ?? "product"] ?? reveal.modes["product"]
+            let product = match.product
+
+            VStack(alignment: .leading, spacing: 0) {
+                if let chapter = mode?.chapter {
+                    Text(chapter.uppercased())
+                        .font(.custom(Typeface.sansBold, size: 11))
+                        .tracking(1)
+                        .foregroundStyle(theme.scheme.accent)
+                        .padding(.bottom, 12)
+                }
+
+                if let raw = product.imageUrl, let url = URL(string: raw) {
+                    AsyncImage(url: url) { phase in
+                        if let image = phase.image {
+                            image.resizable().scaledToFill()
+                        } else {
+                            theme.scheme.accentSoft
+                        }
+                    }
+                    .frame(height: 160)
+                    .frame(maxWidth: .infinity)
+                    .clipShape(RoundedRectangle(cornerRadius: Radius.card, style: .continuous))
+                    .padding(.bottom, 14)
+                }
+
+                if let lead = option.lead {
+                    Text(lead)
+                        .font(.custom(Typeface.sansMedium, size: 14))
+                        .foregroundStyle(theme.scheme.accent)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .padding(.bottom, 8)
+                }
+
+                Text(product.title)
+                    .font(.custom(Typeface.display, size: 26))
+                    .tracking(-0.5)
+                    .foregroundStyle(theme.scheme.text)
+                    .fixedSize(horizontal: false, vertical: true)
+
+                Text(match.matched
+                     ? product.blurb
+                     : [reveal.fallbackNote, product.blurb].compactMap { $0 }.joined(separator: " "))
+                    .font(.custom(Typeface.sansMedium, size: 14))
+                    .lineSpacing(4)
+                    .foregroundStyle(theme.scheme.textSecondary)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.top, 6)
+
+                // The two numbers, side by side. This is the whole argument:
+                // somebody buys it for one price and sells it for another.
+                HStack(spacing: 0) {
+                    figure(reveal.costLabel ?? "costs about", product.sourceCost ?? "—", tint: nil)
+                    figure(reveal.sellLabel ?? "sells for", product.typicalResale ?? "—",
+                           tint: theme.scheme.customer)
+                }
+                .padding(.top, 18)
+
+                if option.mode == "math",
+                   let template = reveal.mathTemplate,
+                   let margin = RevealMatch.margin(cost: product.sourceCost, resale: product.typicalResale) {
+                    Text(template
+                            .replacingOccurrences(of: "{margin}", with: "\(margin)")
+                            .replacingOccurrences(of: "{count}", with: "\(Int(ceil(500.0 / Double(margin))))"))
+                        .font(.custom(Typeface.sansSemiBold, size: 15))
+                        .foregroundStyle(theme.scheme.text)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .padding(.top, 16)
+                }
+
+                if let type = product.sourcingType, let sentence = reveal.models[type] {
+                    Text(sentence)
+                        .font(.custom(Typeface.sansMedium, size: 14))
+                        .lineSpacing(4)
+                        .foregroundStyle(theme.scheme.textSecondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .padding(.top, 16)
+                }
+
+                if let closer = index == 0 ? mode?.closer : reveal.closerSecond {
+                    Text(closer)
+                        .font(.custom(Typeface.sansSemiBold, size: 15))
+                        .lineSpacing(4)
+                        .foregroundStyle(theme.scheme.text)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .padding(.top, 18)
+                }
+            }
+            // Remembered so the second reveal offers a different kind of
+            // business — two suggestions that source the same way is one
+            // suggestion shown twice.
+            .onAppear { if index == 0 { firstModel = product.sourcingType } }
+        } else {
+            ProgressView()
+                .tint(theme.scheme.accent)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 60)
+        }
+    }
+
+    private func figure(_ label: String, _ value: String, tint: Color?) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(label)
+                .font(.custom(Typeface.sansMedium, size: 12))
+                .foregroundStyle(theme.scheme.textSecondary)
+            Text(value)
+                .font(.custom(Typeface.display, size: 20))
+                .tracking(-0.3)
+                .foregroundStyle(tint ?? theme.scheme.text)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
     // MARK: - Flow
 
     private func binding(for id: String) -> Binding<String> {
@@ -474,6 +644,9 @@ struct OnboardingScreen: View {
         case .prompt(let index):
             guard index < promptAnswers.count else { return false }
             return !promptAnswers[index].text.trimmingCharacters(in: .whitespaces).isEmpty
+        case .reveal:
+            // Nothing to fill in. This one is the app's turn.
+            return true
         }
     }
 
@@ -516,16 +689,21 @@ struct OnboardingScreen: View {
                 )
             )
 
+            // Written, but not announced yet.
+            //
+            // Telling AppState about the profile recomputes the mode, and
+            // RootView unmounts onboarding the moment it does — which is why
+            // the finish screen has never once been seen. The records are held
+            // here and handed over when the sequence ends, so the last thing
+            // this flow does is actually shown.
+            pendingProfile = profile
+
             if isNew {
                 // An explorer has no business to rank Discover against, so what
                 // they told us stands in for one.
                 Preferences.interests = promptAnswers.map(\.text)
-                // Order matters: the profile lands first so the mode machine
-                // moves onboarding -> explorer in one step rather than
-                // flickering through an intermediate state.
-                app.profileCreated(profile)
             } else {
-                let business = try await app.store.createBusiness(
+                pendingBusiness = try await app.store.createBusiness(
                     CreateBusiness(
                         name: forkFields["bizName"] ?? trimmedName,
                         niche: forkFields["bizNiche"] ?? "",
@@ -533,11 +711,6 @@ struct OnboardingScreen: View {
                         businessType: nil
                     )
                 )
-                // Both before any mode recompute, so the app goes straight from
-                // onboarding to active without passing through explorer — which
-                // would redirect out of this flow mid-way.
-                app.profileCreated(profile)
-                app.businessCreated(business)
             }
 
             withAnimation { stage = .finish }

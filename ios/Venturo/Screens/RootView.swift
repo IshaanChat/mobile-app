@@ -240,10 +240,10 @@ struct LaunchState: View {
     var body: some View {
         let theme = Theme(colorScheme)
         VStack(spacing: Space.three) {
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .fill(theme.scheme.accent)
-                .frame(width: 56, height: 56)
-                .overlay { Icon(name: .spark, size: 28, color: theme.scheme.accentText) }
+            // The logo, not the generic spark. This was the last of the three
+            // placeholders, and the worst one to leave: it is the first thing
+            // shown on every cold launch.
+            BrandMark(size: 56)
             ProgressView().tint(theme.scheme.accent)
             Text("Fetching the catalogue.")
                 .font(.custom(Typeface.sansMedium, size: 13))

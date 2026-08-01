@@ -13,6 +13,12 @@ struct OnboardingScript: Codable, Equatable {
     let welcome: Welcome
     let shared: [Step]
     let prompts: Prompts
+    /// The payoff after each prompt: a real product matched to what they typed,
+    /// with what it costs and what it sells for. Optional so a script written
+    /// without it still decodes — but its absence is why onboarding used to go
+    /// straight from the last question to a feed, which is the app asking twice
+    /// and answering never.
+    let reveal: Reveal?
     let forks: [String: [Step]]
     /// Not a dictionary. `finish` holds `have` and `new` objects alongside a
     /// plain-string `note`, so decoding it as `[String: Finish]` throws on the
@@ -103,6 +109,30 @@ struct OnboardingScript: Codable, Equatable {
         let title: String
         let body: String?
         let cta: String?
+    }
+
+    struct Reveal: Codable, Equatable {
+        let costLabel: String?
+        let sellLabel: String?
+        /// sourcingType → the sentence explaining what that actually asks of
+        /// them. "You'd never touch these. A supplier ships them straight to
+        /// the buyer."
+        let models: [String: String]
+        /// The prompt's mode → the chapter heading and the closing line.
+        let modes: [String: Mode]
+        /// "Clear about ${margin} a sale. That's {count} sales to reach $500."
+        let mathTemplate: String?
+        /// Shown when nothing in the catalogue matched what they typed. Says so
+        /// rather than pretending the fallback was chosen for them.
+        let fallbackNote: String?
+        let closerSecond: String?
+        let cta: String?
+        let ctaSecond: String?
+
+        struct Mode: Codable, Equatable {
+            let chapter: String
+            let closer: String
+        }
     }
 }
 
