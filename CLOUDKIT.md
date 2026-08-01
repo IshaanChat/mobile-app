@@ -42,10 +42,20 @@ iCloud.com.ishaanchaturvedi.salesmechanic
 ```
 
 Two environments, Development and Production, with **separate data and
-separate schemas**. Record types are created implicitly by saving a record in
-Development; Production gets them only when the schema is **promoted in the
-CloudKit Console**. Forgetting that promotion is the classic way to ship an
-app that works everywhere except the App Store build.
+separate schemas**. Production gets its schema only when Development's is
+**promoted in the CloudKit Console**. Forgetting that promotion is the classic
+way to ship an app that works everywhere except the App Store build.
+
+**The schema has to exist before the first push, and Web Services will not
+create it.** Saving a record of an unknown type from the *native SDK* creates
+the type in Development. Doing the same over a server-to-server key returns
+`NOT_FOUND could not find record_type` — for `create` as much as for
+`forceReplace`. Both were tried; both fail.
+
+So the schema lives in `server/scripts/lib/cloudkit-schema.ts`, and
+`npm run cloudkit:schema` emits a `.ckdb` for **Console → Schema → Import
+Schema**. Keeping it in the repo rather than clicking it into the Console is
+what stops it drifting from what the push actually sends.
 
 ## Public database — curated content
 

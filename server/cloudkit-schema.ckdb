@@ -1,0 +1,142 @@
+DEFINE SCHEMA
+
+    RECORD TYPE Niche (
+        "___createTime"          TIMESTAMP,
+        "___createdBy"           REFERENCE,
+        "___etag"                STRING,
+        "___modTime"             TIMESTAMP,
+        "___modifiedBy"          REFERENCE,
+        "___recordID"            REFERENCE QUERYABLE,
+        name                     STRING,
+        domain                   STRING QUERYABLE,
+        audience                 STRING QUERYABLE,
+        imageUrl                 STRING,
+        imageCredit              STRING,
+        tags                     STRING,
+        GRANT READ TO "_world"
+    );
+
+    RECORD TYPE Product (
+        "___createTime"          TIMESTAMP,
+        "___createdBy"           REFERENCE,
+        "___etag"                STRING,
+        "___modTime"             TIMESTAMP,
+        "___modifiedBy"          REFERENCE,
+        "___recordID"            REFERENCE QUERYABLE,
+        title                    STRING SEARCHABLE,
+        blurb                    STRING,
+        nicheSlug                STRING QUERYABLE,
+        sourcingType             STRING QUERYABLE,
+        sourceName               STRING,
+        sourcingUrl              STRING,
+        sourceCost               STRING,
+        sourceCategory           STRING,
+        typicalResale            STRING,
+        imageUrl                 STRING,
+        imageCredit              STRING,
+        hotness                  INT64 QUERYABLE SORTABLE,
+        tier                     STRING QUERYABLE,
+        signalHeat               INT64,
+        signalInterest           INT64,
+        signalInterestTrend      DOUBLE,
+        signalUnitsSold          INT64,
+        signalPriceLow           DOUBLE,
+        signalPriceHigh          DOUBLE,
+        signalPolledAt           STRING,
+        signalSources            LIST<STRING>,
+        GRANT READ TO "_world"
+    );
+
+    RECORD TYPE Community (
+        "___createTime"          TIMESTAMP,
+        "___createdBy"           REFERENCE,
+        "___etag"                STRING,
+        "___modTime"             TIMESTAMP,
+        "___modifiedBy"          REFERENCE,
+        "___recordID"            REFERENCE QUERYABLE,
+        title                    STRING SEARCHABLE,
+        tagline                  STRING,
+        platform                 STRING QUERYABLE,
+        kind                     STRING QUERYABLE,
+        url                      STRING,
+        overview                 STRING,
+        audience                 STRING,
+        loves                    STRING,
+        dislikes                 STRING,
+        approach                 STRING,
+        rules                    STRING,
+        discussions              STRING,
+        hotness                  INT64 QUERYABLE SORTABLE,
+        imageUrl                 STRING,
+        imageCredit              STRING,
+        tags                     STRING,
+        GRANT READ TO "_world"
+    );
+
+    RECORD TYPE Tip (
+        "___createTime"          TIMESTAMP,
+        "___createdBy"           REFERENCE,
+        "___etag"                STRING,
+        "___modTime"             TIMESTAMP,
+        "___modifiedBy"          REFERENCE,
+        "___recordID"            REFERENCE QUERYABLE,
+        kind                     STRING QUERYABLE,
+        text                     STRING,
+        tab                      STRING QUERYABLE,
+        level                    INT64 QUERYABLE SORTABLE,
+        GRANT READ TO "_world"
+    );
+
+    RECORD TYPE JourneyLevel (
+        "___createTime"          TIMESTAMP,
+        "___createdBy"           REFERENCE,
+        "___etag"                STRING,
+        "___modTime"             TIMESTAMP,
+        "___modifiedBy"          REFERENCE,
+        "___recordID"            REFERENCE QUERYABLE,
+        level                    INT64 QUERYABLE SORTABLE,
+        name                     STRING,
+        title                    STRING,
+        GRANT READ TO "_world"
+    );
+
+    RECORD TYPE Milestone (
+        "___createTime"          TIMESTAMP,
+        "___createdBy"           REFERENCE,
+        "___etag"                STRING,
+        "___modTime"             TIMESTAMP,
+        "___modifiedBy"          REFERENCE,
+        "___recordID"            REFERENCE QUERYABLE,
+        title                    STRING,
+        detail                   STRING,
+        level                    INT64 QUERYABLE SORTABLE,
+        tab                      STRING QUERYABLE,
+        trigger                  STRING QUERYABLE,
+        place                    STRING,
+        xp                       INT64,
+        GRANT READ TO "_world"
+    );
+
+    RECORD TYPE Playbook (
+        "___createTime"          TIMESTAMP,
+        "___createdBy"           REFERENCE,
+        "___etag"                STRING,
+        "___modTime"             TIMESTAMP,
+        "___modifiedBy"          REFERENCE,
+        "___recordID"            REFERENCE QUERYABLE,
+        name                     STRING,
+        blurb                    STRING,
+        steps                    LIST<STRING>,
+        GRANT READ TO "_world"
+    );
+
+    RECORD TYPE OnboardingScript (
+        "___createTime"          TIMESTAMP,
+        "___createdBy"           REFERENCE,
+        "___etag"                STRING,
+        "___modTime"             TIMESTAMP,
+        "___modifiedBy"          REFERENCE,
+        "___recordID"            REFERENCE QUERYABLE,
+        json                     STRING,
+        GRANT READ TO "_world"
+    );

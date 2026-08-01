@@ -32,7 +32,8 @@
     "verify:deletion": "node scripts/verify-account-deletion.mjs",
     "journey:import": "tsx scripts/import-journey.ts",
     "cloudkit:keygen": "node scripts/cloudkit-keygen.mjs",
-    "cloudkit:push": "tsx scripts/cloudkit-push.ts"
+    "cloudkit:push": "tsx --env-file=.env scripts/cloudkit-push.ts",
+    "cloudkit:schema": "tsx scripts/cloudkit-schema.ts"
   },
   "dependencies": {
     "@clerk/backend": "^3.12.0",
