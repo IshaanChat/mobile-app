@@ -171,7 +171,7 @@ in this build.
 | Age Rating | 13+, matching the gate onboarding enforces |
 | Price | Free |
 | Availability | all territories, unless you want to start narrow |
-| Content Rights | contains no third-party content — **see the note below** |
+| Content Rights | **Yes** — it shows third-party content. See the note below |
 
 ### One honest wrinkle on Content Rights
 
