@@ -193,15 +193,8 @@ writeFileSync(
 );
 console.log('  docs/_headers');
 
-// Clean URLs. Written here rather than left as a stray file so a rebuild
-// cannot quietly drop it.
-writeFileSync(
-  join(OUT, '_redirects'),
-  `# Clean URLs, so the App Store listing carries /privacy rather than
-# /privacy.html. 200 rather than 301: the path is the canonical one and a
-# redirect chain on a legal page is a needless extra hop.
-/privacy   /privacy.html   200
-/support   /support.html   200
-`
-);
-console.log('  docs/_redirects');
+// No _redirects file, deliberately. Cloudflare Pages already serves /privacy
+// from privacy.html *and* redirects privacy.html -> /privacy. Adding a rewrite
+// the other way makes the two fight: the request loops until the client gives
+// up with "redirect count exceeded", which reads as the site being down rather
+// than as a config error.
