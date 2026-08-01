@@ -1,5 +1,14 @@
 # Venturo — where things stand
 
+> **Superseded in part, 2026-07-31.** The app moved to CloudKit: no server, no
+> Clerk, no sign-in, no Postgres. `CLOUDKIT.md` is the current architecture and
+> `SHIPPING.md` the current runbook; `CLAUDE.md` is the short version. Below,
+> everything about the *product* — what it is, the business shape, the content
+> database, the voice, the standing constraints — is still accurate and still
+> the best description of it anywhere. Everything about the *stack* — the API,
+> the four codebases, the data tiers, Render, Clerk, the Prisma models — is
+> history.
+
 A description of the project as it actually is, for picking up cold. Nothing
 here is a plan or an instruction; it is a map.
 
