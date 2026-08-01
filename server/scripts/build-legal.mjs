@@ -1,4 +1,4 @@
-// Renders the legal pages to static HTML for GitHub Pages.
+// Renders the legal pages to static HTML for Cloudflare Pages.
 //
 //   npm run legal:build
 //
@@ -179,6 +179,16 @@ writeFileSync(
 );
 console.log('  docs/index.html');
 
-// GitHub Pages runs Jekyll otherwise, which ignores files it does not like.
-writeFileSync(join(OUT, '.nojekyll'), '');
-console.log('  docs/.nojekyll');
+// Cloudflare serves these as-is. The headers are not required by anything —
+// they cost one file and close off the ways a static page can still be turned
+// against its reader.
+writeFileSync(
+  join(OUT, '_headers'),
+  `/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: no-referrer
+  Content-Security-Policy: default-src 'none'; style-src 'unsafe-inline'; img-src 'self'
+`
+);
+console.log('  docs/_headers');
