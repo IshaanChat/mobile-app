@@ -41,10 +41,18 @@ database instead of a query. Queries have no joins and page at ~200.
 iCloud.com.ishaanchaturvedi.salesmechanic
 ```
 
-Two environments, Development and Production, with **separate data and
-separate schemas**. Production gets its schema only when Development's is
-**promoted in the CloudKit Console**. Forgetting that promotion is the classic
-way to ship an app that works everywhere except the App Store build.
+Two environments, Development and Production, with **separate data, separate
+schemas and separate keys**. Production gets its schema only when
+Development's is **promoted in the CloudKit Console**. Forgetting that
+promotion is the classic way to ship an app that works everywhere except the
+App Store build — a TestFlight tester opens it to an empty catalogue and
+nothing errors.
+
+**Server-to-server keys are per environment too.** The same public key
+registered against Production gets a *different* key id, and using the
+development one there fails `AUTHENTICATION_FAILED` rather than saying which
+of the two is wrong. Hence `CLOUDKIT_KEY_ID` and `CLOUDKIT_KEY_ID_PRODUCTION`;
+the private half is shared.
 
 **The schema has to exist before the first push, and Web Services will not
 create it.** Saving a record of an unknown type from the *native SDK* creates

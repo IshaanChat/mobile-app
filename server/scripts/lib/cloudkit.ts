@@ -45,13 +45,24 @@ export interface CloudKitConfig {
  */
 export function configFromEnv(): CloudKitConfig {
   const container = process.env.CLOUDKIT_CONTAINER;
-  const keyId = process.env.CLOUDKIT_KEY_ID;
   const keyPath = process.env.CLOUDKIT_PRIVATE_KEY_PATH;
   const environment = (process.env.CLOUDKIT_ENV ?? 'development') as CloudKitConfig['environment'];
 
+  // Server-to-server keys are scoped to one environment. Registering the same
+  // public key against Production returns a *different* key id, and using the
+  // development one there fails with AUTHENTICATION_FAILED rather than
+  // anything that names the problem. The private key half is shared.
+  const keyId =
+    environment === 'production'
+      ? process.env.CLOUDKIT_KEY_ID_PRODUCTION
+      : process.env.CLOUDKIT_KEY_ID;
+
+  const keyIdVar =
+    environment === 'production' ? 'CLOUDKIT_KEY_ID_PRODUCTION' : 'CLOUDKIT_KEY_ID';
+
   const missing = [
     !container && 'CLOUDKIT_CONTAINER',
-    !keyId && 'CLOUDKIT_KEY_ID',
+    !keyId && keyIdVar,
     !keyPath && 'CLOUDKIT_PRIVATE_KEY_PATH',
   ].filter(Boolean);
 
