@@ -268,26 +268,31 @@ struct DiscoverScreen: View {
         // Hoisted: `wants` tokenizes free text, and reading it inside the map
         // would redo that once per card.
         let want = wants
-        return products
-            .map { product -> (product: DiscoverProduct, group: Int) in
-                (
-                    product,
-                    Relevance.group(
-                        isHot: product.hotness >= floor,
-                        isUpside: product.isUpside,
-                        isMatch: Relevance.matches(product, wants: want),
-                        sellerFilter: sellerFilter
-                    )
-                )
+
+        // Written as statements rather than a map/sorted/map chain: the chained
+        // version type-checks too slowly for the compiler to accept.
+        var grouped: [(product: DiscoverProduct, group: Int)] = []
+        grouped.reserveCapacity(products.count)
+        for product in products {
+            let group = Relevance.group(
+                isHot: product.hotness >= floor,
+                isUpside: product.isUpside,
+                isMatch: Relevance.matches(product, wants: want),
+                sellerFilter: sellerFilter
+            )
+            grouped.append((product: product, group: group))
+        }
+
+        // Stable within a group by falling back to heat, so a shelf does not
+        // reshuffle on every redraw the way an unstable comparator would.
+        grouped.sort { a, b in
+            if a.group == b.group {
+                return a.product.hotness > b.product.hotness
             }
-            // Stable within a group by falling back to heat, so a shelf does not
-            // reshuffle on every redraw the way an unstable comparator would.
-            .sorted { a, b in
-                a.group == b.group
-                    ? a.product.hotness > b.product.hotness
-                    : a.group < b.group
-            }
-            .map(\.product)
+            return a.group < b.group
+        }
+
+        return grouped.map(\.product)
     }
 
     // MARK: - Relevance

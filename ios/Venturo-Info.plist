@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Bare filenames, not "Fonts/…": the synchronized folder group flattens
+	     resources into the bundle root. A wrong path here falls back to the
+	     system font silently, so Theme.swift's Fonts preview is the check. -->
+	<key>UIAppFonts</key>
+	<array>
+		<string>Fraunces_400Regular.ttf</string>
+		<string>Fraunces_600SemiBold.ttf</string>
+		<string>PlusJakartaSans_400Regular.ttf</string>
+		<string>PlusJakartaSans_500Medium.ttf</string>
+		<string>PlusJakartaSans_600SemiBold.ttf</string>
+		<string>PlusJakartaSans_700Bold.ttf</string>
+		<string>Baloo2_500Medium.ttf</string>
+	</array>
+	<!-- HTTPS only, which is exempt. Without this App Store Connect asks the
+	     export-compliance question on every single upload. -->
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+</dict>
+</plist>
