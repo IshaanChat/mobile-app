@@ -30,7 +30,8 @@ const int = (index?: FieldSpec['index']): FieldSpec => ({ type: 'INT64', index }
 const dbl = (): FieldSpec => ({ type: 'DOUBLE' });
 const strList = (): FieldSpec => ({ type: 'LIST<STRING>' });
 
-export const SCHEMA: Record<string, RecordSchema> = {
+/** Curated content. Written by the push script, read by everyone. */
+export const PUBLIC_SCHEMA: Record<string, RecordSchema> = {
   Niche: {
     name: str(),
     domain: str(['QUERYABLE']),
@@ -123,6 +124,57 @@ export const SCHEMA: Record<string, RecordSchema> = {
 };
 
 /**
+ * The user's own rows, stored against their iCloud quota and invisible to us.
+ *
+ * Never written by the push script. Declared here anyway because record types
+ * belong to the *container*, not to a database, and a type the app creates
+ * implicitly gets no queryable index. That failure is silent in the worst way:
+ * writes succeed and every read comes back empty.
+ */
+export const PRIVATE_SCHEMA: Record<string, RecordSchema> = {
+  Profile: {
+    name: str(),
+    email: str(),
+    age: int(),
+    gender: str(),
+    location: str(),
+    phone: str(),
+    bio: str(),
+    experienceLevel: str(),
+    goals: str(),
+    createdAt: int(['SORTABLE']),
+    updatedAt: int(),
+  },
+
+  Business: {
+    name: str(),
+    niche: str(),
+    about: str(),
+    idealCustomer: str(),
+    audienceKeywords: str(),
+    salesAvenues: str(),
+    businessType: str(),
+    pageUrl: str(),
+    createdAt: int(['SORTABLE']),
+    updatedAt: int(),
+  },
+
+  // The heart on a Discover card. `productSlug` is the public Product's
+  // recordName — a plain string rather than a reference, because CloudKit
+  // cannot reference across databases.
+  SavedTrend: {
+    productSlug: str(['QUERYABLE']),
+    savedAt: int(['SORTABLE']),
+  },
+
+  MilestoneCompletion: {
+    milestoneSlug: str(['QUERYABLE']),
+    completedAt: int(['SORTABLE']),
+    xpAwarded: int(),
+  },
+};
+
+/**
  * Emits a `.ckdb` schema file for CloudKit Console → Schema → Import Schema.
  *
  * The grants are CloudKit's defaults, arrived at the hard way. Granting only
@@ -139,6 +191,9 @@ export const SCHEMA: Record<string, RecordSchema> = {
  * creator is not the push key, which is worth doing before the catalogue is
  * worth polluting.
  */
+/** Every record type in the container, both databases. */
+export const SCHEMA: Record<string, RecordSchema> = { ...PUBLIC_SCHEMA, ...PRIVATE_SCHEMA };
+
 export function toCKDB(): string {
   const system = [
     ['"___createTime"', 'TIMESTAMP'],

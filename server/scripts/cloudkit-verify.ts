@@ -12,7 +12,7 @@
 import { readdirSync, readFileSync } from 'fs';
 import { join } from 'path';
 import { configFromEnv, queryRecords } from './lib/cloudkit';
-import { SCHEMA } from './lib/cloudkit-schema';
+import { PUBLIC_SCHEMA } from './lib/cloudkit-schema';
 
 const CONTENT = join(process.cwd(), 'content');
 
@@ -44,7 +44,7 @@ async function run() {
   console.log(`Reading ${config.container} (${config.environment})\n`);
 
   let bad = 0;
-  for (const recordType of Object.keys(SCHEMA)) {
+  for (const recordType of Object.keys(PUBLIC_SCHEMA)) {
     const records = await queryRecords(config, recordType);
     const want = expected[recordType] ?? 0;
     const ok = records.length === want;

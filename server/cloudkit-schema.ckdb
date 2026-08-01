@@ -156,3 +156,77 @@ DEFINE SCHEMA
         GRANT CREATE TO "_icloud",
         GRANT READ TO "_world"
     );
+
+    RECORD TYPE Profile (
+        "___createTime"          TIMESTAMP,
+        "___createdBy"           REFERENCE,
+        "___etag"                STRING,
+        "___modTime"             TIMESTAMP,
+        "___modifiedBy"          REFERENCE,
+        "___recordID"            REFERENCE QUERYABLE,
+        name                     STRING,
+        email                    STRING,
+        age                      INT64,
+        gender                   STRING,
+        location                 STRING,
+        phone                    STRING,
+        bio                      STRING,
+        experienceLevel          STRING,
+        goals                    STRING,
+        createdAt                INT64 SORTABLE,
+        updatedAt                INT64,
+        GRANT WRITE TO "_creator",
+        GRANT CREATE TO "_icloud",
+        GRANT READ TO "_world"
+    );
+
+    RECORD TYPE Business (
+        "___createTime"          TIMESTAMP,
+        "___createdBy"           REFERENCE,
+        "___etag"                STRING,
+        "___modTime"             TIMESTAMP,
+        "___modifiedBy"          REFERENCE,
+        "___recordID"            REFERENCE QUERYABLE,
+        name                     STRING,
+        niche                    STRING,
+        about                    STRING,
+        idealCustomer            STRING,
+        audienceKeywords         STRING,
+        salesAvenues             STRING,
+        businessType             STRING,
+        pageUrl                  STRING,
+        createdAt                INT64 SORTABLE,
+        updatedAt                INT64,
+        GRANT WRITE TO "_creator",
+        GRANT CREATE TO "_icloud",
+        GRANT READ TO "_world"
+    );
+
+    RECORD TYPE SavedTrend (
+        "___createTime"          TIMESTAMP,
+        "___createdBy"           REFERENCE,
+        "___etag"                STRING,
+        "___modTime"             TIMESTAMP,
+        "___modifiedBy"          REFERENCE,
+        "___recordID"            REFERENCE QUERYABLE,
+        productSlug              STRING QUERYABLE,
+        savedAt                  INT64 SORTABLE,
+        GRANT WRITE TO "_creator",
+        GRANT CREATE TO "_icloud",
+        GRANT READ TO "_world"
+    );
+
+    RECORD TYPE MilestoneCompletion (
+        "___createTime"          TIMESTAMP,
+        "___createdBy"           REFERENCE,
+        "___etag"                STRING,
+        "___modTime"             TIMESTAMP,
+        "___modifiedBy"          REFERENCE,
+        "___recordID"            REFERENCE QUERYABLE,
+        milestoneSlug            STRING QUERYABLE,
+        completedAt              INT64 SORTABLE,
+        xpAwarded                INT64,
+        GRANT WRITE TO "_creator",
+        GRANT CREATE TO "_icloud",
+        GRANT READ TO "_world"
+    );
