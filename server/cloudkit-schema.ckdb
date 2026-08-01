@@ -230,3 +230,114 @@ DEFINE SCHEMA
         GRANT CREATE TO "_icloud",
         GRANT READ TO "_world"
     );
+
+    RECORD TYPE Channel (
+        "___createTime"          TIMESTAMP,
+        "___createdBy"           REFERENCE,
+        "___etag"                STRING,
+        "___modTime"             TIMESTAMP,
+        "___modifiedBy"          REFERENCE,
+        "___recordID"            REFERENCE QUERYABLE,
+        businessId               STRING QUERYABLE,
+        type                     STRING,
+        label                    STRING,
+        url                      STRING,
+        createdAt                INT64 SORTABLE,
+        GRANT WRITE TO "_creator",
+        GRANT CREATE TO "_icloud",
+        GRANT READ TO "_world"
+    );
+
+    RECORD TYPE Contact (
+        "___createTime"          TIMESTAMP,
+        "___createdBy"           REFERENCE,
+        "___etag"                STRING,
+        "___modTime"             TIMESTAMP,
+        "___modifiedBy"          REFERENCE,
+        "___recordID"            REFERENCE QUERYABLE,
+        businessId               STRING QUERYABLE,
+        channelId                STRING QUERYABLE,
+        name                     STRING,
+        notes                    STRING,
+        sourceUrl                STRING,
+        status                   STRING QUERYABLE,
+        relationshipStrength     DOUBLE,
+        engagementScore          DOUBLE,
+        createdAt                INT64 SORTABLE,
+        updatedAt                INT64,
+        GRANT WRITE TO "_creator",
+        GRANT CREATE TO "_icloud",
+        GRANT READ TO "_world"
+    );
+
+    RECORD TYPE Interaction (
+        "___createTime"          TIMESTAMP,
+        "___createdBy"           REFERENCE,
+        "___etag"                STRING,
+        "___modTime"             TIMESTAMP,
+        "___modifiedBy"          REFERENCE,
+        "___recordID"            REFERENCE QUERYABLE,
+        contactId                STRING QUERYABLE,
+        businessId               STRING QUERYABLE,
+        type                     STRING,
+        occurredAt               INT64 SORTABLE,
+        GRANT WRITE TO "_creator",
+        GRANT CREATE TO "_icloud",
+        GRANT READ TO "_world"
+    );
+
+    RECORD TYPE Payment (
+        "___createTime"          TIMESTAMP,
+        "___createdBy"           REFERENCE,
+        "___etag"                STRING,
+        "___modTime"             TIMESTAMP,
+        "___modifiedBy"          REFERENCE,
+        "___recordID"            REFERENCE QUERYABLE,
+        businessId               STRING QUERYABLE,
+        contactId                STRING QUERYABLE,
+        productId                STRING,
+        amount                   DOUBLE,
+        quantity                 INT64,
+        note                     STRING,
+        occurredAt               INT64 SORTABLE,
+        createdAt                INT64,
+        GRANT WRITE TO "_creator",
+        GRANT CREATE TO "_icloud",
+        GRANT READ TO "_world"
+    );
+
+    RECORD TYPE ShelfProduct (
+        "___createTime"          TIMESTAMP,
+        "___createdBy"           REFERENCE,
+        "___etag"                STRING,
+        "___modTime"             TIMESTAMP,
+        "___modifiedBy"          REFERENCE,
+        "___recordID"            REFERENCE QUERYABLE,
+        businessId               STRING QUERYABLE,
+        name                     STRING,
+        about                    STRING,
+        price                    DOUBLE,
+        stock                    INT64,
+        sku                      STRING,
+        url                      STRING,
+        createdAt                INT64 SORTABLE,
+        updatedAt                INT64,
+        GRANT WRITE TO "_creator",
+        GRANT CREATE TO "_icloud",
+        GRANT READ TO "_world"
+    );
+
+    RECORD TYPE SocialLink (
+        "___createTime"          TIMESTAMP,
+        "___createdBy"           REFERENCE,
+        "___etag"                STRING,
+        "___modTime"             TIMESTAMP,
+        "___modifiedBy"          REFERENCE,
+        "___recordID"            REFERENCE QUERYABLE,
+        businessId               STRING QUERYABLE,
+        platform                 STRING QUERYABLE,
+        url                      STRING,
+        GRANT WRITE TO "_creator",
+        GRANT CREATE TO "_icloud",
+        GRANT READ TO "_world"
+    );

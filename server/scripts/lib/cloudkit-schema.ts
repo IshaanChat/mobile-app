@@ -172,6 +172,74 @@ export const PRIVATE_SCHEMA: Record<string, RecordSchema> = {
     completedAt: int(['SORTABLE']),
     xpAwarded: int(),
   },
+
+  // Where a customer came from. ETSY | INSTAGRAM | REDDIT | REFERRAL | OTHER.
+  Channel: {
+    businessId: str(['QUERYABLE']),
+    type: str(),
+    label: str(),
+    url: str(),
+    createdAt: int(['SORTABLE']),
+  },
+
+  // Relationships are stored as plain id strings rather than CKReferences.
+  // References give cascade deletes, which sound right here, but they also
+  // make every write order-dependent and every fetch a graph walk. The zone
+  // is deleted whole on account deletion, which is the only cascade that
+  // actually had to work.
+  Contact: {
+    businessId: str(['QUERYABLE']),
+    channelId: str(['QUERYABLE']),
+    name: str(),
+    notes: str(),
+    sourceUrl: str(),
+    status: str(['QUERYABLE']),
+    // Both 0-100, recomputed on every logged interaction. Node size and edge
+    // thickness in the client graph.
+    relationshipStrength: dbl(),
+    engagementScore: dbl(),
+    createdAt: int(['SORTABLE']),
+    updatedAt: int(),
+  },
+
+  Interaction: {
+    contactId: str(['QUERYABLE']),
+    businessId: str(['QUERYABLE']),
+    type: str(),
+    occurredAt: int(['SORTABLE']),
+  },
+
+  Payment: {
+    businessId: str(['QUERYABLE']),
+    contactId: str(['QUERYABLE']),
+    productId: str(),
+    amount: dbl(),
+    quantity: int(),
+    note: str(),
+    occurredAt: int(['SORTABLE']),
+    createdAt: int(),
+  },
+
+  // What the user sells, as opposed to what Discover suggests they could.
+  // `stock` absent means untracked, which is not the same as zero — the UI
+  // says "not tracked" rather than implying sold out.
+  ShelfProduct: {
+    businessId: str(['QUERYABLE']),
+    name: str(),
+    about: str(),
+    price: dbl(),
+    stock: int(),
+    sku: str(),
+    url: str(),
+    createdAt: int(['SORTABLE']),
+    updatedAt: int(),
+  },
+
+  SocialLink: {
+    businessId: str(['QUERYABLE']),
+    platform: str(['QUERYABLE']),
+    url: str(),
+  },
 };
 
 /**
