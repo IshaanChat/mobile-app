@@ -63,21 +63,28 @@ struct RootView: View {
             // private-database read and there is no point asking before we
             // know whether there is an account to ask about.
             await app.loadMilestones()
+            announceNextStep()
         }
     }
 
     private var shell: some View {
         VStack(spacing: 0) {
             TopBar(tab: tabKey, onOpenJourney: { showJourney = true })
+            // The win and the nudge share one strip, which is why only one can
+            // be on screen: `Celebrations` queues them rather than letting them
+            // stack.
+            //
+            // Overlaid on the content rather than on the whole shell, so it
+            // lands *below* the top bar instead of covering the wordmark and
+            // the way into the Journey. Still an overlay rather than a row in
+            // this stack — appearing must not shove the feed down and then
+            // yank it back three seconds later.
             content
+                .overlay(alignment: .top) { momentStrip }
             TabBar(selected: $tab)
         }
         .background(Theme(colorScheme).scheme.background)
         .ignoresSafeArea(.keyboard, edges: .bottom)
-        // The win and the nudge share one strip below the top bar, which is why
-        // only one can be on screen: `Celebrations` queues them rather than
-        // letting them stack.
-        .overlay(alignment: .top) { momentStrip }
         .overlay {
             if let levelUp = celebrations.levelUp {
                 LevelUpOverlay(levelUp: levelUp) { celebrations.dismissLevelUp() }
@@ -88,7 +95,10 @@ struct RootView: View {
         .animation(.spring(response: 0.32, dampingFraction: 0.8), value: celebrations.nudge)
         .animation(.easeInOut(duration: 0.22), value: celebrations.levelUp)
         .sheet(isPresented: $showJourney) {
-            JourneySheet()
+            JourneySheet(onGoTo: { target in
+                showJourney = false
+                tab = target
+            })
                 .venturoTheme(colorScheme)
                 .environment(app)
                 .environment(celebrations)
@@ -99,6 +109,37 @@ struct RootView: View {
                 .presentationDetents([.fraction(0.88), .large])
                 .presentationDragIndicator(.visible)
                 .presentationBackground(Theme(colorScheme).scheme.background)
+        }
+    }
+
+    /// Says what to do next on arrival, then clears itself.
+    ///
+    /// Not a permanent banner: the point is that somebody opening the app knows
+    /// there is one next thing without having to open the Journey to find it.
+    /// Three seconds is long enough to read a title and short enough not to be
+    /// in the way of what they came to do.
+    private func announceNextStep() {
+        guard let next = app.nextMilestone else { return }
+        celebrations.show(
+            Celebrations.Nudge(
+                title: next.title,
+                // Only where the app can actually take them. Pointing at a tab
+                // to do something that happens on Etsy is worse than silence.
+                tab: next.isOutside ? nil : tabFor(next.tab)
+            ),
+            force: true,
+            clearingAfter: .seconds(3)
+        )
+    }
+
+    private func tabFor(_ name: String?) -> Tab? {
+        switch name {
+        case "discover": return .discover
+        case "grow": return .grow
+        // The content files call the Business tab "shop".
+        case "shop", "business": return .business
+        case "you": return .you
+        default: return nil
         }
     }
 

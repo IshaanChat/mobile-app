@@ -139,6 +139,10 @@ final class AppState {
     /// trigger → the milestone it awards. Built once from the journey content.
     private var byTrigger: [String: Milestone2] = [:]
 
+    /// The one thing to do next: the first unfinished step of the first level
+    /// that is open. Nil once the whole journey is walked.
+    private(set) var nextMilestone: Milestone2?
+
     func loadMilestones() async {
         async let doneTask = try? await store.completedMilestones()
         async let journeyTask = try? await content.getJourney()
@@ -155,6 +159,20 @@ final class AppState {
             // first rather than crashing on it.
             uniquingKeysWith: { first, _ in first }
         )
+        recomputeNext(journey)
+    }
+
+    private func recomputeNext(_ journey: JourneyPayload) {
+        // Held so the launch prompt does not have to refetch a journey to name
+        // one step. The completed set moves under it as triggers fire, so the
+        // lookup is done against that rather than against the payload's own
+        // stale flags.
+        nextMilestone = journey.levels
+            .first { level in
+                level.unlocked && !level.milestones.allSatisfy { completedMilestones.contains($0.slug) }
+            }?
+            .milestones
+            .first { !completedMilestones.contains($0.slug) }
     }
 
     /// Records that the user did the thing, and says whether that was news.

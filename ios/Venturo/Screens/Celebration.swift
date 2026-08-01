@@ -83,11 +83,25 @@ final class Celebrations {
     /// `force` skips the rate limit. Used right after a completion, which is
     /// the one moment a prompt is welcome rather than an interruption — they
     /// have just proved they are engaged.
-    func show(_ nudge: Nudge, force: Bool = false) {
+    func show(_ nudge: Nudge, force: Bool = false, clearingAfter: Duration? = nil) {
         guard !nudgeMuted else { return }
         if !force, let last = lastNudgeAt, Date().timeIntervalSince(last) < Self.nudgeGap { return }
         self.nudge = nudge
         lastNudgeAt = Date()
+
+        // The launch prompt clears itself; the one after a completion does not.
+        // Arriving to a banner that will not leave until it is dismissed makes
+        // the app feel like it wants something, and the first three seconds are
+        // the wrong moment to ask.
+        guard let clearingAfter else { return }
+        pending?.cancel()
+        pending = Task { [weak self] in
+            try? await Task.sleep(for: clearingAfter)
+            guard !Task.isCancelled else { return }
+            // Only if it is still the same one — a completion may have replaced
+            // it, and that one is meant to stay.
+            if self?.nudge == nudge { self?.nudge = nil }
+        }
     }
 
     func dismissNudge(mute: Bool) {

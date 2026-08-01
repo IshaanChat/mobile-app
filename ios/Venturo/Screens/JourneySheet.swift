@@ -14,6 +14,10 @@ struct JourneySheet: View {
     @Environment(Celebrations.self) private var celebrations
     @Environment(\.dismiss) private var dismiss
 
+    /// Moves the user to where a milestone is actually done, and closes the
+    /// sheet behind them. Nil in previews.
+    var onGoTo: ((RootView.Tab) -> Void)? = nil
+
     @State private var data: JourneyPayload?
     @State private var expanded: Set<Int> = []
     @State private var busySlug: String?
@@ -216,7 +220,13 @@ struct JourneySheet: View {
     }
 
     private func milestoneRow(_ milestone: Milestone2) -> some View {
-        HStack(alignment: .top, spacing: 10) {
+        // Somewhere to send them: in-app, not already done, and naming a tab
+        // this app has. Fifteen of the thirty-four happen away from the app —
+        // pricing competitors, ordering a sample — and those have no door.
+        let destination: RootView.Tab? =
+            milestone.completed || milestone.isOutside ? nil : tabFor(milestone.tab)
+
+        return HStack(alignment: .top, spacing: 10) {
             checkbox(milestone)
             VStack(alignment: .leading, spacing: 2) {
                 Text(milestone.title)
@@ -231,15 +241,28 @@ struct JourneySheet: View {
                 }
             }
             Spacer(minLength: 0)
-            Text("+\(milestone.xp)")
-                .font(.custom(Typeface.sansBold, size: 12))
-                .monospacedDigit()
-                .foregroundStyle(milestone.completed ? theme.scheme.textSecondary : theme.scheme.accent)
+            VStack(alignment: .trailing, spacing: 4) {
+                Text("+\(milestone.xp)")
+                    .font(.custom(Typeface.sansBold, size: 12))
+                    .monospacedDigit()
+                    .foregroundStyle(milestone.completed ? theme.scheme.textSecondary : theme.scheme.accent)
+                if destination != nil {
+                    Icon(name: .chev, size: 14, color: theme.scheme.textSecondary, rotate: -90)
+                }
+            }
         }
         .padding(.vertical, 8)
         .overlay(alignment: .top) {
             Rectangle().fill(theme.scheme.border).frame(height: 1)
         }
+        // The whole row, not just the chevron. A target the width of the sheet
+        // is the difference between a list you read and a list you use.
+        .contentShape(Rectangle())
+        .onTapGesture {
+            guard let destination else { return }
+            onGoTo?(destination)
+        }
+        .accessibilityHint(destination != nil ? "Opens where this is done" : "")
     }
 
     /// Tappable only where the user is the one who knows.
