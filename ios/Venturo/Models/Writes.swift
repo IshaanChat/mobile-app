@@ -17,6 +17,8 @@ struct CreateProfile {
     let age: Int
     let gender: String
     let experienceLevel: String
+    /// What they picked. Empty if they skipped it.
+    let favouriteNiche: String
 }
 
 struct UpdateProfile {

@@ -34,6 +34,10 @@ const strList = (): FieldSpec => ({ type: 'LIST<STRING>' });
 export const PUBLIC_SCHEMA: Record<string, RecordSchema> = {
   Niche: {
     name: str(),
+    // The title somebody earns by choosing this niche — Crafter, Alchemist,
+    // Scribe. Shown in You, and the reason the onboarding asks them to pick
+    // one rather than inferring it.
+    label: str(),
     domain: str(['QUERYABLE']),
     audience: str(['QUERYABLE']),
     imageUrl: str(),
@@ -142,6 +146,9 @@ export const PRIVATE_SCHEMA: Record<string, RecordSchema> = {
     bio: str(),
     experienceLevel: str(),
     goals: str(),
+    /// The niche they picked at onboarding. A slug, resolved against the
+    /// public Niche records for its label.
+    favouriteNiche: str(),
     createdAt: int(['SORTABLE']),
     updatedAt: int(),
   },

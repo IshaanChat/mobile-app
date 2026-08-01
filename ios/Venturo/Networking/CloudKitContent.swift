@@ -158,6 +158,7 @@ actor CloudKitContent {
             return ProductNiche(
                 slug: record.recordID.recordName,
                 name: name,
+                label: record.string("label"),
                 domain: record.string("domain") ?? "",
                 audience: record.string("audience") ?? "both"
             )

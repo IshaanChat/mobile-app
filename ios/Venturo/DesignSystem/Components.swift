@@ -331,3 +331,10 @@ struct BrandMark: View {
             .accessibilityHidden(true)
     }
 }
+
+extension String {
+    /// Nil where an empty string would render as a blank line. The profile's
+    /// email is optional and usually empty, and "" is not the same as absent
+    /// when something downstream is choosing a fallback.
+    var nilIfEmpty: String? { isEmpty ? nil : self }
+}

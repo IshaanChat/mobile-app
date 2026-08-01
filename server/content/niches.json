@@ -8,7 +8,8 @@
     "imageQuery": "potter glazing ceramic bowl",
     "imageUrl": "https://images.pexels.com/photos/9304555/pexels-photo-9304555.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "Mikhail Nilov / Pexels",
-    "wikiTitle": "Pottery"
+    "wikiTitle": "Pottery",
+    "label": "Homesmith"
   },
   {
     "slug": "candles-fragrance",
@@ -19,7 +20,8 @@
     "imageQuery": "aesthetic candle jars flatlay",
     "imageUrl": "https://images.pexels.com/photos/5782660/pexels-photo-5782660.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "Leeloo The First / Pexels",
-    "wikiTitle": "Candle"
+    "wikiTitle": "Candle",
+    "label": "Homesmith"
   },
   {
     "slug": "wall-art-prints",
@@ -30,7 +32,8 @@
     "imageQuery": "gallery wall framed posters room",
     "imageUrl": "https://images.pexels.com/photos/19019600/pexels-photo-19019600.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "Harun / Pexels",
-    "wikiTitle": "Printmaking"
+    "wikiTitle": "Printmaking",
+    "label": "Homesmith"
   },
   {
     "slug": "plants-planters",
@@ -41,7 +44,8 @@
     "imageQuery": "succulents ceramic planters shelf",
     "imageUrl": "https://images.pexels.com/photos/35979376/pexels-photo-35979376.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "Minh Fan / Pexels",
-    "wikiTitle": "Houseplant"
+    "wikiTitle": "Houseplant",
+    "label": "Homesmith"
   },
   {
     "slug": "kitchen-tableware",
@@ -52,7 +56,8 @@
     "imageQuery": "wooden serving board table setting",
     "imageUrl": "https://images.pexels.com/photos/5638471/pexels-photo-5638471.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "Askar Abayev / Pexels",
-    "wikiTitle": "Tableware"
+    "wikiTitle": "Tableware",
+    "label": "Homesmith"
   },
   {
     "slug": "furniture-woodworking",
@@ -63,7 +68,8 @@
     "imageQuery": "carpenter sanding wooden furniture",
     "imageUrl": "https://images.pexels.com/photos/5466146/pexels-photo-5466146.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "AI25.Studio  Studio / Pexels",
-    "wikiTitle": "Woodworking"
+    "wikiTitle": "Woodworking",
+    "label": "Homesmith"
   },
   {
     "slug": "handmade-jewelry",
@@ -74,7 +80,8 @@
     "imageQuery": "gold earrings jewelry making close",
     "imageUrl": "https://images.pexels.com/photos/14033026/pexels-photo-14033026.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "Yassir Abbas / Pexels",
-    "wikiTitle": "Jewellery"
+    "wikiTitle": "Jewellery",
+    "label": "Threadsmith"
   },
   {
     "slug": "knitwear-crochet",
@@ -85,7 +92,8 @@
     "imageQuery": "chunky knit sweater neutral tones",
     "imageUrl": "https://images.pexels.com/photos/6630834/pexels-photo-6630834.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "Polina Tankilevitch / Pexels",
-    "wikiTitle": "Crochet"
+    "wikiTitle": "Crochet",
+    "label": "Threadsmith"
   },
   {
     "slug": "bags-totes",
@@ -96,7 +104,8 @@
     "imageQuery": "canvas tote bag street style",
     "imageUrl": "https://images.pexels.com/photos/11673914/pexels-photo-11673914.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "Mathias Reding / Pexels",
-    "wikiTitle": "Handbag"
+    "wikiTitle": "Handbag",
+    "label": "Threadsmith"
   },
   {
     "slug": "hair-accessories",
@@ -107,7 +116,8 @@
     "imageQuery": "claw clips pastel collection",
     "imageUrl": "https://images.pexels.com/photos/8152101/pexels-photo-8152101.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "RDNE Stock project / Pexels",
-    "wikiTitle": "Fashion accessory"
+    "wikiTitle": "Fashion accessory",
+    "label": "Threadsmith"
   },
   {
     "slug": "apparel-pod",
@@ -118,7 +128,8 @@
     "imageQuery": "blank tshirt mockup rack",
     "imageUrl": "https://images.pexels.com/photos/8532616/pexels-photo-8532616.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "Hanna Pad / Pexels",
-    "wikiTitle": "Print on demand"
+    "wikiTitle": "Print on demand",
+    "label": "Threadsmith"
   },
   {
     "slug": "upcycled-thrift",
@@ -129,7 +140,8 @@
     "imageQuery": "vintage clothing rack thrift store",
     "imageUrl": "https://images.pexels.com/photos/374677/pexels-photo-374677.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "Burst / Pexels",
-    "wikiTitle": "Upcycling"
+    "wikiTitle": "Upcycling",
+    "label": "Threadsmith"
   },
   {
     "slug": "soap-bath",
@@ -140,7 +152,8 @@
     "imageQuery": "artisan soap bars stacked natural",
     "imageUrl": "https://images.pexels.com/photos/7055166/pexels-photo-7055166.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "Pavel Danilyuk / Pexels",
-    "wikiTitle": "Soap"
+    "wikiTitle": "Soap",
+    "label": "Alchemist"
   },
   {
     "slug": "skincare-serums",
@@ -151,7 +164,8 @@
     "imageQuery": "skincare serum bottles minimalist",
     "imageUrl": "https://images.pexels.com/photos/8100691/pexels-photo-8100691.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "Polina ⠀ / Pexels",
-    "wikiTitle": "Skin care"
+    "wikiTitle": "Skin care",
+    "label": "Alchemist"
   },
   {
     "slug": "natural-cosmetics",
@@ -162,7 +176,8 @@
     "imageQuery": "natural cosmetics ingredients herbs",
     "imageUrl": "https://images.pexels.com/photos/8450505/pexels-photo-8450505.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "MART  PRODUCTION / Pexels",
-    "wikiTitle": "Cosmetics"
+    "wikiTitle": "Cosmetics",
+    "label": "Alchemist"
   },
   {
     "slug": "perfume-oils",
@@ -173,7 +188,8 @@
     "imageQuery": "perfume oil roller bottles amber",
     "imageUrl": "https://images.pexels.com/photos/6693899/pexels-photo-6693899.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "Tara Winstead / Pexels",
-    "wikiTitle": "Perfume"
+    "wikiTitle": "Perfume",
+    "label": "Alchemist"
   },
   {
     "slug": "beard-grooming",
@@ -184,7 +200,8 @@
     "imageQuery": "beard oil bottle barber wood",
     "imageUrl": "https://images.pexels.com/photos/4625624/pexels-photo-4625624.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "AI25.Studio  Studio / Pexels",
-    "wikiTitle": "Beard"
+    "wikiTitle": "Beard",
+    "label": "Alchemist"
   },
   {
     "slug": "yarn-fiber",
@@ -195,7 +212,8 @@
     "imageQuery": "hand dyed yarn skeins colorful",
     "imageUrl": "https://images.pexels.com/photos/2767655/pexels-photo-2767655.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "Surene Palvie / Pexels",
-    "wikiTitle": "Yarn"
+    "wikiTitle": "Yarn",
+    "label": "Crafter"
   },
   {
     "slug": "embroidery-needlework",
@@ -206,7 +224,8 @@
     "imageQuery": "embroidery hoop flowers hands",
     "imageUrl": "https://images.pexels.com/photos/10566042/pexels-photo-10566042.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "Mohamed Rizly / Pexels",
-    "wikiTitle": "Embroidery"
+    "wikiTitle": "Embroidery",
+    "label": "Crafter"
   },
   {
     "slug": "macrame-weaving",
@@ -217,7 +236,8 @@
     "imageQuery": "macrame wall hanging boho room",
     "imageUrl": "https://images.pexels.com/photos/12956041/pexels-photo-12956041.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "Atlantic Ambience / Pexels",
-    "wikiTitle": "Macramé"
+    "wikiTitle": "Macramé",
+    "label": "Crafter"
   },
   {
     "slug": "resin-art",
@@ -228,7 +248,8 @@
     "imageQuery": "resin coasters gold geode",
     "imageUrl": "https://images.pexels.com/photos/7258198/pexels-photo-7258198.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "Thirdman / Pexels",
-    "wikiTitle": "Epoxy"
+    "wikiTitle": "Epoxy",
+    "label": "Crafter"
   },
   {
     "slug": "polymer-clay",
@@ -239,7 +260,8 @@
     "imageQuery": "polymer clay earrings colorful making",
     "imageUrl": "https://images.pexels.com/photos/6757764/pexels-photo-6757764.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "cottonbro studio / Pexels",
-    "wikiTitle": "Polymer clay"
+    "wikiTitle": "Polymer clay",
+    "label": "Crafter"
   },
   {
     "slug": "illustration-prints",
@@ -250,7 +272,8 @@
     "imageQuery": "illustrator drawing tablet studio",
     "imageUrl": "https://images.pexels.com/photos/29940157/pexels-photo-29940157.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "Jakub Zerdzicki / Pexels",
-    "wikiTitle": "Illustration"
+    "wikiTitle": "Illustration",
+    "label": "Artisan"
   },
   {
     "slug": "custom-portraits",
@@ -261,7 +284,8 @@
     "imageQuery": "artist painting dog portrait",
     "imageUrl": "https://images.pexels.com/photos/7858878/pexels-photo-7858878.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "Greta Hoffman / Pexels",
-    "wikiTitle": "Portrait"
+    "wikiTitle": "Portrait",
+    "label": "Artisan"
   },
   {
     "slug": "photography-prints",
@@ -272,7 +296,8 @@
     "imageQuery": "photographer holding printed photos",
     "imageUrl": "https://images.pexels.com/photos/7014874/pexels-photo-7014874.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "George Milton / Pexels",
-    "wikiTitle": "Fine-art photography"
+    "wikiTitle": "Fine-art photography",
+    "label": "Artisan"
   },
   {
     "slug": "stickers-decals",
@@ -283,7 +308,8 @@
     "imageQuery": "laptop covered vinyl stickers",
     "imageUrl": "https://images.pexels.com/photos/17567386/pexels-photo-17567386.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "Arindam Raha / Pexels",
-    "wikiTitle": "Sticker"
+    "wikiTitle": "Sticker",
+    "label": "Artisan"
   },
   {
     "slug": "enamel-pins",
@@ -294,7 +320,8 @@
     "imageQuery": "enamel pins collection jacket",
     "imageUrl": "https://images.pexels.com/photos/10503602/pexels-photo-10503602.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "RDNE Stock project / Pexels",
-    "wikiTitle": "Lapel pin"
+    "wikiTitle": "Lapel pin",
+    "label": "Artisan"
   },
   {
     "slug": "greeting-cards",
@@ -305,7 +332,8 @@
     "imageQuery": "greeting cards display shop",
     "imageUrl": "https://images.pexels.com/photos/28780231/pexels-photo-28780231.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "Nikki Villanueva / Pexels",
-    "wikiTitle": "Greeting card"
+    "wikiTitle": "Greeting card",
+    "label": "Scribe"
   },
   {
     "slug": "planners-journals",
@@ -316,7 +344,8 @@
     "imageQuery": "open planner desk coffee flatlay",
     "imageUrl": "https://images.pexels.com/photos/2736499/pexels-photo-2736499.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "Content Pixie / Pexels",
-    "wikiTitle": "Personal organizer"
+    "wikiTitle": "Personal organizer",
+    "label": "Scribe"
   },
   {
     "slug": "wedding-stationery",
@@ -327,7 +356,8 @@
     "imageQuery": "wedding invitation suite flatlay",
     "imageUrl": "https://images.pexels.com/photos/11650189/pexels-photo-11650189.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "Micheile Henderson / Pexels",
-    "wikiTitle": "Wedding invitation"
+    "wikiTitle": "Wedding invitation",
+    "label": "Scribe"
   },
   {
     "slug": "calligraphy-lettering",
@@ -338,7 +368,8 @@
     "imageQuery": "calligraphy pen writing script",
     "imageUrl": "https://images.pexels.com/photos/114107/pexels-photo-114107.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "Miguel Á. Padriñán / Pexels",
-    "wikiTitle": "Calligraphy"
+    "wikiTitle": "Calligraphy",
+    "label": "Scribe"
   },
   {
     "slug": "baked-goods",
@@ -349,7 +380,8 @@
     "imageQuery": "decorated sugar cookies royal icing",
     "imageUrl": "https://images.pexels.com/photos/6608131/pexels-photo-6608131.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "Jill Wellington / Pexels",
-    "wikiTitle": "Baking"
+    "wikiTitle": "Baking",
+    "label": "Provisioner"
   },
   {
     "slug": "chocolate-confectionery",
@@ -360,7 +392,8 @@
     "imageQuery": "artisan chocolate bonbons glossy",
     "imageUrl": "https://images.pexels.com/photos/7407278/pexels-photo-7407278.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "Тимур Слугин / Pexels",
-    "wikiTitle": "Confectionery"
+    "wikiTitle": "Confectionery",
+    "label": "Provisioner"
   },
   {
     "slug": "hot-sauce",
@@ -371,7 +404,8 @@
     "imageQuery": "hot sauce bottles chili peppers",
     "imageUrl": "https://images.pexels.com/photos/5737237/pexels-photo-5737237.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "RDNE Stock project / Pexels",
-    "wikiTitle": "Hot sauce"
+    "wikiTitle": "Hot sauce",
+    "label": "Provisioner"
   },
   {
     "slug": "coffee-tea",
@@ -382,7 +416,8 @@
     "imageQuery": "loose leaf tea tins scoop",
     "imageUrl": "https://images.pexels.com/photos/7074106/pexels-photo-7074106.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "Styves Exantus / Pexels",
-    "wikiTitle": "Coffee"
+    "wikiTitle": "Coffee",
+    "label": "Provisioner"
   },
   {
     "slug": "jam-honey",
@@ -393,7 +428,8 @@
     "imageQuery": "honey jars farmers market",
     "imageUrl": "https://images.pexels.com/photos/34944360/pexels-photo-34944360.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "Vladi  Nikolov / Pexels",
-    "wikiTitle": "Fruit preserves"
+    "wikiTitle": "Fruit preserves",
+    "label": "Provisioner"
   },
   {
     "slug": "pet-accessories",
@@ -404,7 +440,8 @@
     "imageQuery": "dog wearing bandana collar cute",
     "imageUrl": "https://images.pexels.com/photos/7588709/pexels-photo-7588709.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "Frank Barning / Pexels",
-    "wikiTitle": "Pet"
+    "wikiTitle": "Pet",
+    "label": "Keeper"
   },
   {
     "slug": "pet-treats",
@@ -415,7 +452,8 @@
     "imageQuery": "dog biscuits homemade bone shaped",
     "imageUrl": "https://images.pexels.com/photos/8434641/pexels-photo-8434641.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "MART  PRODUCTION / Pexels",
-    "wikiTitle": "Pet food"
+    "wikiTitle": "Pet food",
+    "label": "Keeper"
   },
   {
     "slug": "pet-apparel",
@@ -426,7 +464,8 @@
     "imageQuery": "small dog wearing knit sweater",
     "imageUrl": "https://images.pexels.com/photos/6471471/pexels-photo-6471471.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "Erik Izsóf / Pexels",
-    "wikiTitle": "Dog clothing"
+    "wikiTitle": "Dog clothing",
+    "label": "Keeper"
   },
   {
     "slug": "baby-clothes",
@@ -437,7 +476,8 @@
     "imageQuery": "knitted baby booties soft neutral",
     "imageUrl": "https://images.pexels.com/photos/5360746/pexels-photo-5360746.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "Tilsa Tanaka / Pexels",
-    "wikiTitle": "Children's clothing"
+    "wikiTitle": "Children's clothing",
+    "label": "Nurturer"
   },
   {
     "slug": "toys-plushies",
@@ -448,7 +488,8 @@
     "imageQuery": "crochet plush animals handmade",
     "imageUrl": "https://images.pexels.com/photos/36186907/pexels-photo-36186907.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "Heriberto Jahir Medina / Pexels",
-    "wikiTitle": "Stuffed toy"
+    "wikiTitle": "Stuffed toy",
+    "label": "Nurturer"
   },
   {
     "slug": "nursery-decor",
@@ -459,7 +500,8 @@
     "imageQuery": "nursery shelf neutral decor",
     "imageUrl": "https://images.pexels.com/photos/9240642/pexels-photo-9240642.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "Alberta Studios / Pexels",
-    "wikiTitle": "Nursery (room)"
+    "wikiTitle": "Nursery (room)",
+    "label": "Nurturer"
   },
   {
     "slug": "digital-planners",
@@ -470,7 +512,8 @@
     "imageQuery": "ipad digital planner stylus desk",
     "imageUrl": "https://images.pexels.com/photos/5946157/pexels-photo-5946157.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "Sajith R / Pexels",
-    "wikiTitle": "Time management"
+    "wikiTitle": "Time management",
+    "label": "Architect"
   },
   {
     "slug": "design-assets",
@@ -481,7 +524,8 @@
     "imageQuery": "designer color palette screen",
     "imageUrl": "https://images.pexels.com/photos/8117406/pexels-photo-8117406.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "Ivan S / Pexels",
-    "wikiTitle": "Graphic design"
+    "wikiTitle": "Graphic design",
+    "label": "Architect"
   },
   {
     "slug": "notion-templates",
@@ -492,7 +536,8 @@
     "imageQuery": "laptop productivity dashboard workspace",
     "imageUrl": "https://images.pexels.com/photos/577210/pexels-photo-577210.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "Lukas Blazek / Pexels",
-    "wikiTitle": "Notion (productivity software)"
+    "wikiTitle": "Notion (productivity software)",
+    "label": "Architect"
   },
   {
     "slug": "coaching-consulting",
@@ -503,7 +548,8 @@
     "imageQuery": "video call coaching session laptop",
     "imageUrl": "https://images.pexels.com/photos/8055488/pexels-photo-8055488.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "Annushka  Ahuja / Pexels",
-    "wikiTitle": "Coaching"
+    "wikiTitle": "Coaching",
+    "label": "Architect"
   },
   {
     "slug": "online-courses",
@@ -514,7 +560,8 @@
     "imageQuery": "person filming tutorial ring light",
     "imageUrl": "https://images.pexels.com/photos/7676472/pexels-photo-7676472.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
     "imageCredit": "Ivan S / Pexels",
-    "wikiTitle": "Online learning"
+    "wikiTitle": "Online learning",
+    "label": "Architect"
   },
   {
     "slug": "sourced-unsorted",
@@ -525,6 +572,7 @@
     "imageQuery": "warehouse shelves cardboard boxes",
     "imageUrl": "",
     "imageCredit": "",
-    "wikiTitle": "Drop shipping"
+    "wikiTitle": "Drop shipping",
+    "label": "Trader"
   }
 ]

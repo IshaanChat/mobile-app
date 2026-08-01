@@ -270,7 +270,18 @@ final class AppState {
         businesses = []
         activeBusinessId = nil
         hasLoaded = false
+        // Cleared too, or the next account inherits this one's progress: the
+        // slugs live in memory as well as in CloudKit, and `fire` checks the
+        // memory first. Deleting everything and immediately earning nothing
+        // would be a strange first impression.
+        completedMilestones = []
+        nextMilestone = nil
         Preferences.reset()
         mode = .loading
+
+        // And ask again. RootView's `.task` has already run and will not fire a
+        // second time, so setting `.loading` without this leaves the app on the
+        // launch screen for as long as it is open.
+        Task { await load() }
     }
 }

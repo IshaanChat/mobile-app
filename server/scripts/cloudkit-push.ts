@@ -49,6 +49,7 @@ for (const niche of readJson('niches.json') as any[]) {
       name: niche.name,
       domain: niche.domain,
       audience: niche.audience,
+      label: niche.label,
       imageUrl: niche.imageUrl,
       imageCredit: niche.imageCredit,
       tags: niche.tags,

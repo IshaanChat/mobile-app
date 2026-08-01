@@ -103,6 +103,7 @@ actor CloudKitPrivate {
         record["age"] = body.age
         record["gender"] = body.gender
         record["experienceLevel"] = body.experienceLevel
+        record["favouriteNiche"] = body.favouriteNiche.isEmpty ? nil : body.favouriteNiche
         record["createdAt"] = Int(Date().timeIntervalSince1970)
         record["updatedAt"] = Int(Date().timeIntervalSince1970)
         let saved = try await database.save(record)
@@ -139,6 +140,7 @@ actor CloudKitPrivate {
             bio: record.str("bio"),
             experienceLevel: record.str("experienceLevel"),
             goals: record.str("goals"),
+            favouriteNiche: record.str("favouriteNiche"),
             createdAt: record.date("createdAt"),
             updatedAt: record.date("updatedAt")
         )

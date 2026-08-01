@@ -22,6 +22,8 @@ struct OnboardingScreen: View {
     @State private var path: String?
     @State private var promptAnswers: [PromptAnswer] = []
     @State private var forkFields: [String: String] = [:]
+    /// The niche they picked, and the title that comes with it.
+    @State private var favouriteNiche: ProductNiche?
 
     /// Loaded once, for the reveal. Onboarding is the only place the app shows
     /// a product before the user has ever seen the feed.
@@ -154,6 +156,10 @@ struct OnboardingScreen: View {
                 out.append(.text(step: step))
             }
         }
+        // Last, and for both paths. By this point they have either seen two
+        // reveals or described a business, so the question is "which of these
+        // is yours" rather than "pick from a list of words".
+        if !availableNiches.isEmpty { out.append(.niche) }
         return out
     }
 
@@ -165,6 +171,7 @@ struct OnboardingScreen: View {
         case fork(step: OnboardingScript.Step)
         case prompt(index: Int)
         case reveal(index: Int)
+        case niche
     }
 
     private func questions(_ script: OnboardingScript) -> some View {
@@ -187,6 +194,8 @@ struct OnboardingScreen: View {
                         promptQuestion(script, index: index)
                     case let .reveal(index):
                         revealStep(script, index: index)
+                    case .niche:
+                        nicheQuestion
                     }
                 }
                 .padding(.top, 20)
@@ -483,6 +492,78 @@ struct OnboardingScreen: View {
         name.split(separator: " ").first.map(String.init) ?? name
     }
 
+    // MARK: - Niche
+
+    /// Every niche the catalogue knows, once each, alphabetically.
+    private var availableNiches: [ProductNiche] {
+        var seen = Set<String>()
+        return catalogue
+            .compactMap(\.niche)
+            .filter { $0.slug != "sourced-unsorted" && seen.insert($0.slug).inserted }
+            .sorted { $0.name < $1.name }
+    }
+
+    /// One niche, and the title that comes with it.
+    ///
+    /// The title is the point. Asking somebody to pick a category is admin;
+    /// telling them that picking it makes them a Crafter is the app handing
+    /// them an identity they did not have thirty seconds ago.
+    private var nicheQuestion: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text("Which one is yours?")
+                .font(.custom(Typeface.display, size: 30))
+                .tracking(-0.6)
+                .lineSpacing(4)
+                .foregroundStyle(theme.scheme.text)
+                .fixedSize(horizontal: false, vertical: true)
+
+            Text(favouriteNiche?.label.map { "That makes you a \($0)." }
+                 ?? "Pick the one you would happily read about all day. You can change it later.")
+                .font(.custom(Typeface.sansMedium, size: 15))
+                .lineSpacing(6)
+                .foregroundStyle(favouriteNiche == nil ? theme.scheme.textSecondary : theme.scheme.accent)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.top, 8)
+                .animation(.easeInOut(duration: 0.2), value: favouriteNiche?.slug)
+
+            LazyVGrid(
+                columns: [GridItem(.flexible(), spacing: 8), GridItem(.flexible(), spacing: 8)],
+                spacing: 8
+            ) {
+                ForEach(availableNiches, id: \.slug) { niche in
+                    let isOn = favouriteNiche?.slug == niche.slug
+                    Button {
+                        withAnimation(.easeInOut(duration: 0.16)) { favouriteNiche = niche }
+                    } label: {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(niche.name)
+                                .font(.custom(Typeface.sansSemiBold, size: 14))
+                                .foregroundStyle(theme.scheme.text)
+                                .fixedSize(horizontal: false, vertical: true)
+                            if let label = niche.label {
+                                Text(label)
+                                    .font(.custom(Typeface.sansMedium, size: 12))
+                                    .foregroundStyle(isOn ? theme.scheme.accent : theme.scheme.textSecondary)
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 11)
+                        .background(isOn ? theme.scheme.accentSoft : theme.scheme.backgroundElement)
+                        .clipShape(RoundedRectangle(cornerRadius: Radius.field, style: .continuous))
+                        .overlay {
+                            RoundedRectangle(cornerRadius: Radius.field, style: .continuous)
+                                .strokeBorder(isOn ? theme.scheme.accent : theme.scheme.border,
+                                              lineWidth: isOn ? 1.5 : 1)
+                        }
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+            .padding(.top, 20)
+        }
+    }
+
     // MARK: - Reveal
 
     /// The app's turn. They answered a question in their own words; this comes
@@ -647,6 +728,8 @@ struct OnboardingScreen: View {
         case .reveal:
             // Nothing to fill in. This one is the app's turn.
             return true
+        case .niche:
+            return favouriteNiche != nil
         }
     }
 
@@ -685,7 +768,8 @@ struct OnboardingScreen: View {
                     email: "",
                     age: ageValue,
                     gender: "",
-                    experienceLevel: isNew ? "FIRST_TIME" : "EXPERIENCED"
+                    experienceLevel: isNew ? "FIRST_TIME" : "EXPERIENCED",
+                    favouriteNiche: favouriteNiche?.slug ?? ""
                 )
             )
 

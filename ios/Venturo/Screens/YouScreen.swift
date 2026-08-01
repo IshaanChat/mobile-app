@@ -36,6 +36,7 @@ struct YouScreen: View {
             .padding(.bottom, 64)
         }
         .background(theme.scheme.background)
+        .task { await loadTitle() }
     }
 
     private var header: some View {
@@ -45,10 +46,24 @@ struct YouScreen: View {
                 .tracking(-0.4)
                 .foregroundStyle(theme.scheme.text)
                 .padding(.top, 6)
-            Text(app.profile?.email ?? "Who you are, and where people can find you.")
-                .font(.custom(Typeface.sansMedium, size: 13))
-                .foregroundStyle(theme.scheme.textSecondary)
+            // The title first, where it is the answer to "who am I here".
+            // Falls back to the email, then to a description, so the line is
+            // never empty and never says something untrue.
+            Text(title ?? app.profile?.email.nilIfEmpty ?? "Who you are, and where people can find you.")
+                .font(.custom(title == nil ? Typeface.sansMedium : Typeface.sansSemiBold, size: 13))
+                .foregroundStyle(title == nil ? theme.scheme.textSecondary : theme.scheme.accent)
         }
+    }
+
+    /// The title that came with their niche. Resolved from the catalogue,
+    /// because the slug is what the profile stores — a label copied onto the
+    /// profile would go stale the moment the content changed.
+    @State private var title: String?
+
+    private func loadTitle() async {
+        guard let slug = app.profile?.favouriteNiche, !slug.isEmpty else { return }
+        let products = (try? await app.content.getTrends(businessId: nil))?.products ?? []
+        title = products.compactMap(\.niche).first { $0.slug == slug }?.label
     }
 
     private var picker: some View {

@@ -31,6 +31,9 @@ struct UserProfile: Codable, Identifiable, Equatable {
     /// FIRST_TIME | SOME_EXPERIENCE | EXPERIENCED
     let experienceLevel: String?
     let goals: String?
+    /// The niche slug they picked at onboarding. Resolved against the public
+    /// Niche records to show their title.
+    let favouriteNiche: String?
     let createdAt: Date
     let updatedAt: Date
 }
@@ -122,6 +125,9 @@ struct DiscoverProduct: Codable, Identifiable, Equatable {
 struct ProductNiche: Codable, Equatable {
     let slug: String
     let name: String
+    /// The title somebody earns by picking this niche — Crafter, Alchemist,
+    /// Scribe. Optional because older records predate it.
+    let label: String?
     let domain: String
     /// maker | reseller | both
     let audience: String

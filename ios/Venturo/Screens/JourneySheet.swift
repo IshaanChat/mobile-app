@@ -138,6 +138,13 @@ struct JourneySheet: View {
                 RoundedRectangle(cornerRadius: Radius.card, style: .continuous)
                     .strokeBorder(theme.scheme.accent, lineWidth: 1.5)
             }
+            // The card that says what to do next should be the easiest thing on
+            // the sheet to act on. It was the only one that was not.
+            .contentShape(Rectangle())
+            .onTapGesture {
+                guard !next.isOutside, let target = tabFor(next.tab) else { return }
+                onGoTo?(target)
+            }
         } else if data.summary.levelComplete {
             Text("You've walked the whole journey.")
                 .font(.custom(Typeface.display, size: 20))
@@ -251,10 +258,10 @@ struct JourneySheet: View {
                 }
             }
         }
-        .padding(.vertical, 8)
-        .overlay(alignment: .top) {
-            Rectangle().fill(theme.scheme.border).frame(height: 1)
-        }
+        // Roomy, and no rules between them. Hairlines made this a table of
+        // thirty-four rows; space makes it a path with steps on it, which is
+        // what it is.
+        .padding(.vertical, 14)
         // The whole row, not just the chevron. A target the width of the sheet
         // is the difference between a list you read and a list you use.
         .contentShape(Rectangle())
