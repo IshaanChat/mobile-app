@@ -17,6 +17,29 @@ Prisma or `APIClient.swift`, it predates this and every part of it is reversed.
 | `server/src/` | the old Express API. **Dead.** Kept only until Render is torn down |
 | `mobile/`, `client/` | Expo and React. Superseded, and now unrevivable — CloudKit is Apple-only by choice |
 
+## You are here — 1 August 2026
+
+Build **1.0 (2)** is uploaded to App Store Connect under the name **Venturo:
+Start Your Venture** (plain "Venturo" was taken). Production CloudKit holds all
+1195 content records. The legal pages are live at
+`https://mobile-app-bf6.pages.dev/privacy` and `/support`. Six 1320x2868
+screenshots sit in `~/Desktop/venturo-screenshots/`.
+
+`SUBMISSION.md` has every piece of copy App Store Connect asks for, including
+the App Privacy answers derived from the code. Nothing is submitted yet.
+
+**Open, in rough priority:**
+
+1. `trends/rank.ts` was never ported. Feed order is raw heat, and the match
+   banner claims 744 of 886 products are relevant — so the highlight signals
+   nothing. Quality problem, not a rejection risk.
+2. Nine milestone triggers are unwired (`add-contact`, `log-sale`,
+   `start-business` and the rest). They sit behind having a business.
+3. Contacts, payments and the shelf are written and compile but have never run
+   against real CloudKit.
+4. `open-grow` fires while level four is locked, so locked levels can gain
+   progress out of order. Decide whether that is wrong.
+
 ## Working on this Mac
 
 `xcode-select` points at the Command Line Tools and the account is not an
