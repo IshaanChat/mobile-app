@@ -14,6 +14,18 @@
 		96579769301D842B002668ED /* Venturo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Venturo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		AA0000000000000000000004 /* Exceptions for "Venturo" folder in "Venturo" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"DesignSystem/svgpath-check.mjs",
+				"Resources/AppIcon-1024.png",
+				Resources/logo.png,
+			);
+			target = 96579768301D842B002668ED /* Venturo */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		9657976B301D842B002668ED /* Venturo */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
@@ -24,18 +36,6 @@
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
-
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		AA0000000000000000000004 /* Exceptions for "Venturo" folder in "Venturo" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				"DesignSystem/svgpath-check.mjs",
-				"Resources/AppIcon-1024.png",
-				"Resources/logo.png",
-			);
-			target = 96579768301D842B002668ED /* Venturo */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		96579766301D842B002668ED /* Frameworks */ = {
