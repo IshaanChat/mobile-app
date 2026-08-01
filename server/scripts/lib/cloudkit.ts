@@ -45,25 +45,30 @@ export interface CloudKitConfig {
  */
 export function configFromEnv(): CloudKitConfig {
   const container = process.env.CLOUDKIT_CONTAINER;
-  const keyPath = process.env.CLOUDKIT_PRIVATE_KEY_PATH;
   const environment = (process.env.CLOUDKIT_ENV ?? 'development') as CloudKitConfig['environment'];
+  const isProduction = environment === 'production';
 
-  // Server-to-server keys are scoped to one environment. Registering the same
-  // public key against Production returns a *different* key id, and using the
-  // development one there fails with AUTHENTICATION_FAILED rather than
-  // anything that names the problem. The private key half is shared.
-  const keyId =
-    environment === 'production'
-      ? process.env.CLOUDKIT_KEY_ID_PRODUCTION
-      : process.env.CLOUDKIT_KEY_ID;
+  // The two environments need separate credentials, and a *separate key pair*
+  // rather than the same public key registered twice — the Console refuses a
+  // duplicate. A development key used against production does not say it is
+  // the wrong key; it returns AUTHENTICATION_FAILED, which reads like a broken
+  // signature and sends you auditing the ECDSA instead of the registration.
+  const keyId = isProduction
+    ? process.env.CLOUDKIT_KEY_ID_PRODUCTION
+    : process.env.CLOUDKIT_KEY_ID;
+  const keyPath = isProduction
+    ? process.env.CLOUDKIT_PRIVATE_KEY_PATH_PRODUCTION ?? process.env.CLOUDKIT_PRIVATE_KEY_PATH
+    : process.env.CLOUDKIT_PRIVATE_KEY_PATH;
 
-  const keyIdVar =
-    environment === 'production' ? 'CLOUDKIT_KEY_ID_PRODUCTION' : 'CLOUDKIT_KEY_ID';
+  const keyIdVar = isProduction ? 'CLOUDKIT_KEY_ID_PRODUCTION' : 'CLOUDKIT_KEY_ID';
+  const keyPathVar = isProduction
+    ? 'CLOUDKIT_PRIVATE_KEY_PATH_PRODUCTION'
+    : 'CLOUDKIT_PRIVATE_KEY_PATH';
 
   const missing = [
     !container && 'CLOUDKIT_CONTAINER',
     !keyId && keyIdVar,
-    !keyPath && 'CLOUDKIT_PRIVATE_KEY_PATH',
+    !keyPath && keyPathVar,
   ].filter(Boolean);
 
   if (missing.length) {

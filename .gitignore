@@ -38,3 +38,5 @@ ios/DerivedData/
 # CloudKit server-to-server private key — never commit
 server/cloudkit-key.pem
 cloudkit-key.pem
+server/cloudkit-key-production.pem
+cloudkit-key-production.pem

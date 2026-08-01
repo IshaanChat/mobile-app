@@ -9,7 +9,11 @@ import { generateKeyPairSync } from 'crypto';
 import { existsSync, writeFileSync, chmodSync } from 'fs';
 import { join } from 'path';
 
-const OUT = join(process.cwd(), 'cloudkit-key.pem');
+// A second pair for production: the Console refuses to register the same
+// public key twice in a container, so the two environments cannot share one.
+//   npm run cloudkit:keygen -- --production
+const isProduction = process.argv.includes('--production');
+const OUT = join(process.cwd(), isProduction ? 'cloudkit-key-production.pem' : 'cloudkit-key.pem');
 
 if (existsSync(OUT)) {
   console.error(
@@ -36,8 +40,15 @@ console.log('  1. Open your container, then Tokens & Keys -> Server-to-Server Ke
 console.log('  2. Add a key and paste this public half:\n');
 console.log(publicKey);
 console.log('  3. Copy the Key ID it gives back, then add to server/.env:\n');
-console.log('     CLOUDKIT_CONTAINER=iCloud.com.ishaanchaturvedi.salesmechanic');
-console.log('     CLOUDKIT_KEY_ID=<the key id>');
-console.log(`     CLOUDKIT_PRIVATE_KEY_PATH=${OUT}`);
-console.log('     CLOUDKIT_ENV=development\n');
-console.log('Then: npm run cloudkit:push -- --dry-run');
+if (isProduction) {
+  console.log('     CLOUDKIT_KEY_ID_PRODUCTION=<the key id>');
+  console.log(`     CLOUDKIT_PRIVATE_KEY_PATH_PRODUCTION=${OUT}\n`);
+  console.log('Register it under the **Production** environment in the Console.\n');
+  console.log('Then: CLOUDKIT_ENV=production npm run cloudkit:push');
+} else {
+  console.log('     CLOUDKIT_CONTAINER=iCloud.com.ishaanchaturvedi.salesmechanic');
+  console.log('     CLOUDKIT_KEY_ID=<the key id>');
+  console.log(`     CLOUDKIT_PRIVATE_KEY_PATH=${OUT}`);
+  console.log('     CLOUDKIT_ENV=development\n');
+  console.log('Then: npm run cloudkit:push -- --dry-run');
+}
