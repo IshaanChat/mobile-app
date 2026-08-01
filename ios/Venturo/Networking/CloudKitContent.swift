@@ -78,7 +78,15 @@ actor CloudKitContent {
 
     // MARK: - Discover
 
-    func getTrends(businessId: String?, interests: [String] = []) async throws -> TrendsPayload {
+    /// `savedSlugs` comes from the private database and is joined here, because
+    /// CloudKit cannot reference across databases. Passing it in rather than
+    /// fetching it keeps this side account-free — somebody with no iCloud login
+    /// gets the same feed, minus the hearts.
+    func getTrends(
+        businessId: String?,
+        interests: [String] = [],
+        savedSlugs: Set<String> = []
+    ) async throws -> TrendsPayload {
         async let productTask = fetchAll("Product", sortedBy: "hotness")
         async let nicheTask = fetchAll("Niche")
 
@@ -87,7 +95,11 @@ actor CloudKitContent {
         let niches = Dictionary(
             uniqueKeysWithValues: nicheRecords.map { ($0.recordID.recordName, $0) }
         )
-        let products = productRecords.map { product(from: $0, niches: niches) }
+        let products = productRecords.map { record -> DiscoverProduct in
+            var item = product(from: record, niches: niches)
+            item.saved = savedSlugs.contains(item.slug)
+            return item
+        }
 
         return TrendsPayload(
             generatedAt: Date(),
@@ -271,7 +283,10 @@ actor CloudKitContent {
 
     // MARK: - Journey
 
-    func getJourney() async throws -> JourneyPayload {
+    /// `completed` comes from the private database, same join as Discover's
+    /// hearts. Empty for somebody with no account, which reads correctly: they
+    /// can see the whole path and have walked none of it.
+    func getJourney(completed: Set<String> = []) async throws -> JourneyPayload {
         async let levelTask = fetchAll("JourneyLevel", sortedBy: "level")
         async let milestoneTask = fetchAll("Milestone", sortedBy: "level")
         async let playbookTask = fetchAll("Playbook")
@@ -281,25 +296,34 @@ actor CloudKitContent {
 
         let byLevel = Dictionary(grouping: milestoneRecords) { $0.int("level") ?? 1 }
 
-        // Completion is a private-database fact. Everything below reads as
-        // untouched until phase 4, which is why nothing is gated yet — a level
-        // that never unlocks would be worse than one that always does.
-        let levels = levelRecords
-            .sorted { ($0.int("level") ?? 0) < ($1.int("level") ?? 0) }
-            .map { record -> JourneyLevel in
-                let number = record.int("level") ?? 1
-                let milestones = (byLevel[number] ?? []).map(milestone(from:))
-                return JourneyLevel(
+        // Levels gate sequentially: one is always open, and each later one waits
+        // on the one before being finished. The server decided this; it is
+        // decided here now, which is what moving off the API costs.
+        var previousComplete = true
+        var levels: [JourneyLevel] = []
+
+        for record in levelRecords.sorted(by: { ($0.int("level") ?? 0) < ($1.int("level") ?? 0) }) {
+            let number = record.int("level") ?? 1
+            let milestones = (byLevel[number] ?? []).map {
+                milestone(from: $0, completed: completed)
+            }
+            let done = milestones.filter(\.completed).count
+            let isComplete = !milestones.isEmpty && done == milestones.count
+
+            levels.append(
+                JourneyLevel(
                     level: number,
                     name: record.string("name") ?? "",
                     title: record.string("title") ?? "",
-                    unlocked: number == 1,
-                    complete: false,
-                    completedCount: 0,
+                    unlocked: previousComplete,
+                    complete: isComplete,
+                    completedCount: done,
                     total: milestones.count,
                     milestones: milestones
                 )
-            }
+            )
+            previousComplete = isComplete
+        }
 
         let playbooks = playbookRecords.map { record in
             Playbook(
@@ -310,26 +334,35 @@ actor CloudKitContent {
             )
         }
 
-        let total = levels.reduce(0) { $0 + $1.total }
+        let all = levels.flatMap(\.milestones)
+        let done = all.filter(\.completed)
+        // The level you are *on* is the first unfinished one, not the last
+        // finished — someone who has done nothing is on level 1, not level 0.
+        let current = levels.first { $0.unlocked && !$0.complete } ?? levels.last
+
         return JourneyPayload(
             levels: levels,
             playbooks: playbooks,
             summary: JourneySummary(
-                xp: 0,
-                completed: 0,
-                total: total,
-                level: 1,
-                levelName: levels.first?.name ?? "",
-                levelComplete: false
+                xp: done.reduce(0) { $0 + $1.xp },
+                completed: done.count,
+                total: all.count,
+                level: current?.level ?? 1,
+                levelName: current?.name ?? levels.first?.name ?? "",
+                levelComplete: !levels.isEmpty && levels.allSatisfy(\.complete)
             ),
+            // The server awarded milestones while answering; nothing is proven
+            // server-side any more, so this is always empty and the celebration
+            // fires from the completion call instead.
             justCompleted: []
         )
     }
 
-    private func milestone(from record: CKRecord) -> Milestone2 {
+    private func milestone(from record: CKRecord, completed: Set<String>) -> Milestone2 {
         let trigger = record.string("trigger")
+        let slug = record.recordID.recordName
         return Milestone2(
-            slug: record.recordID.recordName,
+            slug: slug,
             title: record.string("title") ?? "",
             detail: record.string("detail") ?? "",
             // `where` in the content files, `place` in CloudKit, `she` in
@@ -339,7 +372,7 @@ actor CloudKitContent {
             trigger: trigger,
             tab: record.string("tab"),
             xp: record.int("xp") ?? 0,
-            completed: false,
+            completed: completed.contains(slug),
             // A milestone the app can prove has no "mark done" control.
             automatic: trigger != nil
         )

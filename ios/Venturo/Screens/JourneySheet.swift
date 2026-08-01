@@ -333,7 +333,11 @@ struct JourneySheet: View {
     private func load() async {
         errorMessage = nil
         do {
-            data = try await app.content.getJourney()
+            // Completions are private; the path itself is public. Someone with
+            // no account sees the whole journey with nothing walked, which is
+            // accurate rather than broken.
+            let done = (try? await app.store.completedMilestones()) ?? []
+            data = try await app.content.getJourney(completed: done)
         } catch {
             if data == nil { errorMessage = error.localizedDescription }
         }

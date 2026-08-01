@@ -176,7 +176,9 @@ struct BusinessOverview: View {
         // The journey is per-user rather than per-business, so this is the one
         // call here that does not take an id — and the one that works for an
         // explorer who has no business at all.
-        async let journeyResult = try? app.content.getJourney()
+        async let journeyResult = try? app.content.getJourney(
+            completed: (try? await app.store.completedMilestones()) ?? []
+        )
 
         contacts = (await graph)?.contacts ?? []
         payments = await paymentsResult

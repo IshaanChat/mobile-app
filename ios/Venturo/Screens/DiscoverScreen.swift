@@ -316,9 +316,15 @@ struct DiscoverScreen: View {
             // Explorers have no business to rank against, so the interests they
             // gave during onboarding stand in. Discover is their home screen —
             // it has to work before anything else exists.
+            // Which products are hearted lives in the private database, so it
+            // is fetched alongside and joined in. `try?` rather than `try`:
+            // somebody with no iCloud account still gets the whole feed, just
+            // with no hearts filled.
+            async let savedTask = try? await app.store.savedSlugs()
             payload = try await app.content.getTrends(
                 businessId: app.activeBusiness?.id,
-                interests: app.activeBusiness == nil ? Preferences.interests : []
+                interests: app.activeBusiness == nil ? Preferences.interests : [],
+                savedSlugs: await savedTask ?? []
             )
         } catch {
             if payload == nil { errorMessage = error.localizedDescription }

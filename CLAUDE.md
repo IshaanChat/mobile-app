@@ -1,69 +1,77 @@
 # Venturo — working notes for Claude
 
-Read `HANDOFF.md` first. It is the map of the project and is kept current.
-This file is only the things that change how you should *work* here.
+Read `CLOUDKIT.md` first, then `HANDOFF.md`. This file is only the things that
+change how you should *work* here.
 
-## Which directory is authoritative
+## The app runs on CloudKit. There is no server and no sign-in.
 
-| directory | what it is |
+Rewritten 2026-07-31. If you are reading advice about Clerk, Render, Postgres,
+Prisma or `APIClient.swift`, it predates this and every part of it is reversed.
+
+| where | what |
 |---|---|
-| `server/` | the API, the content database, every script. Live on Render. |
-| `ios/` | native SwiftUI. **The shipping client.** |
+| `ios/` | the app. SwiftUI, iOS 17, **the only thing that ships** |
+| `server/content/*.json` | the content database, still the source of truth |
+| `server/scripts/cloudkit-*.ts` | schema, push and verify for CloudKit |
 | `server/scripts/preview-app.ts` | the HTML prototype — **the design source of truth** |
-| `mobile/` | Expo. Parked. Only the written spec for the API contract. |
-| `client/` | the original web app. Superseded. |
+| `server/src/` | the old Express API. **Dead.** Kept only until Render is torn down |
+| `mobile/`, `client/` | Expo and React. Superseded, and now unrevivable — CloudKit is Apple-only by choice |
 
-When `ios/` and the prototype disagree, the prototype is right. `client/` is a
-*feature* reference — which screens and endpoints exist — and never a design
-reference; following it silently reproduces the old product's structure.
+## Working on this Mac
 
-## Stale documents — do not follow
+`xcode-select` points at the Command Line Tools and the account is not an
+admin, so **every Xcode command needs `DEVELOPER_DIR`**:
 
-- **`SHIPPING.md` was rewritten on 2026-07-31.** If you are reading a version
-  that recommends Railway, says "nothing here is built yet", or says to use
-  React Native instead of Swift, it is the old one and every recommendation in
-  it has since been reversed.
-- **`README.md` and `ARCHITECTURE.md` describe `client/`**, the superseded web
-  app, and are stale beyond the rename.
-- `TODO.md` is a finished day's list kept for its two open items at the end.
+```bash
+export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer
+xcodebuild -project ios/Venturo.xcodeproj -scheme Venturo -sdk iphonesimulator \
+  -destination 'generic/platform=iOS Simulator' build
+```
+
+That covers build, install, launch and screenshot. It does **not** cover the
+Claude Code simulator tool, which reads the global setting — so tap and swipe
+injection is unavailable until an admin runs
+`sudo xcode-select -s /Applications/Xcode.app/Contents/Developer`.
+
+`origin` here is `IshaanChat/mobile-app`, the working remote, and is free to
+push. The Render deploy remote is not configured on this clone. Older docs say
+the opposite; they were written on the Windows machine where the remotes were
+inverted.
 
 ## Things that will waste an hour if you don't know them
 
+- **CloudKit Web Services will not create record types.** The native SDK does,
+  over a server-to-server key nothing does — `create` fails exactly as
+  `forceReplace` does. Schema lives in `scripts/lib/cloudkit-schema.ts`;
+  `npm run cloudkit:schema` emits a `.ckdb` to import in the Console.
+- **A missing index is silent.** A type whose `___recordID` is not QUERYABLE
+  stores fine and lists as empty. `npm run cloudkit:verify` is what catches it.
+- **The private database needs an iCloud account in the simulator.** Without
+  one the app runs in `.browsing` and every private read returns empty, which
+  looks like working code doing nothing.
 - **`preview-app.ts` keeps ~1,700 lines inside one template literal.** A
-  backtick anywhere in there — including in a comment — ends the string.
-  `tsc --noEmit` does not catch it because TypeScript does not parse inside
-  template literals. Only starting the server does.
+  backtick anywhere in there ends the string, and `tsc --noEmit` does not catch
+  it because TypeScript does not parse inside template literals.
 - **`tsx` does not hot-reload.** Restart after every prototype change.
-- **`ios/` has never been compiled.** There is no `.xcodeproj` in the repo; it
-  has to be generated once by Xcode. Nothing in `ios/` has ever been checked by
-  a compiler, so treat "it looks right" accordingly.
-- **Underscore-prefixed files in `server/content/` are staging, not content.**
-  Loaders and importers skip them. 95 blank cards once rendered live because
-  they did not.
-- **`server/.env` is not in git.** A fresh clone cannot run the ingest scripts
-  or reach the database until it is recreated.
-
-## Git
-
-Two remotes on one tree. `github-mobile` (`IshaanChat/mobile-app`) is the
-working remote — push every checkpoint there freely. `origin`
-(`IshaanChat/sales-mechanic`) **deploys to Render**: never push it without the
-user explicitly saying so, in this conversation.
+- **`server/.env` is not in git**, and neither is `cloudkit-key.pem`.
 
 ## Voice
 
 The app's own copy — subtitles, empty states, toasts, milestone titles,
-onboarding, celebrations — is written plain, short, second person, with dry
-humour that undercuts rather than cheerleads. `server/content/tips.json` is the
-reference sample. Product and community write-ups are research and stay
-factual.
+onboarding, celebrations — is plain, short, second person, with dry humour that
+undercuts rather than cheerleads. `server/content/tips.json` is the reference
+sample. Product and community write-ups are research and stay factual.
 
 Two content rules that override "make it look finished": **don't invent data**
-(an empty field beats a number nobody can stand behind), and **no scraping** —
-official APIs and manual research only.
+(an empty field beats a number nobody can stand behind — which is why the
+profile email is now blank rather than fabricated), and **no scraping**.
 
 ## Before saying something works
 
-Run it. `npm test` (173) and `npm run smoke` (56, needs `npm run dev` in
-another terminal) are both fast. Swift cannot be compiled anywhere except the
-Mac, so say so rather than implying it was checked.
+Run it. The Swift compiles on this Mac, the app installs and launches in the
+simulator, and screenshots are cheap — so "it should work" is never the report
+to give. `npm test` (184) and `npm run cloudkit:verify` are both fast.
+
+Say plainly which paths you actually exercised. The no-account path and the
+content reads are verified; most of the private database is compiled and
+unproven.
