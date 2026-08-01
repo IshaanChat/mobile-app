@@ -93,10 +93,7 @@ struct SignInScreen: View {
     }
 
     private var mark: some View {
-        RoundedRectangle(cornerRadius: 16, style: .continuous)
-            .fill(theme.scheme.accent)
-            .frame(width: 52, height: 52)
-            .overlay { Icon(name: .spark, size: 26, color: theme.scheme.accentText) }
+        BrandMark(size: 52)
     }
 
     private var primaryLabel: String {

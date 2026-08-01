@@ -57,10 +57,7 @@ struct TopBar: View {
 
     private var brand: some View {
         HStack(spacing: 9) {
-            RoundedRectangle(cornerRadius: Radius.mark, style: .continuous)
-                .fill(theme.scheme.accent)
-                .frame(width: 27, height: 27)
-                .overlay { Icon(name: .spark, size: 16, color: theme.scheme.accentText) }
+            BrandMark(size: 27)
             Text("Venturo")
                 .font(.custom(Typeface.wordmark, size: 25))
                 .foregroundStyle(theme.scheme.accent)

@@ -310,3 +310,24 @@ enum SourcingLabel {
         }
     }
 }
+
+/// The Venturo mark — the same art as the app icon, so the tile in the top bar
+/// and the one on the home screen are recognisably the same object.
+///
+/// An image rather than an `Icon`: the V is a drawn logotype with a gradient
+/// along each stroke, and the icon set carries flat single-colour paths. It
+/// also means the mark never picks up the theme's accent, which is correct —
+/// a logo that changes colour between light and dark is two logos.
+struct BrandMark: View {
+    let size: CGFloat
+
+    var body: some View {
+        Image("BrandMark")
+            .resizable()
+            .interpolation(.high)
+            .scaledToFill()
+            .frame(width: size, height: size)
+            .clipShape(RoundedRectangle(cornerRadius: size * 0.33, style: .continuous))
+            .accessibilityHidden(true)
+    }
+}
