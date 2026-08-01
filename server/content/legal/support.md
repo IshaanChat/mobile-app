@@ -1,13 +1,13 @@
 # Support
 
-_Last updated: 31 July 2026_
+_Last updated: 1 August 2026_
 
 Venturo is made by one person. There is no support team and no ticket queue —
 there is an inbox, and it is read.
 
 ## Getting help
 
-Email **REPLACE-BEFORE-SUBMITTING@example.com**. Say what you were doing and
+Email **ishaanchtrvdi@gmail.com**. Say what you were doing and
 what happened instead. Screenshots help more than descriptions.
 
 Expect a reply within a few days. If something is broken badly enough to stop
@@ -15,9 +15,13 @@ you using the app, say so in the subject line and it goes to the front.
 
 ## Things that are known
 
-**The first load after a quiet period is slow.** The server sleeps when nobody
-is using it and takes around twenty seconds to wake up. The app says so while
-it waits. Nothing is broken.
+**You do not need an account.** Venturo has no sign-up. Browsing works with no
+iCloud account at all — you only need one to keep things: bookmarks, a
+business, clients, progress.
+
+**Your data lives in your iCloud, not on a server.** That means it syncs to
+your other devices, and it also means nobody but you can read it. If you delete
+it, it is gone — there is no copy anywhere for us to restore.
 
 **Products come from a curated catalogue**, not from live marketplace search.
 What you see is researched and written by hand, or sourced from supplier

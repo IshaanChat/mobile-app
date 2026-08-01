@@ -1,6 +1,6 @@
 # Privacy Policy
 
-_Last updated: 30 July 2026_
+_Last updated: 1 August 2026_
 
 > This describes what the software actually does, checked against the code. It
 > is not legal advice. If you take payment or accept users in the EU, UK or
@@ -9,127 +9,95 @@ _Last updated: 30 July 2026_
 Venturo helps you find something to sell and keep track of the people you sell
 to. To do that it stores what you type in.
 
-**Your data is stored on servers we operate, not on your device.** An earlier
-version of this app kept everything locally; that is no longer true, and this
-policy was rewritten when it changed.
+**Your data is stored in your own iCloud account, not on servers we operate.**
+Venturo has no server. What you put into the app is written to a private space
+in your iCloud that only this app can reach. It counts against your iCloud
+storage, syncs to your other devices through Apple, and **we cannot read it** —
+not "we choose not to", we have no access to it at all.
+
+This replaced an earlier arrangement where data lived on a database we ran, and
+this policy was rewritten when it changed. If you used Venturo before August
+2026, that is no longer where your information is kept.
 
 ---
 
-## What we collect
+## There is no account, and no password
 
-**About you**, when you create your profile:
+Venturo does not ask you to sign up. There is no username, no password, and no
+"sign in with" anything. The app identifies you by the iCloud account already
+on your device, and it never sees your Apple ID, your email address, or your
+password.
 
-- **Required:** your name, your email address, and your age.
-- **Optional:** gender, location, phone number, a bio, your prior business
-  experience, and your goals. You can finish onboarding without any of these.
+**You can use Venturo without being signed in to iCloud at all.** The Discover
+feed, the Grow directory, the tips and the journey all work with no account.
+What you cannot do is keep anything — saving a product, creating a business or
+recording a client all need somewhere private to write to.
 
-Your email comes from whichever sign-in method you used. Your age is collected
-for one reason only: to check you are 13 or over. Nothing else in the app reads
-it.
+## What the app stores
 
-**About your business:** name, what you sell, description, ideal customer,
-audience keywords, sales channels, your business page link, and links to your
-social accounts.
+Only what you type in:
 
-**About your clients and prospects** — data *you* enter about *other people*:
-their name, where you found them, notes you write, interactions you log, and
-payments you attribute to them.
+- **Your profile** — your name and your age. Optionally a location, a short
+  bio, an email address and your goals. Age is asked once, to check you are 13
+  or older, and nothing else uses it.
+- **Your business** — its name, what you sell, who you sell it to, links.
+- **Your clients and sales** — names, notes, where you found someone, what they
+  bought and when.
+- **Your progress** — which products you bookmarked and which milestones you
+  have completed.
 
-**About your products:** name, description, price, stock, SKU, listing links.
+**Your email address is optional and blank by default.** Earlier versions took
+it from whichever sign-in you used; there is no sign-in now, so the field stays
+empty unless you choose to fill it in.
 
-**About your use of the app:** a record of significant actions — a client added,
-a sale recorded, a mission completed — so the app can show you your own history
-and progress. This is stored on our servers alongside everything else.
+Nothing beyond a name and an age is required. Empty fields stay empty.
 
-## An important note about your clients' data
+## Who else is involved
 
-When you add a client, you are storing personal information about someone else.
-Under laws like the GDPR that makes **you** responsible for that data, and
-Venturo a tool you use to process it.
-
-In practice: record only what you genuinely need, and if a client asks you to
-delete what you hold about them, you can delete that contact and everything
-attached to them from inside the app.
-
-## Where your data lives, and who can touch it
-
-Your data is held in a PostgreSQL database and reached through an API we run.
-Three companies process it on our behalf:
-
-| Who | What they do | Where |
+| who | what they do | where |
 |---|---|---|
-| **Neon** | hosts the database | AWS, US East (N. Virginia) |
-| **Render** | runs the API server | United States |
-| **Clerk** | handles sign-in and holds your login credentials | United States |
+| **Apple (CloudKit)** | stores your private data in your iCloud, and serves the app's catalogue | per Apple's own policy |
 
-We do not use any other processor. There is no advertising network, no data
-broker, and no analytics service — the usage record described above is our own
-and stays in our own database.
+That is the whole list. Apple's handling of your iCloud data is governed by
+[Apple's Privacy Policy](https://www.apple.com/legal/privacy/), not by this one.
 
-**If you are outside the United States**, using Venturo means your data is
-transferred to and stored in the US.
+The app also loads product and community photographs directly from the sites
+that host them — Pexels, and suppliers such as AliExpress. Requesting an image
+tells that host your IP address, the same as opening any web page would. No
+identifying information about you is sent with those requests.
 
-## Passwords
+**There is no analytics SDK, no advertising, no tracking, and nothing is sold
+or shared.** Venturo does not build a profile of you, and there is nothing here
+to opt out of.
 
-We never see your password. Sign-in is handled entirely by Clerk; our servers
-receive only a signed token proving you are who you say you are.
+## What we can and cannot see
 
-## If you connect your own AI
+We cannot see your profile, your business, your clients, your sales, your notes
+or your bookmarks. The catalogue of products and communities that the app shows
+everybody is public and read-only; your copy of what you did with it is not.
 
-Discover can use an AI model to suggest places to find customers. If you
-configure one, your business name, description, niche, ideal customer, keywords
-and social links are sent to **the server you chose**, at the address you
-entered. We do not run it, see it, or control what it does with that data. If
-you use a third-party API rather than a model you host, their privacy policy
-applies. If you configure no AI, none of this happens.
+## Your data, and getting rid of it
 
-## What we don't do
+- **Export.** You → Settings → Export. It assembles everything the app holds
+  about you into a file, on the device, and hands it to you.
+- **Delete.** You → Settings → Delete account. This removes the entire private
+  space the app uses, in one operation. It is immediate, it cannot be undone,
+  and there is no grace period and no backup we could restore from — because
+  there is no copy anywhere else.
 
-- We don't sell your data.
-- We don't use it for advertising, and there are no ad or tracking SDKs in the
-  app.
-- We don't scrape social media or marketplaces on your behalf. Venturo suggests
-  public communities to visit; it does not harvest people from them.
-- We don't share your client list with anyone.
-
-## Your choices
-
-- **Get a copy of everything.** Settings → Export my data hands you a single
-  JSON file containing your profile, businesses, clients, interactions,
-  payments, products, saved items and activity history.
-- **Delete a client**, and everything attached to them.
-- **Delete a business**, and everything inside it.
-- **Delete your account.** Settings → Delete my account removes every record we
-  hold about you — profile, businesses, clients, interactions, payments,
-  products, saved items, mission progress and usage history — and deletes your
-  login at Clerk. It is immediate and cannot be undone. There is no grace
-  period and no archived copy.
-
-Curated content — the product catalogue, community write-ups and tips — is the
-same for everyone and is not your data, so it is not included in an export and
-is unaffected by deletion.
-
-## How long we keep things
-
-For as long as you have an account. When you delete your account, your data is
-deleted at the same time rather than being retained on a schedule. Backups may
-persist for up to 30 days before rolling off.
+You can also remove Venturo's data from iCloud yourself, without the app, in
+iOS Settings under your Apple ID → iCloud.
 
 ## Children
 
-Venturo is not intended for anyone under 13, and the app will not accept an age
-below 13.
+Venturo is not for under-13s. The app asks your age once and stops there if you
+are younger. We do not knowingly keep information from anyone under 13.
 
 ## Changes
 
-If this policy changes materially you will be told in the app before the change
-takes effect.
+If this policy changes in a way that affects what the app does with your
+information, the app will say so rather than quietly updating this page.
 
 ## Contact
 
-Questions, requests, or anything you want removed:
-
-**ishaanchtrvdi@gmail.com**
-
-We aim to respond within 30 days, which is the GDPR deadline for access and
-deletion requests.
+Questions about any of this: **ishaanchtrvdi@gmail.com**.

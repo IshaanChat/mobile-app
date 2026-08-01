@@ -34,7 +34,8 @@
     "cloudkit:keygen": "node scripts/cloudkit-keygen.mjs",
     "cloudkit:push": "tsx --env-file=.env scripts/cloudkit-push.ts",
     "cloudkit:schema": "tsx scripts/cloudkit-schema.ts",
-    "cloudkit:verify": "tsx --env-file=.env scripts/cloudkit-verify.ts"
+    "cloudkit:verify": "tsx --env-file=.env scripts/cloudkit-verify.ts",
+    "legal:build": "node scripts/build-legal.mjs"
   },
   "dependencies": {
     "@clerk/backend": "^3.12.0",
