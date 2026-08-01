@@ -30,10 +30,36 @@ Don't redo any of this.
 
 ## What is not
 
-- **The iOS app has never been compiled.** No `.xcodeproj` exists.
+- **The iOS app has never been compiled.** No `.xcodeproj` in git yet.
 - No App Store Connect app record.
 - Clerk is on a **development** instance.
 - No screenshots, description, or demo account for the reviewer.
+
+## You are here — 31 July 2026
+
+Work moved from the Windows machine to a Mac mini partway through Phase 1.
+
+**Done on the Mac:** Xcode **26.6** installed and licensed, repo cloned to
+`~/sales-mechanic`.
+
+**Note the Mac is not an admin account.** `sudo xcode-select -s` is not
+available, so the developer directory is set per-shell instead — this line is
+in `~/.zshrc` and is why `xcodebuild` works:
+
+```bash
+export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer
+```
+
+A one-off admin password from the machine's owner covered the Xcode license.
+Building and code signing need no further admin.
+
+**Next, in order:** create the Xcode project (Phase 1), set Swift Language
+Version to **5** before the first build (Phase 2), then compile ~7,200 lines of
+Swift that no compiler has ever seen.
+
+**Carried over and still open:** the support page at `/support` is live and
+still reads `REPLACE-BEFORE-SUBMITTING@example.com`. A dedicated address was
+being created rather than reusing a personal one. Phase 3 step 2.
 
 ---
 
@@ -57,27 +83,30 @@ is faster than it.
    ```bash
    git clone https://github.com/IshaanChat/mobile-app.git sales-mechanic
    ```
-6. **Recreate `server/.env`.** It is not in git and nothing that touches the
-   database or the prototype's content pipeline runs without it. Five values:
-
-   | key | where to get it |
-   |---|---|
-   | `DATABASE_URL` | Neon dashboard — the **direct**, non-pooled URL |
-   | `CLERK_SECRET_KEY` | Clerk dashboard → API keys |
-   | `PEXELS_API_KEY` | Pexels account |
-   | `ALIEXPRESS_APP_KEY` | AliExpress open platform |
-   | `ALIEXPRESS_APP_SECRET` | same |
-
-   Copying the file across from the Windows machine is faster than five
-   dashboards. Everything except `DATABASE_URL` is only needed by the content
-   scripts, so a partial `.env` is enough to start.
-
-7. **Check the toolchain works** before touching Xcode:
+6. **Check the toolchain works** before touching Xcode:
    ```bash
    cd server && npm ci && npm test
    ```
-   173 tests, about half a second. If they pass, Node and the repo are fine and
+   184 tests, well under a second. If they pass, Node and the repo are fine and
    anything that breaks later is Xcode's.
+
+7. **`server/.env` is probably not needed.** It is not in git, and it is easy to
+   assume everything is blocked on it. It is not:
+
+   | task | needs `.env`? |
+   |---|---|
+   | Build and run the iOS app | **No** — it talks to the deployed Render API |
+   | `npm run app:preview` (the prototype) | **No** — reads `content/*.json` off disk |
+   | `npm test` | **No** |
+   | `npm run dev` (the API locally) | Yes — `DATABASE_URL` |
+   | `catalog:import`, `growth:*`, `sourcing`, `ingest` | Yes |
+
+   So finishing and shipping the app needs no secrets at all. If you do want
+   the API running locally, `cp .env.example .env` — it documents every key and
+   where to get it — and fill in `DATABASE_URL` from Neon, the **direct**
+   non-pooled string. With `CLERK_SECRET_KEY` left unset the API signs every
+   request in as one development account, which makes local work simpler rather
+   than harder.
 
 ## Phase 1 — Create the Xcode project
 
