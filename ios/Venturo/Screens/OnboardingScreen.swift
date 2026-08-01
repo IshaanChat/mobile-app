@@ -98,9 +98,13 @@ struct OnboardingScreen: View {
     /// changes what comes next — a cached list would keep asking the questions
     /// belonging to a fork the user has since left.
     private func steps(_ script: OnboardingScript) -> [Question] {
-        var out: [Question] = [.text(id: "name", title: "First — what's your name?",
-                                     subtitle: "The one you'd want customers to know you by.",
-                                     placeholder: "Your name")]
+        var out: [Question] = []
+
+        // Taken from the script rather than written here: the reason the copy
+        // lives in content/onboarding.json is that these screens can be
+        // reworded without an App Store release, and a literal undoes that
+        // quietly — the JSON changes and the app does not.
+        out.append(.text(step: script.shared.first { $0.id == "name" } ?? .nameFallback))
 
         out.append(.age)
 
@@ -116,15 +120,16 @@ struct OnboardingScreen: View {
             if promptAnswers.count >= 1 { out.append(.prompt(index: 1)) }
         } else if let forkSteps = script.forks[path] {
             for step in forkSteps {
-                out.append(.text(id: step.id, title: step.title,
-                                 subtitle: step.subtitle, placeholder: step.placeholder))
+                out.append(.text(step: step))
             }
         }
         return out
     }
 
     private enum Question: Equatable {
-        case text(id: String, title: String, subtitle: String?, placeholder: String?)
+        /// Carries the whole step, not its fields: `optional` decides whether
+        /// the button unlocks, and unpacking only the copy loses it.
+        case text(step: OnboardingScript.Step)
         case age
         case fork(step: OnboardingScript.Step)
         case prompt(index: Int)
@@ -140,8 +145,8 @@ struct OnboardingScreen: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
                     switch current {
-                    case let .text(id, title, subtitle, placeholder):
-                        textQuestion(id: id, title: title, subtitle: subtitle, placeholder: placeholder)
+                    case let .text(step):
+                        textQuestion(step)
                     case .age:
                         ageQuestion
                     case let .fork(step):
@@ -194,15 +199,19 @@ struct OnboardingScreen: View {
 
     // MARK: - Question kinds
 
-    private func textQuestion(id: String, title: String, subtitle: String?, placeholder: String?) -> some View {
-        VStack(alignment: .leading, spacing: 0) {
-            Text(title)
+    private func textQuestion(_ step: OnboardingScript.Step) -> some View {
+        // "What do you sell?" asks for a sentence and the script types it as a
+        // textarea. Growing the field is the difference between an answer that
+        // fits and one you write blind.
+        let isLong = step.type == "textarea"
+        return VStack(alignment: .leading, spacing: 0) {
+            Text(step.title)
                 .font(.custom(Typeface.display, size: 30))
                 .tracking(-0.6)
                 .lineSpacing(4)
                 .foregroundStyle(theme.scheme.text)
                 .fixedSize(horizontal: false, vertical: true)
-            if let subtitle {
+            if let subtitle = step.subtitle {
                 Text(subtitle)
                     .font(.custom(Typeface.sansMedium, size: 15))
                     .lineSpacing(6)
@@ -210,7 +219,12 @@ struct OnboardingScreen: View {
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.top, 8)
             }
-            TextField(placeholder ?? "", text: binding(for: id))
+            TextField(
+                step.placeholder ?? "",
+                text: binding(for: step.id),
+                axis: isLong ? .vertical : .horizontal
+            )
+                .lineLimit(isLong ? 3...6 : 1...1)
                 .font(.custom(Typeface.sansMedium, size: 18))
                 .foregroundStyle(theme.scheme.text)
                 .padding(.horizontal, 14)
@@ -447,8 +461,11 @@ struct OnboardingScreen: View {
 
     private func canAdvance(_ question: Question) -> Bool {
         switch question {
-        case .text(let id, _, _, _):
-            return !binding(for: id).wrappedValue.trimmingCharacters(in: .whitespaces).isEmpty
+        case .text(let step):
+            // A step the script calls optional advances empty. Without this the
+            // button stays greyed under a subtitle inviting you to skip.
+            if step.isSkippable { return true }
+            return !binding(for: step.id).wrappedValue.trimmingCharacters(in: .whitespaces).isEmpty
         case .age:
             guard let value = Int(age.trimmingCharacters(in: .whitespaces)) else { return false }
             return (13...120).contains(value)

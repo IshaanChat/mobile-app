@@ -40,14 +40,35 @@ struct OnboardingScript: Codable, Equatable {
 
     struct Step: Codable, Equatable, Identifiable {
         let id: String
-        /// "text" | "fork"
+        /// "text" | "textarea" | "fork"
         let type: String
         let chapter: String?
         let title: String
         let subtitle: String?
         let placeholder: String?
         let required: Bool?
+        /// The script marks a step skippable with `optional`, not by setting
+        /// `required` to false. Missing it means "Who buys from you?" — whose
+        /// own subtitle says "Skip it if you're still working that out" —
+        /// cannot actually be skipped.
+        let optional: Bool?
         let options: [Option]?
+
+        var isSkippable: Bool { optional == true || required == false }
+
+        /// Onboarding has to be able to ask for a name even if the script
+        /// arrives without that step.
+        static let nameFallback = Step(
+            id: "name",
+            type: "text",
+            chapter: "About you",
+            title: "First — what's your name?",
+            subtitle: "The one you'd want customers to know you by.",
+            placeholder: "Your name",
+            required: true,
+            optional: nil,
+            options: nil
+        )
 
         struct Option: Codable, Equatable, Identifiable {
             let value: String
